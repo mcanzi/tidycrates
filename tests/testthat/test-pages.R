@@ -32,13 +32,13 @@ test_that("a failed page returns NULL", {
 })
 
 test_that("long fetches give the expected time", {
-  local_dig_state()
+  clock <- local_dig_state()
   httr2::local_mocked_responses(\(req) page_response(req, pages = 80L))
-  expect_message(
-    out <- dig_get_pages("artists/1/releases", "releases", all = TRUE),
-    "80 pages takes about 4 minutes"
-  )
+  msgs <- testthat::capture_messages(out <- dig_get_pages("artists/1/releases", "releases", all = TRUE))
+  expect_match(msgs[1], "80 pages takes at least 3 minutes")
+  expect_match(msgs[-1], "Waiting 60 seconds")
   expect_length(out, 160)
+  expect_equal(clock$time, 180)
 })
 
 test_that("pages without items or pagination are handled", {

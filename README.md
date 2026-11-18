@@ -6,7 +6,7 @@
 
 tidycrates reads the [Discogs](https://www.discogs.com/) database through the [Discogs API](https://www.discogs.com/developers) and returns <span class="hl">tidy tibbles</span>. Releases, master releases, artists and labels come back with one row each, and their tracklists, credits, formats, identifiers and companies can be unnested into one row per item.
 
-Requests are spaced out evenly to stay within the <span class="hl">rate limit</span> of the API, which is 25 requests a minute without a token and 60 with one. A request that still hits the limit is retried. Long lists can be fetched in full with `all = TRUE`, and responses can be cached for the session.
+Requests stay within the <span class="hl">rate limit</span> of the API, which is 25 requests a minute without a token and 60 with one. Small batches are sent at once, and longer ones wait for room in each minute. A request that still hits the limit is retried. Long lists can be fetched in full with `all = TRUE`, and responses can be cached for the session.
 
 ## Installation
 
@@ -110,7 +110,7 @@ dig_master_versions(2001) |>
 
 `dig_collection()` and `dig_wantlist()` list the releases in the collection or wantlist of a user. Anyone can read a public collection, but a private one can only be read with the token of its owner. Without a username, they read the collection or wantlist of the token owner. The notes that users write are left out. Collections and wantlists are Restricted Data, see [Terms of use](#terms-of-use).
 
-`dig_collection_folders()` lists the folders of a collection, and their IDs can be passed to `dig_collection()`:
+`dig_collection_folders()` lists the folders of a collection, and their IDs can be passed to `dig_collection()`, which also gives the folder name of each copy:
 
 ```r
 dig_collection_folders()

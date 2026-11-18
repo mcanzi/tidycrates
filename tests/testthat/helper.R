@@ -10,6 +10,16 @@ local_dig_state <- function(token = "", env = parent.frame()) {
     envir = env
   )
   withr::local_options(tidycrates.cache = FALSE, .local_envir = env)
+  clock <- rlang::env(time = 0, pauses = numeric())
+  local_mocked_bindings(
+    now = \() clock$time,
+    pause = \(seconds) {
+      clock$pauses <- c(clock$pauses, seconds)
+      clock$time <- clock$time + max(seconds, 0)
+    },
+    .env = env
+  )
+  invisible(clock)
 }
 
 discogs_response <- function(body, status = 200L, used = 1L, limit = 25L) {

@@ -1,7 +1,9 @@
 base_url <- "https://api.discogs.com"
 
-request_spacing <- function(token = auth_token()) {
-  60 / (if (is.null(token)) 24 else 59)
+rate_window <- 60
+
+window_size <- function(token = auth_token()) {
+  if (is.null(token)) 24 else 59
 }
 
 dig_request <- function(path, query = list(), token = auth_token()) {
@@ -10,17 +12,69 @@ dig_request <- function(path, query = list(), token = auth_token()) {
     httr2::req_url_query(!!!query) |>
     httr2::req_user_agent(user_agent()) |>
     httr2::req_timeout(60) |>
-    httr2::req_throttle(
-      capacity = 1,
-      fill_time_s = request_spacing(token),
-      realm = if (is.null(token)) "discogs" else "discogs-token"
-    ) |>
-    httr2::req_retry(max_tries = 4, backoff = retry_backoff) |>
     httr2::req_error(body = error_body)
   if (!is.null(token)) {
     req <- httr2::req_headers_redacted(req, Authorization = paste0("Discogs token=", token))
   }
   req
+}
+
+perform <- function(req, token, max_tries = 4) {
+  for (attempt in seq_len(max_tries)) {
+    wait_for_slot(token)
+    resp <- tryCatch(httr2::req_perform(req), httr2_http = identity, finally = record_request(token))
+    if (!inherits(resp, "httr2_http")) {
+      return(resp)
+    }
+    status <- httr2::resp_status(resp$resp)
+    if (attempt == max_tries || !status %in% c(429, 503)) {
+      rlang::cnd_signal(resp)
+    }
+    seconds <- retry_wait(resp$resp, attempt)
+    if (seconds >= 1) {
+      cli::cli_inform("Retrying in {ceiling(seconds)} second{?s} after HTTP {status}.")
+    }
+    pause(seconds)
+  }
+}
+
+wait_for_slot <- function(token) {
+  sent <- recent_requests(token)
+  size <- window_size(token)
+  if (length(sent) < size) {
+    return(invisible())
+  }
+  seconds <- sent[length(sent) - size + 1] + rate_window - now()
+  if (seconds >= 1) {
+    cli::cli_inform("Waiting {ceiling(seconds)} second{?s} for the 'Discogs' rate limit.")
+  }
+  pause(seconds)
+}
+
+record_request <- function(token) {
+  dig_env[[sent_key(token)]] <- c(recent_requests(token), now())
+}
+
+recent_requests <- function(token) {
+  sent <- dig_env[[sent_key(token)]]
+  sent[sent > now() - rate_window]
+}
+
+sent_key <- function(token) {
+  if (is.null(token)) "sent" else "sent_token"
+}
+
+now <- function() {
+  as.numeric(Sys.time())
+}
+
+pause <- function(seconds) {
+  if (seconds > 0) Sys.sleep(seconds)
+}
+
+retry_wait <- function(resp, attempt) {
+  after <- httr2::resp_retry_after(resp)
+  if (is.na(after)) retry_backoff(attempt) else after
 }
 
 retry_backoff <- function(attempt) {
@@ -39,7 +93,7 @@ read_json <- function(resp) {
 
 fetch <- function(path, query = list(), token = auth_token()) {
   resp <- dig_request(path, query, token) |>
-    httr2::req_perform() |>
+    perform(token) |>
     tryCatch(
       httr2_failure = \(e) unavailable("Could not reach the Discogs API. Check your internet connection.", e),
       httr2_http = \(e) {
@@ -153,9 +207,9 @@ dig_get_pages <- function(path, field, query = list(), all = FALSE, page = 1,
       call = call
     )
   }
-  minutes <- ceiling((pages - page) * request_spacing() / 60)
-  if (minutes > 1) {
-    cli::cli_inform("Fetching {pages} pages takes about {minutes} minutes.")
+  minutes <- (pages - page) %/% window_size()
+  if (minutes >= 1) {
+    cli::cli_inform("Fetching {pages} pages takes at least {minutes} minute{?s}.")
   }
   rest <- map_requests(seq(page + 1L, pages), get_page, .progress = "Fetching pages")
   if (any(purrr::map_lgl(rest, is.null))) {

@@ -6,10 +6,11 @@ returns tidy tibbles. Releases, master releases, artists and labels come
 back with one row each, and their tracklists, credits, formats,
 identifiers and companies can be unnested into one row per item.
 
-Requests are spaced out evenly to stay within the rate limit of the API,
-which is 25 requests a minute without a token and 60 with one. A request
-that still hits the limit is retried. Long lists can be fetched in full
-with `all = TRUE`, and responses can be cached for the session.
+Requests stay within the rate limit of the API, which is 25 requests a
+minute without a token and 60 with one. Small batches are sent at once,
+and longer ones wait for room in each minute. A request that still hits
+the limit is retried. Long lists can be fetched in full with
+`all = TRUE`, and responses can be cached for the session.
 
 ## Installation
 
@@ -154,7 +155,8 @@ use](#terms-of-use).
 
 [`dig_collection_folders()`](https://mcanzi.de/tidycrates/reference/dig_collection_folders.md)
 lists the folders of a collection, and their IDs can be passed to
-[`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md):
+[`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md),
+which also gives the folder name of each copy:
 
 ``` r
 

@@ -10,9 +10,9 @@ tallied and plotted, and marketplace statistics, price suggestions and
 collection values can be read. Tracklists, credits, formats, identifiers
 and companies of releases can be unnested into one row per item.
 Requests can be made with a personal access token or without one. They
-are spaced out to stay within the rate limit of the API and retried when
-the limit is exceeded. Responses can be cached for the session, and
-paginated results can be fetched in full.
+stay within the rate limit of the API and are retried when the limit is
+exceeded. Responses can be cached for the session, and paginated results
+can be fetched in full.
 
 ## Details
 
@@ -22,8 +22,10 @@ access token set by
 [`dig_auth()`](https://mcanzi.de/tidycrates/reference/dig_auth.md), the
 limit is 60 requests a minute, the database can be searched, your own
 private collection and wantlist can be read, and price suggestions and
-the value of your collection are available. Requests are spaced out
-evenly to stay within the limit and retried after HTTP 429 responses.
+the value of your collection are available. Up to 59 requests with a
+token, or 24 without, are sent at once, and later requests wait until
+the last 60 seconds have room for them. Requests are retried after HTTP
+429 and 503 responses, and a message says how long each wait takes.
 
 When the API cannot be reached, because there is no internet connection,
 the server returns an error or the rate limit is still exceeded after

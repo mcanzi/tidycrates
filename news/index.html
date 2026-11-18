@@ -52,7 +52,7 @@
 <code><a href="../reference/dig_cache_clear.html">dig_cache_clear()</a></code> empties the cache.</li>
 <li>
 <code><a href="../reference/dig_collection.html">dig_collection()</a></code>, <code><a href="../reference/dig_wantlist.html">dig_wantlist()</a></code>, <code><a href="../reference/dig_collection_folders.html">dig_collection_folders()</a></code> and <code><a href="../reference/dig_collection_value.html">dig_collection_value()</a></code> use the owner of the token when no username is given.</li>
-<li>Requests are spaced out evenly. Before, the first 25 requests were sent at once, so a batch of more than 25 could exceed the rate limit of ‘Discogs’.</li>
+<li>Requests are counted over a moving window of 60 seconds. Up to 59 requests with a token, or 24 without, are sent at once, and later ones wait until the window has room. A message says how long each wait or retry takes. Before, a full minute of requests was sent at once and more followed within the same minute, so a long batch could exceed the rate limit of ‘Discogs’.</li>
 <li>A rate limit that is still exceeded after several tries gives a message and returns <code>NULL</code>, as when the API cannot be reached.</li>
 <li>
 <code>dig_search(all = TRUE)</code> stops before fetching more than 100 pages.</li>

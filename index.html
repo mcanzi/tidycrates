@@ -16,8 +16,8 @@
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Tidy Data from the Discogs API">
-<meta name="description" content="Sends requests to the Discogs API &lt;https://www.discogs.com/developers&gt; and returns the results as tidy tibbles. Releases, master releases, artists and labels can be read from the Discogs database, along with the releases of an artist or label and the versions of a master release. The collection and wantlist of a user can be listed, tallied and plotted, and marketplace statistics, price suggestions and collection values can be read. Tracklists, credits, formats and identifiers of releases can be unnested into one row per item. Requests can be made with a personal access token or without one. They are spaced out to stay within the rate limit of the API and retried when the limit is exceeded. Responses can be cached for the session, and paginated results can be fetched in full.">
-<meta property="og:description" content="Sends requests to the Discogs API &lt;https://www.discogs.com/developers&gt; and returns the results as tidy tibbles. Releases, master releases, artists and labels can be read from the Discogs database, along with the releases of an artist or label and the versions of a master release. The collection and wantlist of a user can be listed, tallied and plotted, and marketplace statistics, price suggestions and collection values can be read. Tracklists, credits, formats and identifiers of releases can be unnested into one row per item. Requests can be made with a personal access token or without one. They are spaced out to stay within the rate limit of the API and retried when the limit is exceeded. Responses can be cached for the session, and paginated results can be fetched in full.">
+<meta name="description" content="Sends requests to the Discogs API &lt;https://www.discogs.com/developers&gt; and returns the results as tidy tibbles. The Discogs database can be searched, and releases, master releases, artists and labels can be read from it, along with the releases of an artist or label and the versions of a master release. The collection and wantlist of a user can be listed, tallied and plotted, and marketplace statistics, price suggestions and collection values can be read. Tracklists, credits, formats and identifiers of releases can be unnested into one row per item. Requests can be made with a personal access token or without one. They are spaced out to stay within the rate limit of the API and retried when the limit is exceeded. Responses can be cached for the session, and paginated results can be fetched in full.">
+<meta property="og:description" content="Sends requests to the Discogs API &lt;https://www.discogs.com/developers&gt; and returns the results as tidy tibbles. The Discogs database can be searched, and releases, master releases, artists and labels can be read from it, along with the releases of an artist or label and the versions of a master release. The collection and wantlist of a user can be listed, tallied and plotted, and marketplace statistics, price suggestions and collection values can be read. Tracklists, credits, formats and identifiers of releases can be unnested into one row per item. Requests can be made with a personal access token or without one. They are spaced out to stay within the rate limit of the API and retried when the limit is exceeded. Responses can be cached for the session, and paginated results can be fetched in full.">
 <meta property="og:image" content="https://mcanzi.de/tidycrates/logo.png">
 <link rel="stylesheet" href="https://mcanzi.de/fonts/fonts.css">
 </head>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">tidycrates</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,7 @@
 <div class="section level2">
 <h2 id="token">Token<a class="anchor" aria-label="anchor" href="#token"></a>
 </h2>
-<p>The database can be read without a token. A <span class="hl">personal access token</span> raises the limit to 60 requests a minute. Generate one in the <a href="https://www.discogs.com/settings/developers" class="external-link">developer settings</a> of your Discogs account and add it to <code>.Renviron</code>, so it stays out of your scripts:</p>
+<p>The database can be read without a token, but searching it needs one. A <span class="hl">personal access token</span> also raises the limit to 60 requests a minute. Generate one in the <a href="https://www.discogs.com/settings/developers" class="external-link">developer settings</a> of your Discogs account and add it to <code>.Renviron</code>, so it stays out of your scripts:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">edit_r_environ</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="va">DISCOGS_TOKEN</span><span class="op">=</span><span class="va">your</span><span class="op">-</span><span class="va">token</span></span></code></pre>
@@ -83,17 +83,28 @@
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>The output below comes from <span class="hl">made-up data</span>: the band Juniper Static, the label Fernhollow Records and their releases do not exist. The package tests use the same data. The real API returns other records for these IDs.</p>
+<p><code><a href="reference/dig_search.html">dig_search()</a></code> finds the IDs to start from. It searches releases, master releases, artists and labels by a query, by filters such as artist, label, format and year, or by both:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mcanzi/tidycrates" class="external-link">tidycrates</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">release</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dig_release.html">dig_release</a></span><span class="op">(</span><span class="fl">1001</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/dig_search.html">dig_search</a></span><span class="op">(</span><span class="st">"Juniper Static"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">type</span>, <span class="va">title</span>, <span class="va">year</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 4</span></span>
+<span><span class="co">#&gt;      id type    title                               year</span></span>
+<span><span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;                              &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1  1001 release Juniper Static - Lantern Weather    1994</span></span>
+<span><span class="co">#&gt; 2  2001 master  Juniper Static - Small Hours Atlas  1994</span></span>
+<span><span class="co">#&gt; 3  3001 artist  Juniper Static                        NA</span></span></code></pre></div>
+<p><code><a href="reference/dig_release.html">dig_release()</a></code> reads a release:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">release</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dig_release.html">dig_release</a></span><span class="op">(</span><span class="fl">1001</span><span class="op">)</span></span>
 <span><span class="va">release</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">title</span>, <span class="va">artist</span>, <span class="va">year</span>, <span class="va">country</span>, <span class="va">label</span>, <span class="va">format</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   title           artist          year country label              format</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;              &lt;chr&gt;</span></span>
 <span><span class="co">#&gt; 1 Lantern Weather Juniper Static  1994 UK      Fernhollow Records Vinyl</span></span></code></pre></div>
 <p>The tracklist, credits, formats and identifiers are <span class="hl">list columns</span>. <code><a href="reference/unnest_release.html">dig_tracklist()</a></code>, <code><a href="reference/unnest_release.html">dig_credits()</a></code>, <code><a href="reference/unnest_release.html">dig_formats()</a></code> and <code><a href="reference/unnest_release.html">dig_identifiers()</a></code> turn them into one row per item, and <code>seconds</code> gives each duration in seconds:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/unnest_release.html">dig_tracklist</a></span><span class="op">(</span><span class="va">release</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 7</span></span>
 <span><span class="co">#&gt;   release_id position type  title                 artist duration seconds</span></span>
@@ -112,7 +123,7 @@
 <span><span class="co">#&gt; 5 Felix Arno         Felix A.    Mixed By</span></span>
 <span><span class="co">#&gt; 6 Malin Ödegaard     M. Ödegaard Producer, Written-By</span></span></code></pre></div>
 <p><code><a href="reference/dig_artist_releases.html">dig_artist_releases()</a></code> lists everything an artist appears on, with the number of users who have each item in their collection or wantlist:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/dig_artist_releases.html">dig_artist_releases</a></span><span class="op">(</span><span class="fl">3001</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">type</span>, <span class="va">title</span>, <span class="va">year</span>, <span class="va">have</span>, <span class="va">want</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
@@ -122,7 +133,7 @@
 <span><span class="co">#&gt; 2  2001 master  Small Hours Atlas  1997    70    90</span></span>
 <span><span class="co">#&gt; 3  2002 master  Paper Moon Signal  1997    25    30</span></span></code></pre></div>
 <p><code><a href="reference/dig_master_versions.html">dig_master_versions()</a></code> lists the versions of a master release, which can be filtered by format, label, year and country:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/dig_master_versions.html">dig_master_versions</a></span><span class="op">(</span><span class="fl">2001</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">release_id</span>, <span class="va">country</span>, <span class="va">released</span>, <span class="va">major_formats</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 4</span></span>
@@ -133,7 +144,7 @@
 <span><span class="co">#&gt; 3       1006 Poland      1997     Cassette</span></span></code></pre></div>
 <p><code><a href="reference/dig_collection.html">dig_collection()</a></code> and <code><a href="reference/dig_wantlist.html">dig_wantlist()</a></code> list the releases in the collection or wantlist of a user. Anyone can read a public collection, but a private one can only be read with the token of its owner. Collections and wantlists are Restricted Data, see <a href="#terms-of-use">Terms of use</a>.</p>
 <p><code><a href="reference/dig_tally.html">dig_tally()</a></code> counts a collection by genre, style, format, label, artist, year, decade or month added, without sending more requests. A copy with several genres counts once for each:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">collection</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dig_collection.html">dig_collection</a></span><span class="op">(</span><span class="st">"your-username"</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/dig_tally.html">dig_tally</a></span><span class="op">(</span><span class="va">collection</span>, <span class="st">"genre"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
@@ -142,14 +153,14 @@
 <span><span class="co">#&gt; 1 Electronic     3 1</span></span>
 <span><span class="co">#&gt; 2 Pop            2 0.667</span></span></code></pre></div>
 <p><code><a href="reference/dig_plot.html">dig_plot()</a></code> draws the same counts with ggplot2. Both also work on the output of the database and list functions, for example to count the releases of a label by decade or the credits of an artist by role:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/dig_plot.html">dig_plot</a></span><span class="op">(</span><span class="va">collection</span>, <span class="st">"genre"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/dig_plot.html">dig_plot</a></span><span class="op">(</span><span class="fu"><a href="reference/dig_label_releases.html">dig_label_releases</a></span><span class="op">(</span><span class="fl">4001</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"decade"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/dig_plot.html">dig_plot</a></span><span class="op">(</span><span class="fu"><a href="reference/dig_artist_releases.html">dig_artist_releases</a></span><span class="op">(</span><span class="fl">3001</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"role"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-genres.png" width="100%" alt="Lollipop chart of copies by genre in a made-up collection of 240 copies. Electronic is the most common, with 68 copies (28%), followed by Rock and Funk / Soul."></p>
 <p>Every plot has a title, a subtitle that says what is shown, alt text for screen readers and the caption “Data provided by Discogs.”. Values are written next to their marks, and the colours have enough contrast to be read without relying on colour alone.</p>
 <p><code><a href="reference/dig_price_stats.html">dig_price_stats()</a></code> gets the lowest price and the number of copies for sale of releases. With a token, <code><a href="reference/dig_price_suggestions.html">dig_price_suggestions()</a></code> gets the price Discogs suggests for each condition and <code><a href="reference/dig_collection_value.html">dig_collection_value()</a></code> the value of your own collection. Prices are never cached, and they are Restricted Data, see <a href="#terms-of-use">Terms of use</a>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/dig_price_stats.html">dig_price_stats</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1001</span>, <span class="fl">1002</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 5</span></span>
 <span><span class="co">#&gt;   release_id lowest_price currency for_sale blocked</span></span>

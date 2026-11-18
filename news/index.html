@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidycrates</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,15 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="tidycrates-development-version">tidycrates (development version)<a class="anchor" aria-label="anchor" href="#tidycrates-development-version"></a></h2>
+<ul><li>
+<code><a href="../reference/dig_search.html">dig_search()</a></code> searches the ‘Discogs’ database by a query, by filters or by both, and returns one row per release, master release, artist or label. It needs a token. <code><a href="../reference/dig_tally.html">dig_tally()</a></code> and <code><a href="../reference/dig_plot.html">dig_plot()</a></code> can count the results by genre, style, format, label, country, year or decade.</li>
+<li>An HTTP error for one of several IDs now stops with the message from ‘Discogs’, without a purrr error about the index around it.</li>
+<li>A response body of <code>null</code> gives a row of <code>NA</code> instead of returning <code>NULL</code> without a message.</li>
+<li>
+<code><a href="../reference/dig_collection_value.html">dig_collection_value()</a></code> keeps the sign of negative values.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="tidycrates-010">tidycrates 0.1.0<a class="anchor" aria-label="anchor" href="#tidycrates-010"></a></h2>
 <p>First release.</p>
 <ul><li>Core request layer with token authentication, a custom user agent, throttling to the ‘Discogs’ rate limit, retries after HTTP 429, pagination and optional caching.</li>
@@ -55,7 +64,8 @@
 <li>Unknown release dates, which ‘Discogs’ gives as <code>"0"</code>, are <code>NA</code>.</li>
 <li>README and pkgdown site in the glacier theme of mcanzi.de.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

@@ -28,5 +28,5 @@ The user agent, invisibly if `agent` is given.
 
 ``` r
 dig_user_agent()
-#> [1] "tidycrates/0.1.0 (+https://github.com/mcanzi/tidycrates)"
+#> [1] "tidycrates/0.1.0.9000 (+https://github.com/mcanzi/tidycrates)"
 ```

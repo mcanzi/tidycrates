@@ -6,6 +6,7 @@ token, 'Discogs' allows 60 requests a minute instead of 25,
 and
 [`dig_wantlist()`](https://mcanzi.de/tidycrates/reference/dig_wantlist.md)
 can read your own collection and wantlist when they are private, and
+[`dig_search()`](https://mcanzi.de/tidycrates/reference/dig_search.md),
 [`dig_price_suggestions()`](https://mcanzi.de/tidycrates/reference/dig_price_suggestions.md)
 and
 [`dig_collection_value()`](https://mcanzi.de/tidycrates/reference/dig_collection_value.md)

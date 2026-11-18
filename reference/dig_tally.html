@@ -13,7 +13,7 @@ columns of x are used, so no requests are sent."><meta property="og:image" conte
 
     <a class="navbar-brand me-2" href="../index.html">tidycrates</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,16 +95,17 @@ invisibly if <code>x</code> is <code>NULL</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Which values of <code>by</code> work depends on where <code>x</code> comes from:</p><table class="table table"><tr><td><code>x</code> from</td><td><code>by</code></td></tr><tr><td><code><a href="dig_collection.html">dig_collection()</a></code>, <code><a href="dig_wantlist.html">dig_wantlist()</a></code></td><td>genre, style, format, label, artist, decade, year, added</td></tr><tr><td><code><a href="dig_release.html">dig_release()</a></code></td><td>genre, style, format, label, artist, country, decade, year, added</td></tr><tr><td><code><a href="dig_master.html">dig_master()</a></code></td><td>genre, style, artist, decade, year</td></tr><tr><td><code><a href="dig_artist_releases.html">dig_artist_releases()</a></code></td><td>format, label, artist, role, decade, year</td></tr><tr><td><code><a href="dig_label_releases.html">dig_label_releases()</a></code></td><td>format, artist, decade, year</td></tr><tr><td><code><a href="dig_master_versions.html">dig_master_versions()</a></code></td><td>format, label, country, decade, year</td></tr></table><p>A row with several genres, styles, formats or labels counts once for
+    <p>Which values of <code>by</code> work depends on where <code>x</code> comes from:</p><table class="table table"><tr><td><code>x</code> from</td><td><code>by</code></td></tr><tr><td><code><a href="dig_collection.html">dig_collection()</a></code>, <code><a href="dig_wantlist.html">dig_wantlist()</a></code></td><td>genre, style, format, label, artist, decade, year, added</td></tr><tr><td><code><a href="dig_release.html">dig_release()</a></code></td><td>genre, style, format, label, artist, country, decade, year, added</td></tr><tr><td><code><a href="dig_master.html">dig_master()</a></code></td><td>genre, style, artist, decade, year</td></tr><tr><td><code><a href="dig_artist_releases.html">dig_artist_releases()</a></code></td><td>format, label, artist, role, decade, year</td></tr><tr><td><code><a href="dig_label_releases.html">dig_label_releases()</a></code></td><td>format, artist, decade, year</td></tr><tr><td><code><a href="dig_master_versions.html">dig_master_versions()</a></code></td><td>format, label, country, decade, year</td></tr><tr><td><code><a href="dig_search.html">dig_search()</a></code></td><td>genre, style, format, label, country, decade, year</td></tr></table><p>A row with several genres, styles, formats or labels counts once for
 each of them, so the shares can add up to more than 1. Rows without a
 value, such as releases with an unknown year, are left out.</p>
 <p>The lists of <code><a href="dig_artist_releases.html">dig_artist_releases()</a></code> and <code><a href="dig_label_releases.html">dig_label_releases()</a></code> give
 formats as descriptions such as <code>2x12", Comp</code>. Only the first part is
 counted, without the number of items, so vinyl is counted by size, for
-example <code>12"</code>. Master releases in <code><a href="dig_artist_releases.html">dig_artist_releases()</a></code> stand
-for all their versions and have no format or label. For
-<code><a href="dig_release.html">dig_release()</a></code>, <code>added</code> is the month the release was added to
-'Discogs'.</p>
+example <code>12"</code>. <code><a href="dig_search.html">dig_search()</a></code> gives the format of a release followed by
+its descriptions, and only the format is counted. Master releases in
+<code><a href="dig_artist_releases.html">dig_artist_releases()</a></code> stand for all their versions and have no format
+or label. For <code><a href="dig_release.html">dig_release()</a></code>, <code>added</code> is the month the release was
+added to 'Discogs'.</p>
 <p>Collections and wantlists have no country, because 'Discogs' does not
 return it for them. To tally a collection by country, get its releases
 first with <code>dig_release(collection$release_id)</code>. This sends one request

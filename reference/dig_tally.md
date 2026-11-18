@@ -63,6 +63,7 @@ Which values of `by` work depends on where `x` comes from:
 | [`dig_artist_releases()`](https://mcanzi.de/tidycrates/reference/dig_artist_releases.md) | format, label, artist, role, decade, year |
 | [`dig_label_releases()`](https://mcanzi.de/tidycrates/reference/dig_label_releases.md) | format, artist, decade, year |
 | [`dig_master_versions()`](https://mcanzi.de/tidycrates/reference/dig_master_versions.md) | format, label, country, decade, year |
+| [`dig_search()`](https://mcanzi.de/tidycrates/reference/dig_search.md) | genre, style, format, label, country, decade, year |
 
 A row with several genres, styles, formats or labels counts once for
 each of them, so the shares can add up to more than 1. Rows without a
@@ -74,7 +75,10 @@ and
 [`dig_label_releases()`](https://mcanzi.de/tidycrates/reference/dig_label_releases.md)
 give formats as descriptions such as `2x12", Comp`. Only the first part
 is counted, without the number of items, so vinyl is counted by size,
-for example `12"`. Master releases in
+for example `12"`.
+[`dig_search()`](https://mcanzi.de/tidycrates/reference/dig_search.md)
+gives the format of a release followed by its descriptions, and only the
+format is counted. Master releases in
 [`dig_artist_releases()`](https://mcanzi.de/tidycrates/reference/dig_artist_releases.md)
 stand for all their versions and have no format or label. For
 [`dig_release()`](https://mcanzi.de/tidycrates/reference/dig_release.md),

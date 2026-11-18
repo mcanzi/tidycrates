@@ -11,6 +11,8 @@
 
 ## Database
 
+- [`dig_search()`](https://mcanzi.de/tidycrates/reference/dig_search.md)
+  : Search the 'Discogs' database
 - [`dig_release()`](https://mcanzi.de/tidycrates/reference/dig_release.md)
   : Get releases
 - [`dig_master()`](https://mcanzi.de/tidycrates/reference/dig_master.md)

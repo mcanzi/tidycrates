@@ -66,6 +66,11 @@ for all their versions and have no format or label. For
 \code{\link[=dig_release]{dig_release()}}, \code{added} is the month the release was added to
 'Discogs'.
 
+Collections and wantlists have no country, because 'Discogs' does not
+return it for them. To tally a collection by country, get its releases
+first with \code{dig_release(collection$release_id)}. This sends one request
+for each release.
+
 Tallies of a collection or wantlist are still Restricted Data, see
 \code{\link[=dig_collection]{dig_collection()}}.
 }

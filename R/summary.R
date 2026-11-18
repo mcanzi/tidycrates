@@ -28,6 +28,11 @@
 #' [dig_release()], `added` is the month the release was added to
 #' 'Discogs'.
 #'
+#' Collections and wantlists have no country, because 'Discogs' does not
+#' return it for them. To tally a collection by country, get its releases
+#' first with `dig_release(collection$release_id)`. This sends one request
+#' for each release.
+#'
 #' Tallies of a collection or wantlist are still Restricted Data, see
 #' [dig_collection()].
 #'
@@ -115,9 +120,11 @@ tally_collection <- function(x, by, n, unique, call = rlang::caller_env()) {
   counts
 }
 
-tally_values <- function(x, by, call) {
+tally_by <- c("genre", "style", "format", "label", "artist", "role", "country", "decade", "year", "added")
+
+tally_column <- function(x, by) {
   has <- \(column) column %in% names(x)
-  column <- switch(by,
+  switch(by,
     genre = "genres",
     style = "styles",
     added = "date_added",
@@ -126,9 +133,21 @@ tally_values <- function(x, by, call) {
     decade = if (has("year")) "year" else "released",
     by
   )
+}
+
+tally_values <- function(x, by, call) {
+  has <- \(column) column %in% names(x)
+  column <- tally_column(x, by)
   if (!has(column)) {
+    usable <- purrr::keep(tally_by, \(b) has(tally_column(x, b)))
+    from_releases <- has("release_id") && !by %in% c("role", "added")
     cli::cli_abort(
-      "{.arg x} has no {.field {column}} column, so it cannot be tallied by {.val {by}}.",
+      c(
+        "{.arg x} has no {.field {column}} column, so it cannot be tallied by {.val {by}}.",
+        i = if (length(usable) > 0) "{.arg x} can be tallied by {.or {.val {usable}}}.",
+        i = if (length(usable) == 0) "{.arg x} has no column that can be tallied.",
+        i = if (from_releases) "To tally by {.val {by}}, get the releases first: {.code dig_release(x$release_id)}."
+      ),
       call = call
     )
   }

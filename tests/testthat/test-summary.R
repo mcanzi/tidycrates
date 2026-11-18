@@ -223,3 +223,32 @@ test_that("numbers and shares are formatted for reading", {
   expect_equal(big_number(c(5L, 12345L)), c("5", "12,345"))
   expect_equal(percent(c(0.001, 0.5, 0)), c("<1%", "50%", "0%"))
 })
+
+test_that("a missing column names the usable values and how to get it", {
+  local_dig_state()
+  local_fixtures()
+  collection <- dig_collection("example")
+  error <- rlang::catch_cnd(dig_plot(collection, "country"))
+  message <- cli::ansi_strip(conditionMessage(error))
+  expect_match(message, "no country column")
+  expect_match(message, "can be tallied by \"genre\", \"style\", \"format\", \"label\", \"artist\", \"decade\", \"year\", or \"added\"", fixed = TRUE)
+  expect_match(message, "dig_release(x$release_id)", fixed = TRUE)
+  copies <- dig_release(collection$release_id[1:2])
+  expect_equal(dig_tally(copies, "country")$n, 2L)
+})
+
+test_that("the release hint is only given where it helps", {
+  credits <- tibble::tibble(type = "release", id = 1:2, role = c("Main", "Remix"))
+  message <- cli::ansi_strip(conditionMessage(rlang::catch_cnd(dig_tally(credits, "genre"))))
+  expect_match(message, "can be tallied by \"role\"", fixed = TRUE)
+  expect_no_match(message, "dig_release")
+  expect_no_match(
+    cli::ansi_strip(conditionMessage(rlang::catch_cnd(dig_tally(shelf(), "role")))),
+    "dig_release"
+  )
+  nothing <- tibble::tibble(release_id = 1:2)
+  expect_match(
+    cli::ansi_strip(conditionMessage(rlang::catch_cnd(dig_tally(nothing, "genre")))),
+    "no column that can be tallied"
+  )
+})

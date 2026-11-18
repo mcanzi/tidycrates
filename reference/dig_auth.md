@@ -25,7 +25,8 @@ dig_auth(token = Sys.getenv("DISCOGS_TOKEN"))
 
   A personal access token. By default the value of the `DISCOGS_TOKEN`
   environment variable. An empty string removes the token, so requests
-  are made without one.
+  are made without one. Spaces at either end are removed, and a token
+  with spaces or line breaks inside is rejected.
 
 ## Value
 

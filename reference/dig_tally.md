@@ -95,6 +95,31 @@ Tallies of a collection or wantlist are still Restricted Data, see
 ## Examples
 
 ``` r
+shelf <- tibble::tibble(
+  release_id = c(1, 1, 2, 3),
+  year = c(1994, 1994, 1998, NA),
+  genres = list(c("Electronic", "Pop"), c("Electronic", "Pop"), "Electronic", "Jazz")
+)
+dig_tally(shelf, "genre")
+#> # A tibble: 3 × 3
+#>   genre          n share
+#>   <chr>      <int> <dbl>
+#> 1 Electronic     3  0.75
+#> 2 Pop            2  0.5 
+#> 3 Jazz           1  0.25
+dig_tally(shelf, "decade")
+#> # A tibble: 1 × 3
+#>   decade     n share
+#>    <dbl> <int> <dbl>
+#> 1   1990     3  0.75
+dig_tally(shelf, "genre", unique = TRUE)
+#> # A tibble: 3 × 3
+#>   genre          n share
+#>   <chr>      <int> <dbl>
+#> 1 Electronic     2 0.667
+#> 2 Jazz           1 0.333
+#> 3 Pop            1 0.333
+
 if (FALSE) { # interactive()
 collection <- dig_collection("username", all = TRUE)
 dig_tally(collection, "genre")

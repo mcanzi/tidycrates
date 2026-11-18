@@ -3,13 +3,13 @@
 tidycrates reads the [Discogs](https://www.discogs.com/) database
 through the [Discogs API](https://www.discogs.com/developers) and
 returns tidy tibbles. Releases, master releases, artists and labels come
-back with one row each, and their tracklists, credits, formats and
-identifiers can be unnested into one row per item.
+back with one row each, and their tracklists, credits, formats,
+identifiers and companies can be unnested into one row per item.
 
-Requests stay within the rate limit of the API, which is 25 requests a
-minute without a token and 60 with one. A request that still hits the
-limit is retried. Long lists can be fetched in full with `all = TRUE`,
-and responses can be cached for the session.
+Requests are spaced out evenly to stay within the rate limit of the API,
+which is 25 requests a minute without a token and 60 with one. A request
+that still hits the limit is retried. Long lists can be fetched in full
+with `all = TRUE`, and responses can be cached for the session.
 
 ## Installation
 
@@ -58,11 +58,11 @@ library(tidycrates)
 dig_search("Juniper Static") |>
   dplyr::select(id, type, title, year)
 #> # A tibble: 3 × 4
-#>      id type    title                               year
-#>   <int> <chr>   <chr>                              <int>
-#> 1  1001 release Juniper Static - Lantern Weather    1994
-#> 2  2001 master  Juniper Static - Small Hours Atlas  1994
-#> 3  3001 artist  Juniper Static                        NA
+#>      id type    title                             year
+#>   <int> <chr>   <chr>                            <int>
+#> 1  1001 release Juniper Static - Lantern Weather  1994
+#> 2  2001 master  Juniper Static - Lantern Weather  1994
+#> 3  3001 artist  Juniper Static                      NA
 ```
 
 [`dig_release()`](https://mcanzi.de/tidycrates/reference/dig_release.md)
@@ -78,12 +78,14 @@ release |> dplyr::select(title, artist, year, country, label, format)
 #> 1 Lantern Weather Juniper Static  1994 UK      Fernhollow Records Vinyl
 ```
 
-The tracklist, credits, formats and identifiers are list columns.
+The tracklist, credits, formats, identifiers and companies are list
+columns.
 [`dig_tracklist()`](https://mcanzi.de/tidycrates/reference/unnest_release.md),
 [`dig_credits()`](https://mcanzi.de/tidycrates/reference/unnest_release.md),
-[`dig_formats()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
-and
+[`dig_formats()`](https://mcanzi.de/tidycrates/reference/unnest_release.md),
 [`dig_identifiers()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
+and
+[`dig_companies()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
 turn them into one row per item, and `seconds` gives each duration in
 seconds:
 
@@ -120,7 +122,7 @@ dig_artist_releases(3001) |>
 #>      id type    title              year  have  want
 #>   <int> <chr>   <chr>             <int> <int> <int>
 #> 1  1004 release Moth Radio         1997    43   160
-#> 2  2001 master  Small Hours Atlas  1997    70    90
+#> 2  2001 master  Lantern Weather    1994    70    90
 #> 3  2002 master  Paper Moon Signal  1997    25    30
 ```
 
@@ -133,11 +135,11 @@ label, year and country:
 dig_master_versions(2001) |>
   dplyr::select(release_id, country, released, major_formats)
 #> # A tibble: 3 × 4
-#>   release_id country     released major_formats
-#>        <int> <chr>       <chr>    <chr>
-#> 1       1001 Bulgaria    1997     Cassette
-#> 2       1005 UK & France 1997     CD
-#> 3       1006 Poland      1997     Cassette
+#>   release_id country     released   major_formats
+#>        <int> <chr>       <chr>      <chr>
+#> 1       1001 UK          1994-07-00 Vinyl
+#> 2       1005 UK & France 1997       CD
+#> 3       1006 Poland      1997       Cassette
 ```
 
 [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
@@ -145,8 +147,25 @@ and
 [`dig_wantlist()`](https://mcanzi.de/tidycrates/reference/dig_wantlist.md)
 list the releases in the collection or wantlist of a user. Anyone can
 read a public collection, but a private one can only be read with the
-token of its owner. Collections and wantlists are Restricted Data, see
-[Terms of use](#terms-of-use).
+token of its owner. Without a username, they read the collection or
+wantlist of the token owner. The notes that users write are left out.
+Collections and wantlists are Restricted Data, see [Terms of
+use](#terms-of-use).
+
+[`dig_collection_folders()`](https://mcanzi.de/tidycrates/reference/dig_collection_folders.md)
+lists the folders of a collection, and their IDs can be passed to
+[`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md):
+
+``` r
+
+dig_collection_folders()
+#> # A tibble: 3 × 3
+#>   folder_id name          count
+#>       <int> <chr>         <int>
+#> 1         0 All               3
+#> 2         1 Uncategorized     2
+#> 3         2 Compilations      1
+```
 
 Each copy in a collection has a `media_condition` and a
 `sleeve_condition` if the user graded it. The grades are factors from
@@ -156,7 +175,7 @@ so the two can be joined to price each copy in its own grade:
 
 ``` r
 
-collection <- dig_collection("your-username", all = TRUE)
+collection <- dig_collection(all = TRUE)
 prices <- dig_price_suggestions(unique(collection$release_id))
 collection |>
   dplyr::left_join(prices, by = dplyr::join_by(release_id, media_condition == condition)) |>
@@ -232,11 +251,11 @@ dig_price_suggestions(1001)
 #> 3       1001 Very Good Plus (VG+)   9.8 EUR
 #> # ℹ 5 more rows
 
-dig_collection_value("your-username")
+dig_collection_value()
 #> # A tibble: 1 × 5
-#>   username      minimum median maximum currency
-#>   <chr>           <dbl>  <dbl>   <dbl> <chr>
-#> 1 your-username    75.5   480.    1250 €
+#>   username minimum median maximum currency
+#>   <chr>      <dbl>  <dbl>   <dbl> <chr>
+#> 1 example     75.5   480.    1250 €
 ```
 
 ## Terms of use

@@ -2,8 +2,8 @@
 
 Turns the list columns of
 [`dig_release()`](https://mcanzi.de/tidycrates/reference/dig_release.md)
-into tibbles with one row per track, credit, format or identifier. Each
-row keeps the ID of its release.
+into tibbles with one row per track, credit, format, identifier or
+company. Each row keeps the ID of its release.
 
 ## Usage
 
@@ -15,6 +15,8 @@ dig_credits(x)
 dig_formats(x)
 
 dig_identifiers(x)
+
+dig_companies(x)
 ```
 
 ## Arguments
@@ -44,6 +46,11 @@ single tracks. `credited_as` is the name printed on the release, if it
 differs from the artist name, and `tracks` gives the positions a credit
 applies to.
 
+`dig_companies()` lists the labels of the release followed by the other
+companies, such as pressing plants and studios. `role` says what each
+company did, and `label_id` can be passed to
+[`dig_label()`](https://mcanzi.de/tidycrates/reference/dig_label.md).
+
 ## Examples
 
 ``` r
@@ -53,5 +60,6 @@ dig_tracklist(release)
 dig_credits(release)
 dig_formats(release)
 dig_identifiers(release)
+dig_companies(release)
 }
 ```

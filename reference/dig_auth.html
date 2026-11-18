@@ -3,13 +3,13 @@
 token, 'Discogs' allows 60 requests a minute instead of 25,
 dig_collection() and dig_wantlist() can read your own collection and
 wantlist when they are private, and dig_search(),
-dig_price_suggestions() and dig_collection_value() work. A token can be generated at
-https://www.discogs.com/settings/developers."><meta property="og:description" content="Sets the personal access token used for requests in this session. With a
+dig_price_suggestions() and dig_collection_value() work. A token
+can be generated at https://www.discogs.com/settings/developers."><meta property="og:description" content="Sets the personal access token used for requests in this session. With a
 token, 'Discogs' allows 60 requests a minute instead of 25,
 dig_collection() and dig_wantlist() can read your own collection and
 wantlist when they are private, and dig_search(),
-dig_price_suggestions() and dig_collection_value() work. A token can be generated at
-https://www.discogs.com/settings/developers."><meta property="og:image" content="https://mcanzi.de/tidycrates/logo.png"><link rel="stylesheet" href="https://mcanzi.de/fonts/fonts.css"></head><body>
+dig_price_suggestions() and dig_collection_value() work. A token
+can be generated at https://www.discogs.com/settings/developers."><meta property="og:image" content="https://mcanzi.de/tidycrates/logo.png"><link rel="stylesheet" href="https://mcanzi.de/fonts/fonts.css"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -17,7 +17,7 @@ https://www.discogs.com/settings/developers."><meta property="og:image" content=
 
     <a class="navbar-brand me-2" href="../index.html">tidycrates</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,8 +48,8 @@ https://www.discogs.com/settings/developers."><meta property="og:image" content=
 token, 'Discogs' allows 60 requests a minute instead of 25,
 <code><a href="dig_collection.html">dig_collection()</a></code> and <code><a href="dig_wantlist.html">dig_wantlist()</a></code> can read your own collection and
 wantlist when they are private, and <code><a href="dig_search.html">dig_search()</a></code>,
-<code><a href="dig_price_suggestions.html">dig_price_suggestions()</a></code> and <code><a href="dig_collection_value.html">dig_collection_value()</a></code> work. A token can be generated at
-<a href="https://www.discogs.com/settings/developers" class="external-link">https://www.discogs.com/settings/developers</a>.</p>
+<code><a href="dig_price_suggestions.html">dig_price_suggestions()</a></code> and <code><a href="dig_collection_value.html">dig_collection_value()</a></code> work. A token
+can be generated at <a href="https://www.discogs.com/settings/developers" class="external-link">https://www.discogs.com/settings/developers</a>.</p>
     </div>
 
     <div class="section level2">
@@ -64,7 +64,8 @@ wantlist when they are private, and <code><a href="dig_search.html">dig_search()
 <dl><dt id="arg-token">token<a class="anchor" aria-label="anchor" href="#arg-token"></a></dt>
 <dd><p>A personal access token. By default the value of the
 <code>DISCOGS_TOKEN</code> environment variable. An empty string removes the
-token, so requests are made without one.</p></dd>
+token, so requests are made without one. Spaces at either end are
+removed, and a token with spaces or line breaks inside is rejected.</p></dd>
 
 </dl></div>
     <div class="section level2">

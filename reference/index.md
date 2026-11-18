@@ -8,6 +8,8 @@
   : Set the user agent
 - [`dig_rate_limit()`](https://mcanzi.de/tidycrates/reference/dig_rate_limit.md)
   : Check the rate limit
+- [`dig_cache_clear()`](https://mcanzi.de/tidycrates/reference/dig_cache_clear.md)
+  : Clear the cache
 
 ## Database
 
@@ -33,6 +35,8 @@
 
 ## Users
 
+- [`dig_collection_folders()`](https://mcanzi.de/tidycrates/reference/dig_collection_folders.md)
+  : List the collection folders of a user
 - [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
   : List the collection of a user
 - [`dig_wantlist()`](https://mcanzi.de/tidycrates/reference/dig_wantlist.md)
@@ -57,6 +61,7 @@
   [`dig_credits()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
   [`dig_formats()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
   [`dig_identifiers()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
+  [`dig_companies()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
   : Unnest release data
 
 ## Package

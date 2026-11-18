@@ -4,18 +4,21 @@ Gets the minimum, median and maximum value of a collection, as 'Discogs'
 estimates it from marketplace sales. Only the owner of a collection can
 get its value, so this needs the owner's token, see
 [`dig_auth()`](https://mcanzi.de/tidycrates/reference/dig_auth.md).
+Without a username, the value of the token owner's collection is read.
 
 ## Usage
 
 ``` r
-dig_collection_value(username)
+dig_collection_value(username = NULL)
 ```
 
 ## Arguments
 
 - username:
 
-  A 'Discogs' username.
+  A 'Discogs' username, or `NULL` for the owner of the token set with
+  [`dig_auth()`](https://mcanzi.de/tidycrates/reference/dig_auth.md).
+  Finding the owner takes one request, once per session.
 
 ## Value
 
@@ -44,6 +47,6 @@ using the API to get around the 'Discogs' marketplace.
 
 ``` r
 if (FALSE) { # interactive()
-dig_collection_value("your-username")
+dig_collection_value()
 }
 ```

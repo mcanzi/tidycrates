@@ -1,6 +1,6 @@
 # Changelog
 
-## tidycrates (development version)
+## tidycrates 0.2.0
 
 - [`dig_search()`](https://mcanzi.de/tidycrates/reference/dig_search.md)
   searches the ‘Discogs’ database by a query, by filters or by both, and
@@ -9,7 +9,10 @@
   [`dig_tally()`](https://mcanzi.de/tidycrates/reference/dig_tally.md)
   and [`dig_plot()`](https://mcanzi.de/tidycrates/reference/dig_plot.md)
   can count the results by genre, style, format, label, country, year or
-  decade.
+  decade, and
+  [`dig_plot()`](https://mcanzi.de/tidycrates/reference/dig_plot.md)
+  counts “results” instead of “releases” when they include artists or
+  labels.
 - [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
   returns the media and sleeve condition of each copy as factors from
   best to worst, with the same grades as
@@ -17,15 +20,42 @@
   The collection fields are read with one more request, and only when a
   copy has a value in one of them. If that request fails, the conditions
   are `NA` and the collection is kept.
-- [`dig_plot()`](https://mcanzi.de/tidycrates/reference/dig_plot.md)
-  counts “results” instead of “releases” when search results include
-  artists or labels.
 - An HTTP error for one of several IDs now stops with the message from
   ‘Discogs’, without a purrr error about the index around it.
 - A response body of `null` gives a row of `NA` instead of returning
   `NULL` without a message.
 - [`dig_collection_value()`](https://mcanzi.de/tidycrates/reference/dig_collection_value.md)
   keeps the sign of negative values.
+- [`dig_collection_folders()`](https://mcanzi.de/tidycrates/reference/dig_collection_folders.md)
+  lists the folders of a collection with their IDs, which
+  [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
+  takes as `folder`.
+- [`dig_companies()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
+  unnests the labels and other companies of releases.
+- [`dig_cache_clear()`](https://mcanzi.de/tidycrates/reference/dig_cache_clear.md)
+  empties the cache.
+- [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md),
+  [`dig_wantlist()`](https://mcanzi.de/tidycrates/reference/dig_wantlist.md),
+  [`dig_collection_folders()`](https://mcanzi.de/tidycrates/reference/dig_collection_folders.md)
+  and
+  [`dig_collection_value()`](https://mcanzi.de/tidycrates/reference/dig_collection_value.md)
+  use the owner of the token when no username is given.
+- Requests are spaced out evenly. Before, the first 25 requests were
+  sent at once, so a batch of more than 25 could exceed the rate limit
+  of ‘Discogs’.
+- A rate limit that is still exceeded after several tries gives a
+  message and returns `NULL`, as when the API cannot be reached.
+- `dig_search(all = TRUE)` stops before fetching more than 100 pages.
+- [`dig_wantlist()`](https://mcanzi.de/tidycrates/reference/dig_wantlist.md)
+  leaves out the notes of the user, as
+  [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
+  does.
+- Tokens with spaces or line breaks inside, and usernames made only of
+  dots, are rejected.
+- jsonlite is now imported. It was needed to read every response but was
+  only suggested. httr2 1.2.2 and, for plots, ggplot2 3.5.2 are now
+  required.
+- The made-up data of the tests and README agree with each other.
 
 ## tidycrates 0.1.0
 

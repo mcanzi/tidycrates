@@ -4,12 +4,13 @@ Lists the releases in the collection of a 'Discogs' user. Anyone can
 read a public collection. A private collection can only be read with the
 token of its owner, see
 [`dig_auth()`](https://mcanzi.de/tidycrates/reference/dig_auth.md).
+Without a username, the collection of the token owner is listed.
 
 ## Usage
 
 ``` r
 dig_collection(
-  username,
+  username = NULL,
   folder = 0,
   sort = c("added", "artist", "title", "label", "catno", "format", "rating", "year"),
   order = c("asc", "desc"),
@@ -23,12 +24,16 @@ dig_collection(
 
 - username:
 
-  A 'Discogs' username.
+  A 'Discogs' username, or `NULL` for the owner of the token set with
+  [`dig_auth()`](https://mcanzi.de/tidycrates/reference/dig_auth.md).
+  Finding the owner takes one request, once per session.
 
 - folder:
 
-  The ID of a collection folder. The default, `0`, holds the whole
-  collection and is the only folder other users can read.
+  The ID of a collection folder, see
+  [`dig_collection_folders()`](https://mcanzi.de/tidycrates/reference/dig_collection_folders.md).
+  The default, `0`, holds the whole collection and is the only folder
+  other users can read.
 
 - sort:
 

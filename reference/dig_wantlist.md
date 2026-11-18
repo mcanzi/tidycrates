@@ -4,13 +4,14 @@ Lists the releases in the wantlist of a 'Discogs' user. Anyone can read
 a public wantlist. A private wantlist can only be read with the token of
 its owner, see
 [`dig_auth()`](https://mcanzi.de/tidycrates/reference/dig_auth.md).
-Wantlists are never cached, so changes show up at once.
+Without a username, the wantlist of the token owner is listed. Wantlists
+are never cached, so changes show up at once.
 
 ## Usage
 
 ``` r
 dig_wantlist(
-  username,
+  username = NULL,
   sort = c("added", "artist", "title", "label", "catno", "format", "rating", "year"),
   order = c("asc", "desc"),
   all = FALSE,
@@ -23,7 +24,9 @@ dig_wantlist(
 
 - username:
 
-  A 'Discogs' username.
+  A 'Discogs' username, or `NULL` for the owner of the token set with
+  [`dig_auth()`](https://mcanzi.de/tidycrates/reference/dig_auth.md).
+  Finding the owner takes one request, once per session.
 
 - sort:
 
@@ -52,8 +55,13 @@ dig_wantlist(
 A tibble with one row per release, or `NULL` invisibly if the API cannot
 be reached. The columns are `release_id`, `title`, `artist`, `year`,
 `label`, `catno`, `format`, `genres` and `styles` as list columns,
-`master_id`, `rating`, `date_added` and `notes`. `rating` is `NA` if the
-user gave none.
+`master_id`, `rating` and `date_added`. `rating` is `NA` if the user
+gave none.
+
+## Details
+
+The notes that a user writes for each release are left out, because they
+can be personal.
 
 ## Restricted Data
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidycrates</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,17 +33,32 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidycrates-development-version">tidycrates (development version)<a class="anchor" aria-label="anchor" href="#tidycrates-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="tidycrates-020">tidycrates 0.2.0<a class="anchor" aria-label="anchor" href="#tidycrates-020"></a></h2>
 <ul><li>
-<code><a href="../reference/dig_search.html">dig_search()</a></code> searches the ‘Discogs’ database by a query, by filters or by both, and returns one row per release, master release, artist or label. It needs a token. <code><a href="../reference/dig_tally.html">dig_tally()</a></code> and <code><a href="../reference/dig_plot.html">dig_plot()</a></code> can count the results by genre, style, format, label, country, year or decade.</li>
+<code><a href="../reference/dig_search.html">dig_search()</a></code> searches the ‘Discogs’ database by a query, by filters or by both, and returns one row per release, master release, artist or label. It needs a token. <code><a href="../reference/dig_tally.html">dig_tally()</a></code> and <code><a href="../reference/dig_plot.html">dig_plot()</a></code> can count the results by genre, style, format, label, country, year or decade, and <code><a href="../reference/dig_plot.html">dig_plot()</a></code> counts “results” instead of “releases” when they include artists or labels.</li>
 <li>
 <code><a href="../reference/dig_collection.html">dig_collection()</a></code> returns the media and sleeve condition of each copy as factors from best to worst, with the same grades as <code><a href="../reference/dig_price_suggestions.html">dig_price_suggestions()</a></code>. The collection fields are read with one more request, and only when a copy has a value in one of them. If that request fails, the conditions are <code>NA</code> and the collection is kept.</li>
-<li>
-<code><a href="../reference/dig_plot.html">dig_plot()</a></code> counts “results” instead of “releases” when search results include artists or labels.</li>
 <li>An HTTP error for one of several IDs now stops with the message from ‘Discogs’, without a purrr error about the index around it.</li>
 <li>A response body of <code>null</code> gives a row of <code>NA</code> instead of returning <code>NULL</code> without a message.</li>
 <li>
 <code><a href="../reference/dig_collection_value.html">dig_collection_value()</a></code> keeps the sign of negative values.</li>
+<li>
+<code><a href="../reference/dig_collection_folders.html">dig_collection_folders()</a></code> lists the folders of a collection with their IDs, which <code><a href="../reference/dig_collection.html">dig_collection()</a></code> takes as <code>folder</code>.</li>
+<li>
+<code><a href="../reference/unnest_release.html">dig_companies()</a></code> unnests the labels and other companies of releases.</li>
+<li>
+<code><a href="../reference/dig_cache_clear.html">dig_cache_clear()</a></code> empties the cache.</li>
+<li>
+<code><a href="../reference/dig_collection.html">dig_collection()</a></code>, <code><a href="../reference/dig_wantlist.html">dig_wantlist()</a></code>, <code><a href="../reference/dig_collection_folders.html">dig_collection_folders()</a></code> and <code><a href="../reference/dig_collection_value.html">dig_collection_value()</a></code> use the owner of the token when no username is given.</li>
+<li>Requests are spaced out evenly. Before, the first 25 requests were sent at once, so a batch of more than 25 could exceed the rate limit of ‘Discogs’.</li>
+<li>A rate limit that is still exceeded after several tries gives a message and returns <code>NULL</code>, as when the API cannot be reached.</li>
+<li>
+<code>dig_search(all = TRUE)</code> stops before fetching more than 100 pages.</li>
+<li>
+<code><a href="../reference/dig_wantlist.html">dig_wantlist()</a></code> leaves out the notes of the user, as <code><a href="../reference/dig_collection.html">dig_collection()</a></code> does.</li>
+<li>Tokens with spaces or line breaks inside, and usernames made only of dots, are rejected.</li>
+<li>jsonlite is now imported. It was needed to read every response but was only suggested. httr2 1.2.2 and, for plots, ggplot2 3.5.2 are now required.</li>
+<li>The made-up data of the tests and README agree with each other.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="tidycrates-010">tidycrates 0.1.0<a class="anchor" aria-label="anchor" href="#tidycrates-010"></a></h2>

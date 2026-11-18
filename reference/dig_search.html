@@ -11,7 +11,7 @@ can belong to any user."><meta property="og:image" content="https://mcanzi.de/ti
 
     <a class="navbar-brand me-2" href="../index.html">tidycrates</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -154,7 +154,10 @@ but not releases that only mention the name in their title. The IDs in
 <code>id</code> can be passed to <code><a href="dig_release.html">dig_release()</a></code>, <code><a href="dig_master.html">dig_master()</a></code>, <code><a href="dig_artist.html">dig_artist()</a></code> or
 <code><a href="dig_label.html">dig_label()</a></code>, depending on <code>type</code>.</p>
 <p>'Discogs' returns up to 100 results per page. With <code>all = TRUE</code>, every
-page is fetched, which takes one request for each 100 results.</p>
+page is fetched, which takes one request for each 100 results. A search
+with more than 100 pages, or 10,000 results, stops with an error before
+the other pages are fetched, so that a broad search does not send
+hundreds of requests. Single pages can still be fetched with <code>page</code>.</p>
     </div>
 
     <div class="section level2">

@@ -32,9 +32,10 @@ The tracklist, credits, formats, identifiers and companies are kept as
 list columns of tibbles.
 [`dig_tracklist()`](https://mcanzi.de/tidycrates/reference/unnest_release.md),
 [`dig_credits()`](https://mcanzi.de/tidycrates/reference/unnest_release.md),
-[`dig_formats()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
-and
+[`dig_formats()`](https://mcanzi.de/tidycrates/reference/unnest_release.md),
 [`dig_identifiers()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
+and
+[`dig_companies()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
 turn them into one row per item.
 
 Images are left out, because the people who upload them can hold their

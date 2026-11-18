@@ -6,6 +6,8 @@ releases that are in no other folder. Other users can only see folder
 `0`, unless the collection is read with the token of its owner, see
 [`dig_auth()`](https://mcanzi.de/tidycrates/reference/dig_auth.md).
 Folders are never cached.
+[`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
+adds the folder name of each copy itself.
 
 ## Usage
 

@@ -61,11 +61,11 @@ dig_collection(
 
 A tibble with one row per copy of a release, or `NULL` invisibly if the
 API cannot be reached. The columns are `release_id`, `instance_id`,
-`folder_id`, `title`, `artist`, `year`, `label`, `catno`, `format`,
-`media_condition`, `sleeve_condition`, `genres` and `styles` as list
-columns, `master_id`, `rating` and `date_added`. `rating` is `NA` if the
-user gave none. The conditions are factors from best to worst, with the
-same grades as
+`folder_id`, `folder`, `title`, `artist`, `year`, `label`, `catno`,
+`format`, `media_condition`, `sleeve_condition`, `genres` and `styles`
+as list columns, `master_id`, `rating` and `date_added`. `rating` is
+`NA` if the user gave none. The conditions are factors from best to
+worst, with the same grades as
 [`dig_price_suggestions()`](https://mcanzi.de/tidycrates/reference/dig_price_suggestions.md).
 The sleeve condition can also be `"Generic"` or `"No Cover"`, and a
 condition is `NA` if the user gave none.
@@ -82,6 +82,14 @@ matched by name with one more request. Other fields, such as Notes, are
 left out. Without the token of the owner, only public fields can be
 read, and the conditions are `NA` for fields that are private. If the
 fields cannot be read, a message says so and the conditions are `NA`.
+
+The folder names are read with one more request, as in
+[`dig_collection_folders()`](https://mcanzi.de/tidycrates/reference/dig_collection_folders.md).
+Other users can only see folder `0`, so the names of other folders are
+`NA` without the token of the owner. The request is skipped without a
+token, and when the token owner is known from an earlier call to be
+someone else. If the folders cannot be read, a message says so and the
+names are `NA`.
 
 ## Restricted Data
 
@@ -101,5 +109,6 @@ if (FALSE) { # interactive()
 collection <- dig_collection("username", all = TRUE)
 dplyr::count(collection, format, sort = TRUE)
 dplyr::count(collection, media_condition)
+dplyr::count(collection, folder)
 }
 ```

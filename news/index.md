@@ -30,6 +30,11 @@
   lists the folders of a collection with their IDs, which
   [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
   takes as `folder`.
+- [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
+  returns the folder name of each copy in a `folder` column. The folders
+  are read with one more request, which is skipped without a token and
+  when the token owner is known to be someone else. Then, or if that
+  request fails, the names are `NA` and the collection is kept.
 - [`dig_companies()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
   unnests the labels and other companies of releases.
 - [`dig_cache_clear()`](https://mcanzi.de/tidycrates/reference/dig_cache_clear.md)

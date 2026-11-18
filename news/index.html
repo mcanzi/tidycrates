@@ -45,6 +45,8 @@
 <li>
 <code><a href="../reference/dig_collection_folders.html">dig_collection_folders()</a></code> lists the folders of a collection with their IDs, which <code><a href="../reference/dig_collection.html">dig_collection()</a></code> takes as <code>folder</code>.</li>
 <li>
+<code><a href="../reference/dig_collection.html">dig_collection()</a></code> returns the folder name of each copy in a <code>folder</code> column. The folders are read with one more request, which is skipped without a token and when the token owner is known to be someone else. Then, or if that request fails, the names are <code>NA</code> and the collection is kept.</li>
+<li>
 <code><a href="../reference/unnest_release.html">dig_companies()</a></code> unnests the labels and other companies of releases.</li>
 <li>
 <code><a href="../reference/dig_cache_clear.html">dig_cache_clear()</a></code> empties the cache.</li>

@@ -38,13 +38,14 @@ are ignored.}
 \value{
 A tibble with one row per copy of a release, or \code{NULL}
 invisibly if the API cannot be reached. The columns are \code{release_id},
-\code{instance_id}, \code{folder_id}, \code{title}, \code{artist}, \code{year}, \code{label},
-\code{catno}, \code{format}, \code{media_condition}, \code{sleeve_condition}, \code{genres} and
-\code{styles} as list columns, \code{master_id}, \code{rating} and \code{date_added}.
-\code{rating} is \code{NA} if the user gave none. The conditions are factors
-from best to worst, with the same grades as \code{\link[=dig_price_suggestions]{dig_price_suggestions()}}.
-The sleeve condition can also be \code{"Generic"} or \code{"No Cover"}, and a
-condition is \code{NA} if the user gave none.
+\code{instance_id}, \code{folder_id}, \code{folder}, \code{title}, \code{artist}, \code{year},
+\code{label}, \code{catno}, \code{format}, \code{media_condition}, \code{sleeve_condition},
+\code{genres} and \code{styles} as list columns, \code{master_id}, \code{rating} and
+\code{date_added}. \code{rating} is \code{NA} if the user gave none. The conditions
+are factors from best to worst, with the same grades as
+\code{\link[=dig_price_suggestions]{dig_price_suggestions()}}. The sleeve condition can also be
+\code{"Generic"} or \code{"No Cover"}, and a condition is \code{NA} if the user gave
+none.
 }
 \description{
 Lists the releases in the collection of a 'Discogs' user. Anyone can
@@ -63,6 +64,13 @@ matched by name with one more request. Other fields, such as Notes, are
 left out. Without the token of the owner, only public fields can be
 read, and the conditions are \code{NA} for fields that are private. If the
 fields cannot be read, a message says so and the conditions are \code{NA}.
+
+The folder names are read with one more request, as in
+\code{\link[=dig_collection_folders]{dig_collection_folders()}}. Other users can only see folder \code{0}, so the
+names of other folders are \code{NA} without the token of the owner. The
+request is skipped without a token, and when the token owner is known
+from an earlier call to be someone else. If the folders cannot be read,
+a message says so and the names are \code{NA}.
 }
 \section{Restricted Data}{
 
@@ -81,5 +89,6 @@ using the API to get around the 'Discogs' marketplace.
 collection <- dig_collection("username", all = TRUE)
 dplyr::count(collection, format, sort = TRUE)
 dplyr::count(collection, media_condition)
+dplyr::count(collection, folder)
 \dontshow{\}) # examplesIf}
 }

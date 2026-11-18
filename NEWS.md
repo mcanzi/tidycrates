@@ -18,6 +18,11 @@
 * `dig_collection_value()` keeps the sign of negative values.
 * `dig_collection_folders()` lists the folders of a collection with their
   IDs, which `dig_collection()` takes as `folder`.
+* `dig_collection()` returns the folder name of each copy in a `folder`
+  column. The folders are read with one more request, which is skipped
+  without a token and when the token owner is known to be someone else.
+  Then, or if that request fails, the names are `NA` and the collection
+  is kept.
 * `dig_companies()` unnests the labels and other companies of releases.
 * `dig_cache_clear()` empties the cache.
 * `dig_collection()`, `dig_wantlist()`, `dig_collection_folders()` and

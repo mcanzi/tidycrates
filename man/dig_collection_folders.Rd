@@ -21,7 +21,8 @@ Lists the folders of a 'Discogs' collection, with the number of
 releases in each. Folder \code{0} holds the whole collection and folder \code{1}
 holds the releases that are in no other folder. Other users can only
 see folder \code{0}, unless the collection is read with the token of its
-owner, see \code{\link[=dig_auth]{dig_auth()}}. Folders are never cached.
+owner, see \code{\link[=dig_auth]{dig_auth()}}. Folders are never cached. \code{\link[=dig_collection]{dig_collection()}}
+adds the folder name of each copy itself.
 }
 \section{Restricted Data}{
 

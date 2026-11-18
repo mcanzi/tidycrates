@@ -16,6 +16,13 @@
 #' read, and the conditions are `NA` for fields that are private. If the
 #' fields cannot be read, a message says so and the conditions are `NA`.
 #'
+#' The folder names are read with one more request, as in
+#' [dig_collection_folders()]. Other users can only see folder `0`, so the
+#' names of other folders are `NA` without the token of the owner. The
+#' request is skipped without a token, and when the token owner is known
+#' from an earlier call to be someone else. If the folders cannot be read,
+#' a message says so and the names are `NA`.
+#'
 #' @section Restricted Data:
 #' Collections, wantlists, usernames and marketplace data, such as prices
 #' and collection values, are Restricted Data under the 'Discogs' API Terms
@@ -38,18 +45,20 @@
 #'
 #' @return A tibble with one row per copy of a release, or `NULL`
 #'   invisibly if the API cannot be reached. The columns are `release_id`,
-#'   `instance_id`, `folder_id`, `title`, `artist`, `year`, `label`,
-#'   `catno`, `format`, `media_condition`, `sleeve_condition`, `genres` and
-#'   `styles` as list columns, `master_id`, `rating` and `date_added`.
-#'   `rating` is `NA` if the user gave none. The conditions are factors
-#'   from best to worst, with the same grades as [dig_price_suggestions()].
-#'   The sleeve condition can also be `"Generic"` or `"No Cover"`, and a
-#'   condition is `NA` if the user gave none.
+#'   `instance_id`, `folder_id`, `folder`, `title`, `artist`, `year`,
+#'   `label`, `catno`, `format`, `media_condition`, `sleeve_condition`,
+#'   `genres` and `styles` as list columns, `master_id`, `rating` and
+#'   `date_added`. `rating` is `NA` if the user gave none. The conditions
+#'   are factors from best to worst, with the same grades as
+#'   [dig_price_suggestions()]. The sleeve condition can also be
+#'   `"Generic"` or `"No Cover"`, and a condition is `NA` if the user gave
+#'   none.
 #'
 #' @examplesIf interactive()
 #' collection <- dig_collection("username", all = TRUE)
 #' dplyr::count(collection, format, sort = TRUE)
 #' dplyr::count(collection, media_condition)
+#' dplyr::count(collection, folder)
 #'
 #' @export
 dig_collection <- function(username = NULL, folder = 0,
@@ -75,6 +84,10 @@ dig_collection <- function(username = NULL, folder = 0,
   if (is.null(items)) {
     return(invisible(NULL))
   }
+  folders <- folder_names(username, items)
+  if (is.null(folders)) {
+    return(invisible(NULL))
+  }
   fields <- condition_fields(username, items)
   if (is.null(fields)) {
     return(invisible(NULL))
@@ -83,6 +96,7 @@ dig_collection <- function(username = NULL, folder = 0,
     tibble::add_column(
       instance_id = int(items, "instance_id"),
       folder_id = int(items, "folder_id"),
+      folder = folders,
       .after = "release_id"
     ) |>
     tibble::add_column(
@@ -90,6 +104,36 @@ dig_collection <- function(username = NULL, folder = 0,
       sleeve_condition = grade(field_values(items, fields$sleeve), c(conditions, "Generic", "No Cover")),
       .after = "format"
     )
+}
+
+folder_names <- function(username, items, call = rlang::caller_env()) {
+  ids <- int(items, "folder_id")
+  if (all(is.na(ids)) || !maybe_owner(username, call)) {
+    return(rep(NA_character_, length(ids)))
+  }
+  folders <- tryCatch(
+    read_folders(username, call),
+    tidycrates_http_error = \(e) {
+      cli::cli_inform(c("The collection folders could not be read, so the folder names are {.val {NA}}.", i = "{e$message}"))
+      tibble::tibble(folder_id = integer(), name = character())
+    }
+  )
+  if (is.null(folders)) {
+    return(NULL)
+  }
+  folders$name[match(ids, folders$folder_id)]
+}
+
+maybe_owner <- function(username, call) {
+  token <- auth_token(call)
+  if (is.null(token)) {
+    return(FALSE)
+  }
+  identity <- dig_env$identity
+  if (!identical(identity$key, rlang::hash(token))) {
+    return(TRUE)
+  }
+  identical(stringr::str_to_lower(identity$username), stringr::str_to_lower(username))
 }
 
 condition_fields <- function(username, items, call = rlang::caller_env()) {
@@ -181,7 +225,8 @@ dig_wantlist <- function(username = NULL,
 #' releases in each. Folder `0` holds the whole collection and folder `1`
 #' holds the releases that are in no other folder. Other users can only
 #' see folder `0`, unless the collection is read with the token of its
-#' owner, see [dig_auth()]. Folders are never cached.
+#' owner, see [dig_auth()]. Folders are never cached. [dig_collection()]
+#' adds the folder name of each copy itself.
 #'
 #' @inheritSection dig_collection Restricted Data
 #' @inheritParams dig_collection
@@ -199,9 +244,17 @@ dig_collection_folders <- function(username = NULL) {
   if (is.null(username)) {
     return(invisible(NULL))
   }
-  body <- dig_get(user_path(username, "/collection/folders"), cache = FALSE)
-  if (is.null(body)) {
+  folders <- read_folders(username)
+  if (is.null(folders)) {
     return(invisible(NULL))
+  }
+  folders
+}
+
+read_folders <- function(username, call = rlang::caller_env()) {
+  body <- dig_get(user_path(username, "/collection/folders"), cache = FALSE, call = call)
+  if (is.null(body)) {
+    return(NULL)
   }
   folders <- as_items(pluck_list(body, "folders"))
   tibble::tibble(

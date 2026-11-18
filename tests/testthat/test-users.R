@@ -36,7 +36,7 @@ test_that("dig_collection reads the media and sleeve conditions", {
   local_dig_state()
   local_fixtures()
   out <- dig_collection("example", per_page = 3)
-  expect_equal(names(out)[9:11], c("format", "media_condition", "sleeve_condition"))
+  expect_equal(names(out)[10:12], c("format", "media_condition", "sleeve_condition"))
   expect_equal(as.character(out$media_condition), c("Near Mint (NM or M-)", "Very Good (VG)", NA))
   expect_equal(as.character(out$sleeve_condition), c("Very Good Plus (VG+)", "Generic", NA))
   expect_equal(levels(out$media_condition), conditions)
@@ -194,6 +194,67 @@ test_that("an error from the fields request keeps the collection", {
   expect_message(out <- dig_collection("example"), "conditions are NA")
   expect_equal(nrow(out), 3)
   expect_true(all(is.na(out$media_condition)))
+})
+
+test_that("dig_collection names the folders with the token of the owner", {
+  local_dig_state(token = "abc")
+  local_fixtures()
+  out <- dig_collection("example", per_page = 3)
+  expect_equal(names(out)[1:4], c("release_id", "instance_id", "folder_id", "folder"))
+  expect_equal(out$folder, c("Uncategorized", "Uncategorized", "Compilations"))
+})
+
+test_that("folder names are not requested for other users", {
+  local_dig_state()
+  paths <- character()
+  httr2::local_mocked_responses(function(req) {
+    paths <<- c(paths, httr2::url_parse(req$url)$path)
+    discogs_response(fixture("collection-example"))
+  })
+  out <- dig_collection("example")
+  expect_equal(out$folder, rep(NA_character_, 3))
+  dig_env$token <- "abc"
+  dig_env$identity <- list(key = rlang::hash("abc"), username = "someone")
+  out <- dig_collection("example")
+  expect_equal(out$folder, rep(NA_character_, 3))
+  expect_false(any(stringr::str_ends(paths, "/folders")))
+  dig_env$identity$username <- "Example"
+  dig_collection("example")
+  expect_true(any(stringr::str_ends(paths, "/folders")))
+})
+
+test_that("unknown folders and an error from the folders request give NA", {
+  local_dig_state(token = "abc")
+  status <- 200L
+  httr2::local_mocked_responses(function(req) {
+    path <- httr2::url_parse(req$url)$path
+    if (stringr::str_ends(path, "/folders") && status == 200L) {
+      return(discogs_response(list(folders = list(list(id = 0, name = "All"), list(id = 2, name = "Compilations")))))
+    }
+    if (stringr::str_ends(path, "/folders")) {
+      return(discogs_response(list(message = "Forbidden."), status = status))
+    }
+    discogs_response(fixture("collection-example"))
+  })
+  out <- dig_collection("example")
+  expect_equal(out$folder, c(NA, NA, "Compilations"))
+  status <- 403L
+  expect_message(out <- dig_collection("example"), "folder names are NA")
+  expect_equal(nrow(out), 3)
+  expect_equal(out$folder, rep(NA_character_, 3))
+})
+
+test_that("dig_collection returns NULL when the folders cannot be reached", {
+  local_dig_state(token = "abc")
+  httr2::local_mocked_responses(function(req) {
+    if (stringr::str_ends(httr2::url_parse(req$url)$path, "/folders")) {
+      return(discogs_response(list(), status = 503L))
+    }
+    discogs_response(fixture("collection-example"))
+  })
+  local_mocked_bindings(retry_backoff = \(attempt) 0)
+  expect_message(out <- dig_collection("example"))
+  expect_null(out)
 })
 
 test_that("dig_collection_folders lists the folders", {

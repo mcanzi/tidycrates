@@ -10,12 +10,13 @@ Description: Sends requests to the 'Discogs' API
     tibbles. Releases, master releases, artists and labels can be read from
     the 'Discogs' database, along with the releases of an artist or label
     and the versions of a master release. The collection and wantlist of a
-    user can be listed, tallied and plotted. Tracklists, credits, formats
-    and identifiers of releases can be unnested into one row per item.
-    Requests can be made with a personal access token or without one. They
-    are spaced out to stay within the rate limit of the API and retried
-    when the limit is exceeded. Responses can be cached for the session,
-    and paginated results can be fetched in full.
+    user can be listed, tallied and plotted, and marketplace statistics,
+    price suggestions and collection values can be read. Tracklists,
+    credits, formats and identifiers of releases can be unnested into one
+    row per item. Requests can be made with a personal access token or
+    without one. They are spaced out to stay within the rate limit of the
+    API and retried when the limit is exceeded. Responses can be cached for
+    the session, and paginated results can be fetched in full.
 License: MIT + file LICENSE
 URL: https://github.com/mcanzi/tidycrates, https://mcanzi.de/tidycrates/
 BugReports: https://github.com/mcanzi/tidycrates/issues

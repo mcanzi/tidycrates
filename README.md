@@ -119,13 +119,41 @@ dig_plot(dig_artist_releases(3001, all = TRUE), "role")
 
 Every plot has a title, a subtitle that says what is shown, alt text for screen readers and the caption "Data provided by Discogs.". Values are written next to their marks, and the colours have enough contrast to be read without relying on colour alone.
 
+`dig_price_stats()` gets the lowest price and the number of copies for sale of releases. With a token, `dig_price_suggestions()` gets the price Discogs suggests for each condition and `dig_collection_value()` the value of your own collection. Prices are never cached, and they are Restricted Data, see [Terms of use](#terms-of-use):
+
+```r
+dig_price_stats(c(1001, 1002))
+#> # A tibble: 2 × 5
+#>   release_id lowest_price currency for_sale blocked
+#>        <int>        <dbl> <chr>       <int> <lgl>
+#> 1       1001          4.5 EUR            12 FALSE
+#> 2       1002         NA   <NA>            0 FALSE
+
+dig_price_suggestions(1001)
+#> # A tibble: 8 × 4
+#>   release_id condition            price currency
+#>        <int> <fct>                <dbl> <chr>
+#> 1       1001 Mint (M)              14.3 EUR
+#> 2       1001 Near Mint (NM or M-)  12.8 EUR
+#> 3       1001 Very Good Plus (VG+)   9.8 EUR
+#> # ℹ 5 more rows
+
+dig_collection_value("your-username")
+#> # A tibble: 1 × 5
+#>   username      minimum median maximum currency
+#>   <chr>           <dbl>  <dbl>   <dbl> <chr>
+#> 1 your-username    75.5   480.    1250 €
+```
+
 ## Terms of use
 
 The [API Terms of Use](https://support.discogs.com/hc/en-us/articles/360009334593-API-Terms-of-Use) apply to all data returned by tidycrates, and using it means accepting them. In the United States, they require you to be at least 18 years old.
 
 Only some fields are available under the <span class="hl">CC0 licence</span>: titles, notes, dates, formats, tracklists, identifiers, credits, versions and links of releases, and the names, notes and releases of artists and labels. Other fields, such as genres, styles, community counts and ratings, are not listed as CC0 and can only be used under the Terms of Use.
 
-Collections, wantlists and usernames are <span class="hl">Restricted Data</span>. Discogs grants a limited, personal licence to use them: they may not be passed on to anyone else or used commercially, and their use must respect the privacy of their owners. Only publish a collection or wantlist, or tallies and plots of it, if it is your own or its owner has agreed. Images and marketplace data, such as prices, are Restricted Data too and are left out.
+Collections, wantlists, usernames and marketplace data, such as prices and collection values, are <span class="hl">Restricted Data</span>. Discogs grants each user a limited, personal licence to access and use them with their own token: they may not be passed on to anyone else or used commercially, and their use must respect the privacy of their owners. Keep them, and tallies and plots of them, for your own use, and do not publish them. The Terms of Use also forbid using the API to get around the Discogs marketplace.
+
+Images are left out, because the people who upload them can hold their own copyright. Functions for selling, such as listings and orders, are left out too.
 
 If you show data from Discogs, put "Data provided by Discogs." next to it with a link to the page on Discogs, which is in the `uri` column. `dig_plot()` adds the text as a caption, and the link goes wherever you publish the plot. Data that are more than six hours older than the Discogs website may not be shown, and data may not be stored longer than needed, so cached responses are never kept longer than six hours.
 

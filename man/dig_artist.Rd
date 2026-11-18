@@ -24,8 +24,8 @@ share are told apart by a number in brackets, for example
 }
 \details{
 Profiles keep the 'Discogs' markup for links, such as \verb{[a=Carl Craig]}.
-Images are Restricted Data under the 'Discogs' API Terms of Use and are
-left out. \code{\link[=dig_artist_releases]{dig_artist_releases()}} lists the releases of an artist.
+Images are left out, because the people who upload them can hold their
+own copyright. \code{\link[=dig_artist_releases]{dig_artist_releases()}} lists the releases of an artist.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}

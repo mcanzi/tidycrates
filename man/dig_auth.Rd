@@ -16,9 +16,10 @@ token, so requests are made without one.}
 }
 \description{
 Sets the personal access token used for requests in this session. With a
-token, 'Discogs' allows 60 requests a minute instead of 25, and
+token, 'Discogs' allows 60 requests a minute instead of 25,
 \code{\link[=dig_collection]{dig_collection()}} and \code{\link[=dig_wantlist]{dig_wantlist()}} can read your own collection and
-wantlist when they are private. A token can be generated at
+wantlist when they are private, and \code{\link[=dig_price_suggestions]{dig_price_suggestions()}} and
+\code{\link[=dig_collection_value]{dig_collection_value()}} work. A token can be generated at
 \url{https://www.discogs.com/settings/developers}.
 }
 \details{

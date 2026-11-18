@@ -22,8 +22,8 @@ Gets record labels and other companies, such as pressing plants and
 studios, from the 'Discogs' database.
 }
 \details{
-Profiles keep the 'Discogs' markup for links. Images are Restricted Data
-under the 'Discogs' API Terms of Use and are left out.
+Profiles keep the 'Discogs' markup for links. Images are left out,
+because the people who upload them can hold their own copyright.
 \code{\link[=dig_label_releases]{dig_label_releases()}} lists the releases of a label.
 }
 \examples{

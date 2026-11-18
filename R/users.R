@@ -10,13 +10,14 @@
 #' up at once.
 #'
 #' @section Restricted Data:
-#' Collections, wantlists and usernames are Restricted Data under the
-#' 'Discogs' API Terms of Use. 'Discogs' grants a limited, personal licence
-#' to use them. They may not be passed on to anyone else or used for
-#' commercial purposes, and their use must respect the privacy of their
-#' owners. Only publish a collection or wantlist, or tallies and plots of
-#' it, if it is your own or its owner has agreed, and never for commercial
-#' purposes.
+#' Collections, wantlists, usernames and marketplace data, such as prices
+#' and collection values, are Restricted Data under the 'Discogs' API Terms
+#' of Use. 'Discogs' grants each user a limited, personal licence to access
+#' and use them with their own token. They may not be passed on to anyone
+#' else or used for commercial purposes, and their use must respect the
+#' privacy of their owners. Keep them, and tallies and plots of them, for
+#' your own use, and do not publish them. The Terms of Use also forbid
+#' using the API to get around the 'Discogs' marketplace.
 #'
 #' @inheritParams dig_artist_releases
 #' @param username A 'Discogs' username.

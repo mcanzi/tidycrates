@@ -1,9 +1,10 @@
 #' @details
 #' Requests are sent to the 'Discogs' API at <https://api.discogs.com>.
 #' Without a token, 'Discogs' allows 25 requests a minute. With a personal
-#' access token set by [dig_auth()], the limit is 60 requests a minute and
-#' your own private collection and wantlist can be read. Requests are
-#' spaced out to stay within the limit and retried after HTTP 429
+#' access token set by [dig_auth()], the limit is 60 requests a minute,
+#' your own private collection and wantlist can be read, and price
+#' suggestions and the value of your collection are available. Requests
+#' are spaced out to stay within the limit and retried after HTTP 429
 #' responses.
 #'
 #' When the API cannot be reached, because there is no internet connection
@@ -18,7 +19,7 @@
 #' packages and is off by default. Cached responses are kept for 3600
 #' seconds unless `tidycrates.cache_age` gives another number of seconds.
 #' Changing `tidycrates.cache_age` starts a new, empty cache.
-#' Collections and wantlists are never cached.
+#' Collections, wantlists and marketplace data are never cached.
 #' The API Terms of Use do not allow showing data that are more than six
 #' hours old, so responses are never kept longer than 21600 seconds.
 #'
@@ -34,9 +35,10 @@
 #' community counts and ratings, are not listed as CC0, so they can only
 #' be used under the Terms of Use.
 #'
-#' Collections, wantlists and usernames are Restricted Data, see
-#' [dig_collection()]. Images and marketplace data, such as prices, are
-#' Restricted Data too and are left out.
+#' Collections, wantlists, usernames and marketplace data are Restricted
+#' Data: keep them for your own use, see [dig_collection()]. Images are left
+#' out, because the people who upload them can hold their own copyright.
+#' Functions for selling, such as listings and orders, are left out too.
 #'
 #' Data from 'Discogs' may not be shown if they are more than six hours
 #' older than the 'Discogs' website, or stored longer than needed.

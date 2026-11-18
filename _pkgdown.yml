@@ -52,6 +52,11 @@ reference:
   - dig_wantlist
   - dig_tally
   - dig_plot
+- title: Marketplace
+  contents:
+  - dig_price_stats
+  - dig_price_suggestions
+  - dig_collection_value
 - title: Unnesting release data
   contents:
   - unnest_release

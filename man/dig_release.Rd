@@ -28,9 +28,10 @@ The tracklist, credits, formats, identifiers and companies are kept as
 list columns of tibbles. \code{\link[=dig_tracklist]{dig_tracklist()}}, \code{\link[=dig_credits]{dig_credits()}},
 \code{\link[=dig_formats]{dig_formats()}} and \code{\link[=dig_identifiers]{dig_identifiers()}} turn them into one row per item.
 
-Images, prices and the number of copies for sale are Restricted Data
-under the 'Discogs' API Terms of Use and are left out. The \code{uri} column
-links to the release on the 'Discogs' website.
+Images are left out, because the people who upload them can hold their
+own copyright. Prices are left out too, because they change quickly and
+this function can be cached. \code{\link[=dig_price_stats]{dig_price_stats()}} gets them. The \code{uri}
+column links to the release on the 'Discogs' website.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}

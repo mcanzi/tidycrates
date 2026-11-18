@@ -12,6 +12,9 @@
 * `dig_collection()` and `dig_wantlist()` list the collection and wantlist
   of a user. Private ones can be read with the token of their owner, and
   neither is cached.
+* `dig_price_stats()`, `dig_price_suggestions()` and
+  `dig_collection_value()` read marketplace data. They are never cached,
+  and the last two need a token.
 * `dig_tally()` counts a collection, a wantlist or the output of the
   database and list functions by genre, style, format, label, artist,
   role, country, year, decade or month added. `dig_plot()` plots the

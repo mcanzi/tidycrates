@@ -23,8 +23,8 @@ groups all versions of a release, such as the original pressing, later
 reissues and editions in other countries.
 }
 \details{
-Images and prices are Restricted Data under the 'Discogs' API Terms of
-Use and are left out. \code{\link[=dig_master_versions]{dig_master_versions()}} lists the versions.
+Images are left out, because the people who upload them can hold their
+own copyright. \code{\link[=dig_master_versions]{dig_master_versions()}} lists the versions.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}

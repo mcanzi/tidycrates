@@ -1,3 +1,5 @@
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
 dir <- file.path("tests", "testthat", "fixtures")
 
 write_fixture <- function(x, name) {
@@ -223,4 +225,44 @@ write_fixture(
     )
   ),
   "wantlist-example"
+)
+
+write_fixture(
+  list(lowest_price = list(currency = "EUR", value = 4.5), num_for_sale = 12, blocked_from_sale = FALSE),
+  "price-stats-1001"
+)
+
+write_fixture(
+  list(lowest_price = NULL, num_for_sale = NULL, blocked_from_sale = FALSE),
+  "price-stats-1002"
+)
+
+write_fixture(
+  list(lowest_price = NULL, num_for_sale = NULL, blocked_from_sale = TRUE),
+  "price-stats-1003"
+)
+
+suggestion <- function(value) {
+  list(currency = "EUR", value = value)
+}
+
+write_fixture(
+  list(
+    `Very Good (VG)` = suggestion(6.78),
+    `Good Plus (G+)` = suggestion(3.77),
+    `Near Mint (NM or M-)` = suggestion(12.81),
+    `Good (G)` = suggestion(2.26),
+    `Very Good Plus (VG+)` = suggestion(9.8),
+    `Mint (M)` = suggestion(14.32),
+    `Fair (F)` = suggestion(1.51),
+    `Poor (P)` = suggestion(0.75)
+  ),
+  "price-suggestions-1001"
+)
+
+write_fixture(setNames(list(), character()), "price-suggestions-1002")
+
+write_fixture(
+  list(maximum = "€1.250,00", median = "€480,25", minimum = "€75,50"),
+  "collection-value-example"
 )

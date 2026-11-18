@@ -32,6 +32,20 @@ page_response <- function(req, pages = 3L) {
   ))
 }
 
+raw_response <- function(name, used = 1L, limit = 25L) {
+  path <- test_path("fixtures", paste0(name, ".json"))
+  httr2::response(
+    status_code = 200L,
+    headers = list(
+      `Content-Type` = "application/json",
+      `X-Discogs-Ratelimit` = limit,
+      `X-Discogs-Ratelimit-Used` = used,
+      `X-Discogs-Ratelimit-Remaining` = limit - used
+    ),
+    body = readBin(path, "raw", file.size(path))
+  )
+}
+
 fixture <- function(name) {
   jsonlite::read_json(test_path("fixtures", paste0(name, ".json")))
 }
@@ -46,7 +60,13 @@ local_fixtures <- function(env = parent.frame()) {
     "labels/4001/releases$" = "label-4001-releases",
     "masters/2001/versions$" = "master-2001-versions",
     "users/example/collection/folders/0/releases$" = "collection-example",
-    "users/example/wants$" = "wantlist-example"
+    "users/example/wants$" = "wantlist-example",
+    "marketplace/stats/1001$" = "price-stats-1001",
+    "marketplace/stats/1002$" = "price-stats-1002",
+    "marketplace/stats/1003$" = "price-stats-1003",
+    "marketplace/price_suggestions/1001$" = "price-suggestions-1001",
+    "marketplace/price_suggestions/1002$" = "price-suggestions-1002",
+    "users/example/collection/value$" = "collection-value-example"
   )
   httr2::local_mocked_responses(
     function(req) {
@@ -55,7 +75,7 @@ local_fixtures <- function(env = parent.frame()) {
       if (length(hit) == 0) {
         return(discogs_response(list(message = "Not found."), status = 404L))
       }
-      discogs_response(fixture(routes[[hit[1]]]))
+      raw_response(routes[[hit[1]]])
     },
     env = env
   )

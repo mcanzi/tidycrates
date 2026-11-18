@@ -7,9 +7,10 @@
 #' list columns of tibbles. [dig_tracklist()], [dig_credits()],
 #' [dig_formats()] and [dig_identifiers()] turn them into one row per item.
 #'
-#' Images, prices and the number of copies for sale are Restricted Data
-#' under the 'Discogs' API Terms of Use and are left out. The `uri` column
-#' links to the release on the 'Discogs' website.
+#' Images are left out, because the people who upload them can hold their
+#' own copyright. Prices are left out too, because they change quickly and
+#' this function can be cached. [dig_price_stats()] gets them. The `uri`
+#' column links to the release on the 'Discogs' website.
 #'
 #' @param id One or more release IDs, as numbers or as codes copied from
 #'   'Discogs' such as `"r249504"` or `"[r249504]"`.
@@ -76,8 +77,8 @@ parse_release <- function(body) {
 #' groups all versions of a release, such as the original pressing, later
 #' reissues and editions in other countries.
 #'
-#' Images and prices are Restricted Data under the 'Discogs' API Terms of
-#' Use and are left out. [dig_master_versions()] lists the versions.
+#' Images are left out, because the people who upload them can hold their
+#' own copyright. [dig_master_versions()] lists the versions.
 #'
 #' @param id One or more master release IDs, as numbers or as codes copied
 #'   from 'Discogs' such as `"m96559"` or `"[m96559]"`.
@@ -122,8 +123,8 @@ parse_master <- function(body) {
 #' `"Persuader (2)"`.
 #'
 #' Profiles keep the 'Discogs' markup for links, such as `[a=Carl Craig]`.
-#' Images are Restricted Data under the 'Discogs' API Terms of Use and are
-#' left out. [dig_artist_releases()] lists the releases of an artist.
+#' Images are left out, because the people who upload them can hold their
+#' own copyright. [dig_artist_releases()] lists the releases of an artist.
 #'
 #' @param id One or more artist IDs, as numbers or as codes copied from
 #'   'Discogs' such as `"a1"` or `"[a1]"`.
@@ -175,8 +176,8 @@ people_tibble <- function(items) {
 #' Gets record labels and other companies, such as pressing plants and
 #' studios, from the 'Discogs' database.
 #'
-#' Profiles keep the 'Discogs' markup for links. Images are Restricted Data
-#' under the 'Discogs' API Terms of Use and are left out.
+#' Profiles keep the 'Discogs' markup for links. Images are left out,
+#' because the people who upload them can hold their own copyright.
 #' [dig_label_releases()] lists the releases of a label.
 #'
 #' @param id One or more label IDs, as numbers or as codes copied from

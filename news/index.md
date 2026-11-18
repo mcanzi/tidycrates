@@ -45,10 +45,12 @@
   and
   [`dig_collection_value()`](https://mcanzi.de/tidycrates/reference/dig_collection_value.md)
   use the owner of the token when no username is given.
-- Requests are counted over a moving window of 60 seconds. Up to 59
+- tidycrates counts its own requests over the last 60 seconds. Up to 59
   requests with a token, or 24 without, are sent at once, and later ones
-  wait until the window has room. A message says how long each wait or
-  retry takes. Before, a full minute of requests was sent at once and
+  wait until the window has room. If ‘Discogs’ reports that no requests
+  are left, for example because other applications use the same token,
+  the next request waits 60 seconds. A message says how long each wait
+  or retry takes. Before, a full minute of requests was sent at once and
   more followed within the same minute, so a long batch could exceed the
   rate limit of ‘Discogs’.
 - A rate limit that is still exceeded after several tries gives a

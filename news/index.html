@@ -36,6 +36,10 @@
 <h2 class="pkg-version" data-toc-text="development version" id="tidycrates-development-version">tidycrates (development version)<a class="anchor" aria-label="anchor" href="#tidycrates-development-version"></a></h2>
 <ul><li>
 <code><a href="../reference/dig_search.html">dig_search()</a></code> searches the ‘Discogs’ database by a query, by filters or by both, and returns one row per release, master release, artist or label. It needs a token. <code><a href="../reference/dig_tally.html">dig_tally()</a></code> and <code><a href="../reference/dig_plot.html">dig_plot()</a></code> can count the results by genre, style, format, label, country, year or decade.</li>
+<li>
+<code><a href="../reference/dig_collection.html">dig_collection()</a></code> returns the media and sleeve condition of each copy as factors from best to worst, with the same grades as <code><a href="../reference/dig_price_suggestions.html">dig_price_suggestions()</a></code>. The collection fields are read with one more request, and only when a copy has a value in one of them. If that request fails, the conditions are <code>NA</code> and the collection is kept.</li>
+<li>
+<code><a href="../reference/dig_plot.html">dig_plot()</a></code> counts “results” instead of “releases” when search results include artists or labels.</li>
 <li>An HTTP error for one of several IDs now stops with the message from ‘Discogs’, without a purrr error about the index around it.</li>
 <li>A response body of <code>null</code> gives a row of <code>NA</code> instead of returning <code>NULL</code> without a message.</li>
 <li>

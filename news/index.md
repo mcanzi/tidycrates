@@ -10,6 +10,16 @@
   and [`dig_plot()`](https://mcanzi.de/tidycrates/reference/dig_plot.md)
   can count the results by genre, style, format, label, country, year or
   decade.
+- [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
+  returns the media and sleeve condition of each copy as factors from
+  best to worst, with the same grades as
+  [`dig_price_suggestions()`](https://mcanzi.de/tidycrates/reference/dig_price_suggestions.md).
+  The collection fields are read with one more request, and only when a
+  copy has a value in one of them. If that request fails, the conditions
+  are `NA` and the collection is kept.
+- [`dig_plot()`](https://mcanzi.de/tidycrates/reference/dig_plot.md)
+  counts “results” instead of “releases” when search results include
+  artists or labels.
 - An HTTP error for one of several IDs now stops with the message from
   ‘Discogs’, without a purrr error about the index around it.
 - A response body of `null` gives a row of `NA` instead of returning

@@ -57,15 +57,26 @@ dig_collection(
 A tibble with one row per copy of a release, or `NULL` invisibly if the
 API cannot be reached. The columns are `release_id`, `instance_id`,
 `folder_id`, `title`, `artist`, `year`, `label`, `catno`, `format`,
-`genres` and `styles` as list columns, `master_id`, `rating` and
-`date_added`. `rating` is `NA` if the user gave none.
+`media_condition`, `sleeve_condition`, `genres` and `styles` as list
+columns, `master_id`, `rating` and `date_added`. `rating` is `NA` if the
+user gave none. The conditions are factors from best to worst, with the
+same grades as
+[`dig_price_suggestions()`](https://mcanzi.de/tidycrates/reference/dig_price_suggestions.md).
+The sleeve condition can also be `"Generic"` or `"No Cover"`, and a
+condition is `NA` if the user gave none.
 
 ## Details
 
 A release that is in the collection more than once has one row per copy,
-each with its own `instance_id`. Custom fields, such as the media
-condition, are left out. Collections are never cached, so changes show
-up at once.
+each with its own `instance_id`. Collections are never cached, so
+changes show up at once.
+
+The media and sleeve conditions come from the collection fields named
+Media and Sleeve. If any copy has a value in a field, the fields are
+matched by name with one more request. Other fields, such as Notes, are
+left out. Without the token of the owner, only public fields can be
+read, and the conditions are `NA` for fields that are private. If the
+fields cannot be read, a message says so and the conditions are `NA`.
 
 ## Restricted Data
 
@@ -84,5 +95,6 @@ using the API to get around the 'Discogs' marketplace.
 if (FALSE) { # interactive()
 collection <- dig_collection("username", all = TRUE)
 dplyr::count(collection, format, sort = TRUE)
+dplyr::count(collection, media_condition)
 }
 ```

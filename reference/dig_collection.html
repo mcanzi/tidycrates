@@ -96,15 +96,25 @@ are ignored.</p></dd>
     <p>A tibble with one row per copy of a release, or <code>NULL</code>
 invisibly if the API cannot be reached. The columns are <code>release_id</code>,
 <code>instance_id</code>, <code>folder_id</code>, <code>title</code>, <code>artist</code>, <code>year</code>, <code>label</code>,
-<code>catno</code>, <code>format</code>, <code>genres</code> and <code>styles</code> as list columns, <code>master_id</code>,
-<code>rating</code> and <code>date_added</code>. <code>rating</code> is <code>NA</code> if the user gave none.</p>
+<code>catno</code>, <code>format</code>, <code>media_condition</code>, <code>sleeve_condition</code>, <code>genres</code> and
+<code>styles</code> as list columns, <code>master_id</code>, <code>rating</code> and <code>date_added</code>.
+<code>rating</code> is <code>NA</code> if the user gave none. The conditions are factors
+from best to worst, with the same grades as <code><a href="dig_price_suggestions.html">dig_price_suggestions()</a></code>.
+The sleeve condition can also be <code>"Generic"</code> or <code>"No Cover"</code>, and a
+condition is <code>NA</code> if the user gave none.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>A release that is in the collection more than once has one row per
-copy, each with its own <code>instance_id</code>. Custom fields, such as the media
-condition, are left out. Collections are never cached, so changes show
-up at once.</p>
+copy, each with its own <code>instance_id</code>. Collections are never cached, so
+changes show up at once.</p>
+<p>The media and sleeve conditions come from the collection fields named
+Media and Sleeve. If any copy has a value in a field, the fields are
+matched by name with one more request. Other fields, such as Notes, are
+left out. Without
+the token of the owner, only public fields can be read, and the
+conditions are <code>NA</code> for fields that are private. If the fields cannot be
+read, a message says so and the conditions are <code>NA</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="restricted-data">Restricted Data<a class="anchor" aria-label="anchor" href="#restricted-data"></a></h2>
@@ -125,6 +135,7 @@ using the API to get around the 'Discogs' marketplace.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
 <span class="r-in"><span><span class="va">collection</span> <span class="op">&lt;-</span> <span class="fu">dig_collection</span><span class="op">(</span><span class="st">"username"</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">collection</span>, <span class="va">format</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">collection</span>, <span class="va">media_condition</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

@@ -60,6 +60,7 @@ local_fixtures <- function(env = parent.frame()) {
     "labels/4001/releases$" = "label-4001-releases",
     "masters/2001/versions$" = "master-2001-versions",
     "users/example/collection/folders/0/releases$" = "collection-example",
+    "users/example/collection/fields$" = "collection-fields-example",
     "users/example/wants$" = "wantlist-example",
     "marketplace/stats/1001$" = "price-stats-1001",
     "marketplace/stats/1002$" = "price-stats-1002",

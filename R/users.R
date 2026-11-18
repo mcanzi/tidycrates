@@ -5,9 +5,16 @@
 #' the token of its owner, see [dig_auth()].
 #'
 #' A release that is in the collection more than once has one row per
-#' copy, each with its own `instance_id`. Custom fields, such as the media
-#' condition, are left out. Collections are never cached, so changes show
-#' up at once.
+#' copy, each with its own `instance_id`. Collections are never cached, so
+#' changes show up at once.
+#'
+#' The media and sleeve conditions come from the collection fields named
+#' Media and Sleeve. If any copy has a value in a field, the fields are
+#' matched by name with one more request. Other fields, such as Notes, are
+#' left out. Without
+#' the token of the owner, only public fields can be read, and the
+#' conditions are `NA` for fields that are private. If the fields cannot be
+#' read, a message says so and the conditions are `NA`.
 #'
 #' @section Restricted Data:
 #' Collections, wantlists, usernames and marketplace data, such as prices
@@ -29,12 +36,17 @@
 #' @return A tibble with one row per copy of a release, or `NULL`
 #'   invisibly if the API cannot be reached. The columns are `release_id`,
 #'   `instance_id`, `folder_id`, `title`, `artist`, `year`, `label`,
-#'   `catno`, `format`, `genres` and `styles` as list columns, `master_id`,
-#'   `rating` and `date_added`. `rating` is `NA` if the user gave none.
+#'   `catno`, `format`, `media_condition`, `sleeve_condition`, `genres` and
+#'   `styles` as list columns, `master_id`, `rating` and `date_added`.
+#'   `rating` is `NA` if the user gave none. The conditions are factors
+#'   from best to worst, with the same grades as [dig_price_suggestions()].
+#'   The sleeve condition can also be `"Generic"` or `"No Cover"`, and a
+#'   condition is `NA` if the user gave none.
 #'
 #' @examplesIf interactive()
 #' collection <- dig_collection("username", all = TRUE)
 #' dplyr::count(collection, format, sort = TRUE)
+#' dplyr::count(collection, media_condition)
 #'
 #' @export
 dig_collection <- function(username, folder = 0,
@@ -58,12 +70,58 @@ dig_collection <- function(username, folder = 0,
     return(invisible(NULL))
   }
   items <- as_items(items)
+  fields <- condition_fields(username, items)
+  if (is.null(fields)) {
+    return(invisible(NULL))
+  }
   basic_tibble(items) |>
     tibble::add_column(
       instance_id = int(items, "instance_id"),
       folder_id = int(items, "folder_id"),
       .after = "release_id"
+    ) |>
+    tibble::add_column(
+      media_condition = grade(field_values(items, fields$media), conditions),
+      sleeve_condition = grade(field_values(items, fields$sleeve), c(conditions, "Generic", "No Cover")),
+      .after = "format"
     )
+}
+
+condition_fields <- function(username, items, call = rlang::caller_env()) {
+  noted <- purrr::some(items, \(i) length(as_items(pluck_list(i, "notes"))) > 0)
+  if (!noted) {
+    return(list(media = integer(), sleeve = integer()))
+  }
+  body <- tryCatch(
+    dig_get(paste0("users/", username, "/collection/fields"), cache = FALSE, call = call),
+    tidycrates_http_error = \(e) {
+      cli::cli_inform(c("The collection fields could not be read, so the conditions are {.val {NA}}.", i = "{e$message}"))
+      list()
+    }
+  )
+  if (is.null(body)) {
+    return(NULL)
+  }
+  fields <- as_items(pluck_list(body, "fields"))
+  names <- stringr::str_to_lower(stringr::str_squish(chr(fields, "name")))
+  dropdown <- chr(fields, "type") %in% c("dropdown", NA)
+  find <- \(name) {
+    ids <- int(fields, "id")[dropdown & names %in% c(name, paste(name, "condition"))]
+    ids[!is.na(ids)]
+  }
+  list(media = find("media"), sleeve = find("sleeve"))
+}
+
+field_values <- function(items, ids) {
+  purrr::map_chr(items, \(i) {
+    notes <- as_items(pluck_list(i, "notes"))
+    values <- stringr::str_squish(chr(notes, "value"))[int(notes, "field_id") %in% ids]
+    values[!is.na(values) & values != ""][1]
+  })
+}
+
+grade <- function(x, levels) {
+  factor(x, levels = c(levels, sort(setdiff(x[!is.na(x)], levels))))
 }
 
 #' List the wantlist of a user

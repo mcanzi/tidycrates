@@ -36,8 +36,12 @@ are ignored.}
 A tibble with one row per copy of a release, or \code{NULL}
 invisibly if the API cannot be reached. The columns are \code{release_id},
 \code{instance_id}, \code{folder_id}, \code{title}, \code{artist}, \code{year}, \code{label},
-\code{catno}, \code{format}, \code{genres} and \code{styles} as list columns, \code{master_id},
-\code{rating} and \code{date_added}. \code{rating} is \code{NA} if the user gave none.
+\code{catno}, \code{format}, \code{media_condition}, \code{sleeve_condition}, \code{genres} and
+\code{styles} as list columns, \code{master_id}, \code{rating} and \code{date_added}.
+\code{rating} is \code{NA} if the user gave none. The conditions are factors
+from best to worst, with the same grades as \code{\link[=dig_price_suggestions]{dig_price_suggestions()}}.
+The sleeve condition can also be \code{"Generic"} or \code{"No Cover"}, and a
+condition is \code{NA} if the user gave none.
 }
 \description{
 Lists the releases in the collection of a 'Discogs' user. Anyone can
@@ -46,9 +50,16 @@ the token of its owner, see \code{\link[=dig_auth]{dig_auth()}}.
 }
 \details{
 A release that is in the collection more than once has one row per
-copy, each with its own \code{instance_id}. Custom fields, such as the media
-condition, are left out. Collections are never cached, so changes show
-up at once.
+copy, each with its own \code{instance_id}. Collections are never cached, so
+changes show up at once.
+
+The media and sleeve conditions come from the collection fields named
+Media and Sleeve. If any copy has a value in a field, the fields are
+matched by name with one more request. Other fields, such as Notes, are
+left out. Without
+the token of the owner, only public fields can be read, and the
+conditions are \code{NA} for fields that are private. If the fields cannot be
+read, a message says so and the conditions are \code{NA}.
 }
 \section{Restricted Data}{
 
@@ -66,5 +77,6 @@ using the API to get around the 'Discogs' marketplace.
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 collection <- dig_collection("username", all = TRUE)
 dplyr::count(collection, format, sort = TRUE)
+dplyr::count(collection, media_condition)
 \dontshow{\}) # examplesIf}
 }

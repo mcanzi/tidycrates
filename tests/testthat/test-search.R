@@ -92,3 +92,15 @@ test_that("broken search results give NA instead of errors", {
   expect_null(names(empty$genres))
   expect_equal(nrow(dig_search("x")), 0)
 })
+
+test_that("plots of search results with artists or labels count results", {
+  skip_if_not_installed("ggplot2")
+  local_dig_state(token = "abc")
+  local_fixtures()
+  out <- dig_search("Juniper Static")
+  labs <- ggplot2::get_labs(dig_plot(out, "genre"))
+  expect_equal(labs$title, "Results by genre")
+  expect_equal(labs$subtitle, "3 results. A result can have more than one genre.")
+  releases <- ggplot2::get_labs(dig_plot(out[out$type == "release", ], "genre"))
+  expect_equal(releases$title, "Releases by genre")
+})

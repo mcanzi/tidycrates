@@ -193,14 +193,18 @@ basic <- function(id, master_id, title, year, format, descriptions, labels, arti
   )
 }
 
+note <- function(field_id, value) {
+  list(field_id = field_id, value = value)
+}
+
 lantern <- basic(1001, 2001, "Lantern Weather", 1994, "Vinyl", c("7\"", "Single", "45 RPM"), "Fernhollow Records", "Juniper Static", c("Electronic", "Pop"), "Downtempo")
 
 write_fixture(
   list(
     pagination = pages(3, 2, 5),
     releases = list(
-      list(id = 1001, instance_id = 101, folder_id = 1, rating = 4, date_added = "2024-03-02T10:15:30-08:00", basic_information = lantern, notes = list(list(field_id = 1, value = "Near Mint (NM or M-)"))),
-      list(id = 1001, instance_id = 102, folder_id = 1, rating = 0, date_added = "2024-05-20T08:00:00-07:00", basic_information = lantern),
+      list(id = 1001, instance_id = 101, folder_id = 1, rating = 4, date_added = "2024-03-02T10:15:30-08:00", basic_information = lantern, notes = list(note(1, "Near Mint (NM or M-)"), note(2, "Very Good Plus (VG+)"), note(3, "Small seam split."))),
+      list(id = 1001, instance_id = 102, folder_id = 1, rating = 0, date_added = "2024-05-20T08:00:00-07:00", basic_information = lantern, notes = list(note(1, "Very Good (VG)"), note(2, "Generic"), note(4, "Shelf B"))),
       list(
         id = 1002, instance_id = 103, folder_id = 2, rating = 5, date_added = "2025-01-11T19:45:00-08:00",
         basic_information = basic(1002, 0, "Tidewater Sessions", 0, "CD", c("Compilation", "Mixed"), c("Fernhollow Records", "Fernhollow Records"), "Felix Arno", "Electronic", character())
@@ -208,6 +212,23 @@ write_fixture(
     )
   ),
   "collection-example"
+)
+
+grades <- c(
+  "Mint (M)", "Near Mint (NM or M-)", "Very Good Plus (VG+)", "Very Good (VG)",
+  "Good Plus (G+)", "Good (G)", "Fair (F)", "Poor (P)"
+)
+
+write_fixture(
+  list(
+    fields = list(
+      list(name = "Media", options = as.list(grades), id = 1, position = 1, type = "dropdown", public = TRUE),
+      list(name = "Sleeve", options = as.list(c("Generic", "No Cover", grades)), id = 2, position = 2, type = "dropdown", public = TRUE),
+      list(name = "Notes", lines = 3, id = 3, position = 3, type = "textarea", public = TRUE),
+      list(name = "Shelf", options = list("Shelf A", "Shelf B"), id = 4, position = 4, type = "dropdown", public = FALSE)
+    )
+  ),
+  "collection-fields-example"
 )
 
 write_fixture(

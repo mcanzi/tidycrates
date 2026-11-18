@@ -19,15 +19,97 @@ test_that("dig_collection returns one row per copy", {
 
 test_that("dig_collection sends folder, sort and page settings", {
   local_dig_state()
-  url <- NULL
+  urls <- list()
   httr2::local_mocked_responses(function(req) {
-    url <<- httr2::url_parse(req$url)
+    urls[[length(urls) + 1]] <<- httr2::url_parse(req$url)
     discogs_response(fixture("collection-example"))
   })
   dig_collection(" some.user ", folder = 3, sort = "year", order = "desc", page = 2, per_page = 10)
+  url <- urls[[1]]
   expect_equal(url$path, "/users/some.user/collection/folders/3/releases")
+  expect_equal(urls[[2]]$path, "/users/some.user/collection/fields")
   expect_equal(url$query[c("sort", "sort_order", "page", "per_page")],
                list(sort = "year", sort_order = "desc", page = "2", per_page = "10"))
+})
+
+test_that("dig_collection reads the media and sleeve conditions", {
+  local_dig_state()
+  local_fixtures()
+  out <- dig_collection("example", per_page = 3)
+  expect_equal(names(out)[9:11], c("format", "media_condition", "sleeve_condition"))
+  expect_equal(as.character(out$media_condition), c("Near Mint (NM or M-)", "Very Good (VG)", NA))
+  expect_equal(as.character(out$sleeve_condition), c("Very Good Plus (VG+)", "Generic", NA))
+  expect_equal(levels(out$media_condition), conditions)
+  expect_equal(levels(out$sleeve_condition), c(conditions, "Generic", "No Cover"))
+  expect_false(any(c("notes", "shelf") %in% names(out)))
+})
+
+test_that("condition fields are matched by name, not by ID", {
+  local_dig_state()
+  httr2::local_mocked_responses(function(req) {
+    if (stringr::str_ends(httr2::url_parse(req$url)$path, "/fields")) {
+      return(discogs_response(list(fields = list(
+        list(name = "Notes", id = 1, type = "textarea"),
+        list(name = " sleeve  condition ", id = 5, type = "dropdown"),
+        list(name = "Media", id = 9, type = "dropdown")
+      ))))
+    }
+    discogs_response(list(releases = list(list(id = 1, notes = list(
+      list(field_id = 1, value = "Mint (M)"),
+      list(field_id = 9, value = "Very Good Plus (VG+)"),
+      list(field_id = 5, value = "Sealed")
+    )))))
+  })
+  out <- dig_collection("example")
+  expect_equal(as.character(out$media_condition), "Very Good Plus (VG+)")
+  expect_equal(as.character(out$sleeve_condition), "Sealed")
+  expect_equal(levels(out$sleeve_condition), c(conditions, "Generic", "No Cover", "Sealed"))
+})
+
+test_that("conditions are NA when fields are missing, private or broken", {
+  local_dig_state()
+  bodies <- list(
+    list(fields = list(list(name = "Notes", id = 3, type = "textarea"))),
+    list(fields = "broken"),
+    list()
+  )
+  for (fields in bodies) {
+    httr2::local_mocked_responses(function(req) {
+      if (stringr::str_ends(httr2::url_parse(req$url)$path, "/fields")) {
+        return(discogs_response(fields))
+      }
+      discogs_response(list(releases = list(list(id = 1, notes = list(list(field_id = 1, value = "Mint (M)"))))))
+    })
+    out <- dig_collection("example")
+    expect_true(is.na(out$media_condition))
+    expect_true(is.na(out$sleeve_condition))
+  }
+})
+
+test_that("the fields are only requested when a copy has notes", {
+  local_dig_state()
+  calls <- 0L
+  httr2::local_mocked_responses(function(req) {
+    calls <<- calls + 1L
+    discogs_response(list(releases = list(list(id = 1), list(id = 2, notes = list()))))
+  })
+  out <- dig_collection("example")
+  expect_equal(calls, 1L)
+  expect_equal(nrow(out), 2)
+  expect_true(all(is.na(out$media_condition)))
+  expect_s3_class(out$media_condition, "factor")
+})
+
+test_that("dig_collection returns NULL when the fields cannot be reached", {
+  local_dig_state()
+  httr2::local_mocked_responses(function(req) {
+    if (stringr::str_ends(httr2::url_parse(req$url)$path, "/fields")) {
+      return(discogs_response(list(message = "Server error."), status = 500L))
+    }
+    discogs_response(fixture("collection-example"))
+  })
+  expect_message(out <- dig_collection("example"), "not available")
+  expect_null(out)
 })
 
 test_that("dig_wantlist returns releases with notes", {
@@ -75,4 +157,38 @@ test_that("user functions check their arguments", {
   expect_error(dig_collection("a", folder = 1.5), "from 0")
   expect_error(dig_wantlist("a", sort = "released"), "must be one of")
   expect_error(dig_wantlist("a", per_page = 101), "1 to 100")
+})
+
+test_that("condition values are trimmed and duplicate or untyped fields are read", {
+  local_dig_state()
+  httr2::local_mocked_responses(function(req) {
+    if (stringr::str_ends(httr2::url_parse(req$url)$path, "/fields")) {
+      return(discogs_response(list(fields = list(
+        list(name = "Media", id = 7, type = "dropdown"),
+        list(name = "Media", id = 1, type = "dropdown"),
+        list(name = "Sleeve", id = 2)
+      ))))
+    }
+    discogs_response(list(releases = list(
+      list(id = 1, notes = list(list(field_id = 1, value = "  Mint  (M) "), list(field_id = 2, value = "No Cover"))),
+      list(id = 2, notes = list(list(field_id = 7, value = " "), list(field_id = 1, value = "Good (G)")))
+    )))
+  })
+  out <- dig_collection("example")
+  expect_equal(as.character(out$media_condition), c("Mint (M)", "Good (G)"))
+  expect_equal(as.character(out$sleeve_condition), c("No Cover", NA))
+  expect_equal(levels(out$media_condition), conditions)
+})
+
+test_that("an error from the fields request keeps the collection", {
+  local_dig_state()
+  httr2::local_mocked_responses(function(req) {
+    if (stringr::str_ends(httr2::url_parse(req$url)$path, "/fields")) {
+      return(discogs_response(list(message = "Forbidden."), status = 403L))
+    }
+    discogs_response(fixture("collection-example"))
+  })
+  expect_message(out <- dig_collection("example"), "conditions are NA")
+  expect_equal(nrow(out), 3)
+  expect_true(all(is.na(out$media_condition)))
 })

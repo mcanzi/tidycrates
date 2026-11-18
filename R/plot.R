@@ -41,7 +41,11 @@ dig_plot <- function(x,
     return(invisible(NULL))
   }
   total <- if (unique) nrow(dplyr::distinct(x, dplyr::across(dplyr::all_of(release_key(x))))) else nrow(x)
-  unit <- if (unique || !"instance_id" %in% names(x)) "releases" else "copies"
+  unit <- dplyr::case_when(
+    "type" %in% names(x) && any(x$type %in% c("artist", "label")) ~ "results",
+    unique || !"instance_id" %in% names(x) ~ "releases",
+    .default = "copies"
+  )
   about <- list(by = by, total = total, unit = unit)
   if (nrow(data) == 0) {
     return(plot_empty(about))
@@ -243,7 +247,7 @@ count_of <- function(n, unit) {
 }
 
 singular <- function(unit) {
-  c(copies = "copy", releases = "release")[[unit]]
+  c(copies = "copy", releases = "release", results = "result")[[unit]]
 }
 
 keep_distinct <- function(old, new) {

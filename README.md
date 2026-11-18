@@ -110,10 +110,25 @@ dig_master_versions(2001) |>
 
 `dig_collection()` and `dig_wantlist()` list the releases in the collection or wantlist of a user. Anyone can read a public collection, but a private one can only be read with the token of its owner. Collections and wantlists are Restricted Data, see [Terms of use](#terms-of-use).
 
-`dig_tally()` counts a collection by genre, style, format, label, artist, year, decade or month added, without sending more requests. A copy with several genres counts once for each:
+Each copy in a collection has a `media_condition` and a `sleeve_condition` if the user graded it. The grades are factors from best to worst, as in `dig_price_suggestions()`, so the two can be joined to price each copy in its own grade:
 
 ```r
 collection <- dig_collection("your-username", all = TRUE)
+prices <- dig_price_suggestions(unique(collection$release_id))
+collection |>
+  dplyr::left_join(prices, by = dplyr::join_by(release_id, media_condition == condition)) |>
+  dplyr::select(title, media_condition, price, currency)
+#> # A tibble: 3 × 4
+#>   title              media_condition      price currency
+#>   <chr>              <fct>                <dbl> <chr>
+#> 1 Lantern Weather    Near Mint (NM or M-) 12.8  EUR
+#> 2 Lantern Weather    Very Good (VG)        6.78 EUR
+#> 3 Tidewater Sessions <NA>                 NA    <NA>
+```
+
+`dig_tally()` counts a collection by genre, style, format, label, artist, year, decade or month added, without sending more requests. A copy with several genres counts once for each:
+
+```r
 dig_tally(collection, "genre")
 #> # A tibble: 2 × 3
 #>   genre          n share

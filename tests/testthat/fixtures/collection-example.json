@@ -59,6 +59,14 @@
         {
           "field_id": 1,
           "value": "Near Mint (NM or M-)"
+        },
+        {
+          "field_id": 2,
+          "value": "Very Good Plus (VG+)"
+        },
+        {
+          "field_id": 3,
+          "value": "Small seam split."
         }
       ]
     },
@@ -109,7 +117,21 @@
         "styles": [
           "Downtempo"
         ]
-      }
+      },
+      "notes": [
+        {
+          "field_id": 1,
+          "value": "Very Good (VG)"
+        },
+        {
+          "field_id": 2,
+          "value": "Generic"
+        },
+        {
+          "field_id": 4,
+          "value": "Shelf B"
+        }
+      ]
     },
     {
       "id": 1002,

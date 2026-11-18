@@ -1,0 +1,45 @@
+{
+  "id": 4001,
+  "name": "Fernhollow Records",
+  "uri": "https://example.com/label/4001",
+  "profile": "Made-up label for testing.",
+  "contact_info": "Fernhollow Records\n1 Example Street\nNowhere",
+  "urls": [
+    "https://example.com/fernhollow"
+  ],
+  "sublabels": [
+    {
+      "id": 4101,
+      "name": "Fernhollow Sublabel 1"
+    },
+    {
+      "id": 4102,
+      "name": "Fernhollow Sublabel 2"
+    },
+    {
+      "id": 4103,
+      "name": "Fernhollow Sublabel 3"
+    },
+    {
+      "id": 4104,
+      "name": "Fernhollow Sublabel 4"
+    },
+    {
+      "id": 4105,
+      "name": "Fernhollow Sublabel 5"
+    },
+    {
+      "id": 4106,
+      "name": "Fernhollow Sublabel 6"
+    },
+    {
+      "id": 4107,
+      "name": "Fernhollow Sublabel 7"
+    },
+    {
+      "id": 4108,
+      "name": "Fernhollow Sublabel 8"
+    }
+  ],
+  "data_quality": "Needs Vote"
+}

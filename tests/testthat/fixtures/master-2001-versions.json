@@ -1,0 +1,68 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 3,
+    "per_page": 3,
+    "items": 8,
+    "urls": {}
+  },
+  "versions": [
+    {
+      "id": 1001,
+      "label": "Fernhollow Records",
+      "country": "Bulgaria",
+      "title": "Small Hours Atlas",
+      "major_formats": [
+        "Cassette"
+      ],
+      "format": "Album",
+      "catno": "FHR 001 MC",
+      "released": "1997",
+      "status": "Accepted",
+      "stats": {
+        "community": {
+          "in_wantlist": 10,
+          "in_collection": 5
+        }
+      }
+    },
+    {
+      "id": 1005,
+      "label": "Fernhollow Records",
+      "country": "UK & France",
+      "title": "Small Hours Atlas",
+      "major_formats": [
+        "CD"
+      ],
+      "format": "Album",
+      "catno": "FHR 001 CD",
+      "released": "1997",
+      "status": "Accepted",
+      "stats": {
+        "community": {
+          "in_wantlist": 10,
+          "in_collection": 5
+        }
+      }
+    },
+    {
+      "id": 1006,
+      "label": "Fernhollow Records",
+      "country": "Poland",
+      "title": "Small Hours Atlas",
+      "major_formats": [
+        "Cassette"
+      ],
+      "format": "Album",
+      "catno": "FHR 001 PL",
+      "released": "1997",
+      "status": "Accepted",
+      "stats": {
+        "community": {
+          "in_wantlist": 10,
+          "in_collection": 5
+        }
+      }
+    }
+  ]
+}

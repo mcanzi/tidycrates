@@ -1,0 +1,189 @@
+{
+  "id": 1001,
+  "status": "Accepted",
+  "year": 1994,
+  "uri": "https://example.com/release/1001",
+  "artists": [
+    {
+      "name": "Juniper Static",
+      "anv": "",
+      "join": "",
+      "role": "",
+      "tracks": "",
+      "id": 3001
+    }
+  ],
+  "artists_sort": "Juniper Static",
+  "labels": [
+    {
+      "name": "Fernhollow Records",
+      "catno": "FHR 007",
+      "entity_type": "1",
+      "entity_type_name": "Label",
+      "id": 4001
+    }
+  ],
+  "series": [],
+  "companies": [
+    {
+      "name": "Fernhollow Records Ltd.",
+      "catno": "",
+      "entity_type": "13",
+      "entity_type_name": "Phonographic Copyright (p)",
+      "id": 4002
+    },
+    {
+      "name": "Fernhollow Records Ltd.",
+      "catno": "",
+      "entity_type": "13",
+      "entity_type_name": "Copyright (c)",
+      "id": 4002
+    },
+    {
+      "name": "Lantern Songs",
+      "catno": "",
+      "entity_type": "13",
+      "entity_type_name": "Published By",
+      "id": 4003
+    },
+    {
+      "name": "Mossbank Studio",
+      "catno": "",
+      "entity_type": "13",
+      "entity_type_name": "Recorded At",
+      "id": 4004
+    },
+    {
+      "name": "Mossbank Studio",
+      "catno": "",
+      "entity_type": "13",
+      "entity_type_name": "Lacquer Cut At",
+      "id": 4004
+    },
+    {
+      "name": "Tidewater Pressing",
+      "catno": "",
+      "entity_type": "13",
+      "entity_type_name": "Pressed By",
+      "id": 4005
+    }
+  ],
+  "formats": [
+    {
+      "name": "Vinyl",
+      "qty": "1",
+      "descriptions": [
+        "7\"",
+        "45 RPM",
+        "Single",
+        "Stereo"
+      ]
+    }
+  ],
+  "data_quality": "Correct",
+  "community": {
+    "have": 120,
+    "want": 45,
+    "rating": {
+      "count": 12,
+      "average": 4.25
+    },
+    "data_quality": "Correct",
+    "status": "Accepted"
+  },
+  "format_quantity": 1,
+  "date_added": "2004-04-30T08:10:05-07:00",
+  "date_changed": "2021-06-02T03:15:44-07:00",
+  "title": "Lantern Weather",
+  "country": "UK",
+  "released": "1994-07-00",
+  "notes": "Made-up release for testing. It does not exist.",
+  "released_formatted": "Jul 1994",
+  "identifiers": [
+    {
+      "type": "Barcode",
+      "value": "5000000000017"
+    },
+    {
+      "type": "Label Code",
+      "value": "LC 00007"
+    },
+    {
+      "type": "Price Code",
+      "value": "B",
+      "description": "D:"
+    }
+  ],
+  "genres": [
+    "Electronic",
+    "Pop"
+  ],
+  "styles": [
+    "Downtempo"
+  ],
+  "master_id": 2001,
+  "tracklist": [
+    {
+      "position": "A",
+      "type_": "track",
+      "title": "Lantern Weather",
+      "duration": "3:32"
+    },
+    {
+      "position": "B",
+      "type_": "track",
+      "title": "Lantern Weather (Dub)",
+      "duration": "3:30"
+    }
+  ],
+  "extraartists": [
+    {
+      "name": "Paperweight Design",
+      "anv": "Paperweight",
+      "join": "",
+      "role": "Design",
+      "tracks": "",
+      "id": 3101
+    },
+    {
+      "name": "Ida Marsh",
+      "anv": "",
+      "join": "",
+      "role": "Engineer",
+      "tracks": "",
+      "id": 3102
+    },
+    {
+      "name": "Tomas Reed",
+      "anv": "",
+      "join": "",
+      "role": "Engineer",
+      "tracks": "",
+      "id": 3103
+    },
+    {
+      "name": "Noor Halden",
+      "anv": "NH",
+      "join": "",
+      "role": "Lacquer Cut By",
+      "tracks": "",
+      "id": 3104
+    },
+    {
+      "name": "Felix Arno",
+      "anv": "Felix A.",
+      "join": "",
+      "role": "Mixed By",
+      "tracks": "",
+      "id": 3105
+    },
+    {
+      "name": "Malin Ödegaard",
+      "anv": "M. Ödegaard",
+      "join": "",
+      "role": "Producer, Written-By",
+      "tracks": "",
+      "id": 3106
+    }
+  ]
+}

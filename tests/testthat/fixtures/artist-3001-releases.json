@@ -1,0 +1,58 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 44,
+    "per_page": 3,
+    "items": 132,
+    "urls": {}
+  },
+  "releases": [
+    {
+      "id": 1004,
+      "status": "Accepted",
+      "type": "release",
+      "format": "10\"",
+      "label": "Fernhollow Records",
+      "title": "Moth Radio",
+      "role": "Main",
+      "artist": "Juniper Static & Felix Arno",
+      "year": 1997,
+      "stats": {
+        "community": {
+          "in_wantlist": 160,
+          "in_collection": 43
+        }
+      }
+    },
+    {
+      "id": 2001,
+      "type": "master",
+      "main_release": 1001,
+      "title": "Small Hours Atlas",
+      "role": "Main",
+      "artist": "Juniper Static",
+      "year": 1997,
+      "stats": {
+        "community": {
+          "in_wantlist": 90,
+          "in_collection": 70
+        }
+      }
+    },
+    {
+      "id": 2002,
+      "type": "master",
+      "main_release": 1007,
+      "title": "Paper Moon Signal",
+      "role": "Main",
+      "artist": "Juniper Static",
+      "year": 1997,
+      "stats": {
+        "community": {
+          "in_wantlist": 30,
+          "in_collection": 25
+        }
+      }
+    }
+  ]
+}

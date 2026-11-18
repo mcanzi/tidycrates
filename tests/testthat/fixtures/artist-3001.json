@@ -1,0 +1,45 @@
+{
+  "name": "Juniper Static",
+  "id": 3001,
+  "uri": "https://example.com/artist/3001",
+  "profile": "Made-up artist for testing, sometimes working with [a=Felix Arno].",
+  "urls": [
+    "https://example.com/juniper-static"
+  ],
+  "namevariations": [
+    "Juniper Static.",
+    "J. Static"
+  ],
+  "aliases": [
+    {
+      "id": 3106,
+      "name": "Malin Ödegaard"
+    },
+    {
+      "id": 3201,
+      "name": "Moth Radio"
+    },
+    {
+      "id": 3202,
+      "name": "Low Tide"
+    },
+    {
+      "id": 3203,
+      "name": "Ember Lane"
+    },
+    {
+      "id": 3204,
+      "name": "Quiet Engine"
+    },
+    {
+      "id": 3205,
+      "name": "Harbour Lights"
+    },
+    {
+      "id": 3206,
+      "name": "Tin Roof"
+    }
+  ],
+  "realname": "Malin Ödegaard",
+  "data_quality": "Needs Vote"
+}

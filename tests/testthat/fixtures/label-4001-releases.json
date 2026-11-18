@@ -1,0 +1,38 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 199,
+    "per_page": 3,
+    "items": 597,
+    "urls": {}
+  },
+  "releases": [
+    {
+      "status": "Accepted",
+      "format": "CD, Comp, Mixed",
+      "catno": "FHR 010",
+      "title": "Fernhollow Nights",
+      "id": 1001,
+      "year": 1998,
+      "artist": "Felix Arno"
+    },
+    {
+      "status": "Accepted",
+      "format": "2x12\", Comp",
+      "catno": "FHR 011",
+      "title": "Tidewater Sessions",
+      "id": 1002,
+      "year": 1998,
+      "artist": "Various"
+    },
+    {
+      "status": "Accepted",
+      "format": "CD, Mixed, RP",
+      "catno": "FHR 012",
+      "title": "Low Tide Mix",
+      "id": 1003,
+      "year": 0,
+      "artist": "Ida Marsh"
+    }
+  ]
+}

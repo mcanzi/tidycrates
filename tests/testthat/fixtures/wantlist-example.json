@@ -1,0 +1,103 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 1,
+    "per_page": 50,
+    "items": 2,
+    "urls": {}
+  },
+  "wants": [
+    {
+      "id": 1003,
+      "rating": 0,
+      "notes": "Only the first pressing.",
+      "date_added": "2023-11-05T12:00:00-08:00",
+      "basic_information": {
+        "id": 1003,
+        "master_id": 0,
+        "title": "Low Tide Mix",
+        "year": 1998,
+        "formats": [
+          {
+            "name": "CD",
+            "qty": "1",
+            "descriptions": [
+              "Mixed"
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "name": "Fernhollow Records",
+            "catno": "FHR 007",
+            "entity_type": "1",
+            "id": 4001
+          }
+        ],
+        "artists": [
+          {
+            "name": "Ida Marsh",
+            "anv": "",
+            "join": "",
+            "role": "",
+            "tracks": "",
+            "id": 3001
+          }
+        ],
+        "genres": [
+          "Electronic"
+        ],
+        "styles": [
+          "Downtempo",
+          "Electro"
+        ]
+      }
+    },
+    {
+      "id": 1002,
+      "rating": 3,
+      "notes": "",
+      "date_added": "2024-02-14T09:30:00-08:00",
+      "basic_information": {
+        "id": 1002,
+        "master_id": 2002,
+        "title": "Tidewater Sessions",
+        "year": 1998,
+        "formats": [
+          {
+            "name": "Vinyl",
+            "qty": "1",
+            "descriptions": [
+              "12\"",
+              "Compilation"
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "name": "Fernhollow Records",
+            "catno": "FHR 007",
+            "entity_type": "1",
+            "id": 4001
+          }
+        ],
+        "artists": [
+          {
+            "name": "Various",
+            "anv": "",
+            "join": "",
+            "role": "",
+            "tracks": "",
+            "id": 3001
+          }
+        ],
+        "genres": [
+          "Electronic"
+        ],
+        "styles": [
+          "Techno"
+        ]
+      }
+    }
+  ]
+}

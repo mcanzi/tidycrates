@@ -1,0 +1,166 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 2,
+    "per_page": 3,
+    "items": 5,
+    "urls": {}
+  },
+  "releases": [
+    {
+      "id": 1001,
+      "instance_id": 101,
+      "folder_id": 1,
+      "rating": 4,
+      "date_added": "2024-03-02T10:15:30-08:00",
+      "basic_information": {
+        "id": 1001,
+        "master_id": 2001,
+        "title": "Lantern Weather",
+        "year": 1994,
+        "formats": [
+          {
+            "name": "Vinyl",
+            "qty": "1",
+            "descriptions": [
+              "7\"",
+              "Single",
+              "45 RPM"
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "name": "Fernhollow Records",
+            "catno": "FHR 007",
+            "entity_type": "1",
+            "id": 4001
+          }
+        ],
+        "artists": [
+          {
+            "name": "Juniper Static",
+            "anv": "",
+            "join": "",
+            "role": "",
+            "tracks": "",
+            "id": 3001
+          }
+        ],
+        "genres": [
+          "Electronic",
+          "Pop"
+        ],
+        "styles": [
+          "Downtempo"
+        ]
+      },
+      "notes": [
+        {
+          "field_id": 1,
+          "value": "Near Mint (NM or M-)"
+        }
+      ]
+    },
+    {
+      "id": 1001,
+      "instance_id": 102,
+      "folder_id": 1,
+      "rating": 0,
+      "date_added": "2024-05-20T08:00:00-07:00",
+      "basic_information": {
+        "id": 1001,
+        "master_id": 2001,
+        "title": "Lantern Weather",
+        "year": 1994,
+        "formats": [
+          {
+            "name": "Vinyl",
+            "qty": "1",
+            "descriptions": [
+              "7\"",
+              "Single",
+              "45 RPM"
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "name": "Fernhollow Records",
+            "catno": "FHR 007",
+            "entity_type": "1",
+            "id": 4001
+          }
+        ],
+        "artists": [
+          {
+            "name": "Juniper Static",
+            "anv": "",
+            "join": "",
+            "role": "",
+            "tracks": "",
+            "id": 3001
+          }
+        ],
+        "genres": [
+          "Electronic",
+          "Pop"
+        ],
+        "styles": [
+          "Downtempo"
+        ]
+      }
+    },
+    {
+      "id": 1002,
+      "instance_id": 103,
+      "folder_id": 2,
+      "rating": 5,
+      "date_added": "2025-01-11T19:45:00-08:00",
+      "basic_information": {
+        "id": 1002,
+        "master_id": 0,
+        "title": "Tidewater Sessions",
+        "year": 0,
+        "formats": [
+          {
+            "name": "CD",
+            "qty": "1",
+            "descriptions": [
+              "Compilation",
+              "Mixed"
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "name": "Fernhollow Records",
+            "catno": "FHR 007",
+            "entity_type": "1",
+            "id": 4001
+          },
+          {
+            "name": "Fernhollow Records",
+            "catno": "FHR 007",
+            "entity_type": "1",
+            "id": 4001
+          }
+        ],
+        "artists": [
+          {
+            "name": "Felix Arno",
+            "anv": "",
+            "join": "",
+            "role": "",
+            "tracks": "",
+            "id": 3001
+          }
+        ],
+        "genres": [
+          "Electronic"
+        ],
+        "styles": []
+      }
+    }
+  ]
+}

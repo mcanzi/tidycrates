@@ -13,6 +13,11 @@ test_that("the helpers unnest a release", {
   expect_equal(formats$descriptions, "7\", 45 RPM, Single, Stereo")
   identifiers <- dig_identifiers(release)
   expect_equal(identifiers$value[identifiers$type == "Barcode"][1], "5000000000017")
+  companies <- dig_companies(release)
+  expect_named(companies, c("release_id", "name", "role", "catno", "label_id"))
+  expect_equal(companies$role[1:2], c("Label", "Phonographic Copyright (p)"))
+  expect_equal(companies$catno[1], "FHR 007")
+  expect_equal(nrow(companies), 7)
 })
 
 test_that("the helpers accept release IDs", {
@@ -26,7 +31,7 @@ test_that("dig_tracklist accepts master releases", {
   local_fixtures()
   tracks <- dig_tracklist(dig_master(2001))
   expect_equal(names(tracks)[1], "master_id")
-  expect_equal(nrow(tracks), 11)
+  expect_equal(nrow(tracks), 2)
 })
 
 test_that("the helpers reject other input", {

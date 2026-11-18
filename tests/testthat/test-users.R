@@ -112,15 +112,15 @@ test_that("dig_collection returns NULL when the fields cannot be reached", {
   expect_null(out)
 })
 
-test_that("dig_wantlist returns releases with notes", {
+test_that("dig_wantlist returns releases without the notes of the user", {
   local_dig_state()
   local_fixtures()
   out <- dig_wantlist("example")
   expect_equal(out$release_id, c(1003L, 1002L))
-  expect_equal(out$notes, c("Only the first pressing.", NA))
+  expect_false("notes" %in% names(out))
   expect_equal(out$rating, c(NA, 3L))
   expect_equal(out$styles[[1]], c("Downtempo", "Electro"))
-  expect_equal(names(out)[ncol(out)], "notes")
+  expect_equal(names(out)[ncol(out)], "date_added")
 })
 
 test_that("collections and wantlists are not cached", {
@@ -150,6 +150,9 @@ test_that("private collections stop with the API message", {
 
 test_that("user functions check their arguments", {
   expect_error(dig_collection(""), "single username")
+  expect_error(dig_collection(".."), "not a valid username")
+  expect_error(dig_wantlist(" . "), "not a valid username")
+  expect_error(dig_collection("a\nb"), "not a valid username")
   expect_error(dig_collection(c("a", "b")), "single username")
   expect_error(dig_wantlist(NA_character_), "single username")
   expect_error(dig_wantlist(1), "single username")
@@ -191,4 +194,65 @@ test_that("an error from the fields request keeps the collection", {
   expect_message(out <- dig_collection("example"), "conditions are NA")
   expect_equal(nrow(out), 3)
   expect_true(all(is.na(out$media_condition)))
+})
+
+test_that("dig_collection_folders lists the folders", {
+  local_dig_state()
+  local_fixtures()
+  out <- dig_collection_folders("example")
+  expect_named(out, c("folder_id", "name", "count"))
+  expect_equal(out$folder_id, 0:2)
+  expect_equal(out$name, c("All", "Uncategorized", "Compilations"))
+  expect_equal(out$count, c(3L, 2L, 1L))
+})
+
+test_that("dig_collection_folders returns NULL when the API cannot be reached", {
+  local_dig_state()
+  httr2::local_mocked_responses(function(req) discogs_response(list(), status = 503L))
+  local_mocked_bindings(retry_backoff = \(attempt) 0)
+  expect_message(out <- dig_collection_folders("example"))
+  expect_null(out)
+})
+
+test_that("without a username the owner of the token is used, found once", {
+  local_dig_state(token = "abc")
+  paths <- character()
+  httr2::local_mocked_responses(function(req) {
+    path <- httr2::url_parse(req$url)$path
+    paths <<- c(paths, path)
+    if (path == "/oauth/identity") {
+      return(raw_response("identity-example"))
+    }
+    discogs_response(fixture("wantlist-example"))
+  })
+  dig_wantlist()
+  dig_wantlist()
+  expect_equal(paths, c("/oauth/identity", "/users/example/wants", "/users/example/wants"))
+  dig_cache_clear()
+  dig_wantlist()
+  expect_equal(sum(paths == "/oauth/identity"), 2L)
+  suppressMessages(dig_auth("def"))
+  dig_wantlist()
+  expect_equal(sum(paths == "/oauth/identity"), 3L)
+})
+
+test_that("without a username or token the functions stop", {
+  local_dig_state()
+  expect_error(dig_collection(), "needed when no token is set")
+  expect_error(dig_collection_folders(), "needed when no token is set")
+  expect_error(dig_wantlist(), "dig_auth")
+})
+
+test_that("a missing identity is reported", {
+  local_dig_state(token = "abc")
+  httr2::local_mocked_responses(list(discogs_response(list(id = 1))))
+  expect_error(dig_collection(), "did not return the username")
+})
+
+test_that("an unreachable identity returns NULL", {
+  local_dig_state(token = "abc")
+  httr2::local_mocked_responses(function(req) discogs_response(list(), status = 503L))
+  local_mocked_bindings(retry_backoff = \(attempt) 0)
+  expect_message(out <- dig_collection())
+  expect_null(out)
 })

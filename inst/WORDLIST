@@ -4,6 +4,8 @@ CMD
 Discogs
 Fernhollow
 ggplot
+httr
+jsonlite
 mcanzi
 memoise
 ORCID

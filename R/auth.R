@@ -4,8 +4,8 @@
 #' token, 'Discogs' allows 60 requests a minute instead of 25,
 #' [dig_collection()] and [dig_wantlist()] can read your own collection and
 #' wantlist when they are private, and [dig_search()],
-#' [dig_price_suggestions()] and [dig_collection_value()] work. A token can be generated at
-#' <https://www.discogs.com/settings/developers>.
+#' [dig_price_suggestions()] and [dig_collection_value()] work. A token
+#' can be generated at <https://www.discogs.com/settings/developers>.
 #'
 #' If `dig_auth()` is never called, the `DISCOGS_TOKEN` environment
 #' variable is used. Storing the token in `.Renviron` keeps it out of your
@@ -13,7 +13,8 @@
 #'
 #' @param token A personal access token. By default the value of the
 #'   `DISCOGS_TOKEN` environment variable. An empty string removes the
-#'   token, so requests are made without one.
+#'   token, so requests are made without one. Spaces at either end are
+#'   removed, and a token with spaces or line breaks inside is rejected.
 #'
 #' @return `TRUE` if a token is set and `FALSE` otherwise, invisibly.
 #'
@@ -23,8 +24,9 @@
 #' @export
 dig_auth <- function(token = Sys.getenv("DISCOGS_TOKEN")) {
   check_string(token)
-  token <- stringr::str_trim(token)
+  token <- check_token_text(stringr::str_trim(token))
   dig_env$token <- token
+  dig_env$identity <- NULL
   if (nzchar(token)) {
     cli::cli_inform("Requests will be made with a token.")
   } else {
@@ -33,9 +35,23 @@ dig_auth <- function(token = Sys.getenv("DISCOGS_TOKEN")) {
   invisible(nzchar(token))
 }
 
-auth_token <- function() {
+auth_token <- function(call = rlang::caller_env()) {
   token <- stringr::str_trim(dig_env$token %||% Sys.getenv("DISCOGS_TOKEN"))
+  token <- check_token_text(token, call = call)
   if (nzchar(token)) token else NULL
+}
+
+check_token_text <- function(token, call = rlang::caller_env()) {
+  if (stringr::str_detect(token, "[[:space:][:cntrl:]]")) {
+    cli::cli_abort(
+      c(
+        "The token must not contain spaces or line breaks.",
+        i = "Check the value given to {.fn dig_auth} or the {.envvar DISCOGS_TOKEN} environment variable."
+      ),
+      call = call
+    )
+  }
+  token
 }
 
 #' Set the user agent

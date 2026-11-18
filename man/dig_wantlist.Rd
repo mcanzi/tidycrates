@@ -5,7 +5,7 @@
 \title{List the wantlist of a user}
 \usage{
 dig_wantlist(
-  username,
+  username = NULL,
   sort = c("added", "artist", "title", "label", "catno", "format", "rating", "year"),
   order = c("asc", "desc"),
   all = FALSE,
@@ -14,7 +14,9 @@ dig_wantlist(
 )
 }
 \arguments{
-\item{username}{A 'Discogs' username.}
+\item{username}{A 'Discogs' username, or \code{NULL} for the owner of the
+token set with \code{\link[=dig_auth]{dig_auth()}}. Finding the owner takes one request,
+once per session.}
 
 \item{sort}{The column to sort by: \code{"added"}, \code{"artist"}, \code{"title"},
 \code{"label"}, \code{"catno"}, \code{"format"}, \code{"rating"} or \code{"year"}.}
@@ -32,14 +34,19 @@ are ignored.}
 A tibble with one row per release, or \code{NULL} invisibly if the
 API cannot be reached. The columns are \code{release_id}, \code{title},
 \code{artist}, \code{year}, \code{label}, \code{catno}, \code{format}, \code{genres} and \code{styles} as
-list columns, \code{master_id}, \code{rating}, \code{date_added} and \code{notes}.
-\code{rating} is \code{NA} if the user gave none.
+list columns, \code{master_id}, \code{rating} and \code{date_added}. \code{rating} is \code{NA}
+if the user gave none.
 }
 \description{
 Lists the releases in the wantlist of a 'Discogs' user. Anyone can read
 a public wantlist. A private wantlist can only be read with the token of
-its owner, see \code{\link[=dig_auth]{dig_auth()}}. Wantlists are never cached, so changes
-show up at once.
+its owner, see \code{\link[=dig_auth]{dig_auth()}}. Without a username, the wantlist of the
+token owner is listed. Wantlists are never cached, so changes show up
+at once.
+}
+\details{
+The notes that a user writes for each release are left out, because
+they can be personal.
 }
 \section{Restricted Data}{
 

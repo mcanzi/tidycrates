@@ -85,7 +85,10 @@ but not releases that only mention the name in their title. The IDs in
 \code{\link[=dig_label]{dig_label()}}, depending on \code{type}.
 
 'Discogs' returns up to 100 results per page. With \code{all = TRUE}, every
-page is fetched, which takes one request for each 100 results.
+page is fetched, which takes one request for each 100 results. A search
+with more than 100 pages, or 10,000 results, stops with an error before
+the other pages are fetched, so that a broad search does not send
+hundreds of requests. Single pages can still be fetched with \code{page}.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}

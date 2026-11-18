@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Sends requests to the 'Discogs' API \url{https://www.discogs.com/developers} and returns the results as tidy tibbles. The 'Discogs' database can be searched, and releases, master releases, artists and labels can be read from it, along with the releases of an artist or label and the versions of a master release. The collection and wantlist of a user can be listed, tallied and plotted, and marketplace statistics, price suggestions and collection values can be read. Tracklists, credits, formats and identifiers of releases can be unnested into one row per item. Requests can be made with a personal access token or without one. They are spaced out to stay within the rate limit of the API and retried when the limit is exceeded. Responses can be cached for the session, and paginated results can be fetched in full.
+Sends requests to the 'Discogs' application programming interface (API) \url{https://www.discogs.com/developers} and returns the results as tidy tibbles. The 'Discogs' database can be searched, and releases, master releases, artists and labels can be read from it, along with the releases of an artist or label and the versions of a master release. The collection folders, collection and wantlist of a user can be listed, tallied and plotted, and marketplace statistics, price suggestions and collection values can be read. Tracklists, credits, formats, identifiers and companies of releases can be unnested into one row per item. Requests can be made with a personal access token or without one. They are spaced out to stay within the rate limit of the API and retried when the limit is exceeded. Responses can be cached for the session, and paginated results can be fetched in full.
 }
 \details{
 Requests are sent to the 'Discogs' API at \url{https://api.discogs.com}.
@@ -16,14 +16,14 @@ Without a token, 'Discogs' allows 25 requests a minute. With a personal
 access token set by \code{\link[=dig_auth]{dig_auth()}}, the limit is 60 requests a minute,
 the database can be searched, your own private collection and wantlist
 can be read, and price suggestions and the value of your collection are
-available. Requests
-are spaced out to stay within the limit and retried after HTTP 429
-responses.
+available. Requests are spaced out evenly to stay within the limit and
+retried after HTTP 429 responses.
 
-When the API cannot be reached, because there is no internet connection
-or the server returns an error, functions give a message and return
-\code{NULL} invisibly. Errors caused by the request, such as an unknown
-release, stop with the message returned by 'Discogs'.
+When the API cannot be reached, because there is no internet connection,
+the server returns an error or the rate limit is still exceeded after
+several tries, functions give a message and return \code{NULL} invisibly.
+Errors caused by the request, such as an unknown release, stop with the
+message returned by 'Discogs'.
 }
 \section{Options}{
 
@@ -32,7 +32,8 @@ database are kept in memory for the session, so repeated requests do not
 count towards the rate limit. Caching needs the memoise and cachem
 packages and is off by default. Cached responses are kept for 3600
 seconds unless \code{tidycrates.cache_age} gives another number of seconds.
-Changing \code{tidycrates.cache_age} starts a new, empty cache.
+Changing \code{tidycrates.cache_age} starts a new, empty cache, and
+\code{\link[=dig_cache_clear]{dig_cache_clear()}} empties it.
 Collections, wantlists and marketplace data are never cached.
 The API Terms of Use do not allow showing data that are more than six
 hours old, so responses are never kept longer than 21600 seconds.

@@ -42,7 +42,6 @@ dig_artist_releases <- function(id, sort = c("year", "title", "format"),
   if (is.null(items)) {
     return(invisible(NULL))
   }
-  items <- as_items(items)
   tibble::tibble(
     id = int(items, "id"),
     type = chr(items, "type"),
@@ -84,7 +83,6 @@ dig_label_releases <- function(id, all = FALSE, page = 1, per_page = 50) {
   if (is.null(items)) {
     return(invisible(NULL))
   }
-  items <- as_items(items)
   tibble::tibble(
     release_id = int(items, "id"),
     title = chr(items, "title"),
@@ -142,7 +140,6 @@ dig_master_versions <- function(id, format = NULL, label = NULL, released = NULL
   if (is.null(items)) {
     return(invisible(NULL))
   }
-  items <- as_items(items)
   tibble::tibble(
     release_id = int(items, "id"),
     title = chr(items, "title"),

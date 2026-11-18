@@ -35,6 +35,7 @@ reference:
   - dig_auth
   - dig_user_agent
   - dig_rate_limit
+  - dig_cache_clear
 - title: Database
   contents:
   - dig_search
@@ -49,6 +50,7 @@ reference:
   - dig_master_versions
 - title: Users
   contents:
+  - dig_collection_folders
   - dig_collection
   - dig_wantlist
   - dig_tally

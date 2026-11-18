@@ -51,6 +51,15 @@ a plot, link the caption to the 'Discogs' page with the data. Plots of
 a collection or wantlist show Restricted Data, see \code{\link[=dig_collection]{dig_collection()}}.
 }
 \examples{
+\dontshow{if (rlang::is_installed("ggplot2")) withAutoprint(\{ # examplesIf}
+shelf <- tibble::tibble(
+  release_id = c(1, 1, 2, 3),
+  year = c(1994, 1994, 1998, NA),
+  genres = list(c("Electronic", "Pop"), c("Electronic", "Pop"), "Electronic", "Jazz")
+)
+dig_plot(shelf, "genre")
+dig_plot(shelf, "year")
+\dontshow{\}) # examplesIf}
 \dontshow{if (interactive() && rlang::is_installed("ggplot2")) withAutoprint(\{ # examplesIf}
 collection <- dig_collection("username", all = TRUE)
 dig_plot(collection, "decade")

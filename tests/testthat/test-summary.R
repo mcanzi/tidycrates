@@ -88,8 +88,8 @@ test_that("label releases are tallied by the first part of the format", {
   local_fixtures()
   releases <- dig_label_releases(4001)
   out <- dig_tally(releases, "format")
-  expect_equal(out$format, c("CD", "12\""))
-  expect_equal(out$n, c(2L, 1L))
+  expect_equal(out$format, c("12\"", "7\"", "CD"))
+  expect_equal(out$n, c(1L, 1L, 1L))
   out <- dig_tally(releases, "decade")
   expect_equal(out$decade, 1990L)
   expect_equal(out$n, 2L)
@@ -103,7 +103,7 @@ test_that("artist releases are tallied with their masters", {
   expect_equal(dig_tally(releases, "role")$n, 3L)
   expect_equal(dig_tally(releases, "format")$format, "10\"")
   expect_equal(dig_tally(releases, "label")$label, "Fernhollow Records")
-  expect_equal(dig_tally(releases, "year", unique = TRUE)$n, 3L)
+  expect_equal(dig_tally(releases, "year", unique = TRUE)$n, c(1L, 2L))
   expect_equal(dig_tally(releases, "role")$share, 1)
 })
 
@@ -112,10 +112,10 @@ test_that("master versions use major formats and release dates", {
   local_fixtures()
   versions <- dig_master_versions(2001)
   out <- dig_tally(versions, "format")
-  expect_equal(out$format, c("Cassette", "CD"))
-  expect_equal(out$n, c(2L, 1L))
-  expect_equal(dig_tally(versions, "country")$country, c("Bulgaria", "Poland", "UK & France"))
-  expect_equal(dig_tally(versions, "year")$year, 1997L)
+  expect_equal(out$format, c("CD", "Cassette", "Vinyl"))
+  expect_equal(out$n, c(1L, 1L, 1L))
+  expect_equal(dig_tally(versions, "country")$country, c("Poland", "UK", "UK & France"))
+  expect_equal(dig_tally(versions, "year")$year, c(1994L, 1997L))
   expect_equal(dig_tally(versions, "decade")$n, 3L)
 })
 
@@ -225,6 +225,7 @@ test_that("numbers and shares are formatted for reading", {
 })
 
 test_that("a missing column names the usable values and how to get it", {
+  skip_if_not_installed("ggplot2")
   local_dig_state()
   local_fixtures()
   collection <- dig_collection("example")

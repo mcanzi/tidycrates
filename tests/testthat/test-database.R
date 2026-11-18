@@ -45,9 +45,9 @@ test_that("dig_master returns the master release", {
   local_fixtures()
   out <- dig_master(2001)
   expect_equal(out$master_id, 2001L)
-  expect_equal(out$title, "Small Hours Atlas")
+  expect_equal(out$title, "Lantern Weather")
   expect_equal(out$main_release, 1001L)
-  expect_equal(nrow(out$tracklist[[1]]), 11)
+  expect_equal(nrow(out$tracklist[[1]]), 2)
 })
 
 test_that("dig_artist returns the artist", {

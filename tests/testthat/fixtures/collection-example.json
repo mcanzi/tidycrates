@@ -146,11 +146,11 @@
         "year": 0,
         "formats": [
           {
-            "name": "CD",
+            "name": "Vinyl",
             "qty": "1",
             "descriptions": [
-              "Compilation",
-              "Mixed"
+              "12\"",
+              "Compilation"
             ]
           }
         ],
@@ -170,7 +170,7 @@
         ],
         "artists": [
           {
-            "name": "Felix Arno",
+            "name": "Various",
             "anv": "",
             "join": "",
             "role": "",

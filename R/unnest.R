@@ -1,8 +1,8 @@
 #' Unnest release data
 #'
 #' Turns the list columns of [dig_release()] into tibbles with one row per
-#' track, credit, format or identifier. Each row keeps the ID of its
-#' release.
+#' track, credit, format, identifier or company. Each row keeps the ID of
+#' its release.
 #'
 #' `dig_tracklist()` also accepts the output of [dig_master()]. Headings
 #' and index tracks are kept with their `type`, and the tracks of an index
@@ -12,6 +12,10 @@
 #' single tracks. `credited_as` is the name printed on the release, if it
 #' differs from the artist name, and `tracks` gives the positions a credit
 #' applies to.
+#'
+#' `dig_companies()` lists the labels of the release followed by the other
+#' companies, such as pressing plants and studios. `role` says what each
+#' company did, and `label_id` can be passed to [dig_label()].
 #'
 #' @param x A tibble returned by [dig_release()] or, for `dig_tracklist()`,
 #'   [dig_master()]. Release IDs or codes such as `"[r249504]"` are also
@@ -25,6 +29,7 @@
 #' dig_credits(release)
 #' dig_formats(release)
 #' dig_identifiers(release)
+#' dig_companies(release)
 #'
 #' @name unnest_release
 NULL
@@ -53,6 +58,12 @@ dig_identifiers <- function(x) {
   unnest_column(x, "identifiers")
 }
 
+#' @rdname unnest_release
+#' @export
+dig_companies <- function(x) {
+  unnest_column(x, "companies")
+}
+
 unnest_column <- function(x, column, call = rlang::caller_env()) {
   if (is.null(x)) {
     return(invisible(NULL))
@@ -74,7 +85,8 @@ unnest_column <- function(x, column, call = rlang::caller_env()) {
     tracklist = tracklist_tibble(list()),
     credits = credits_tibble(list()),
     formats = formats_tibble(list()),
-    identifiers = identifiers_tibble(list())
+    identifiers = identifiers_tibble(list()),
+    companies = companies_tibble(list())
   )
   nested <- purrr::map(x[[column]], \(t) if (is.data.frame(t)) t else template)
   ids <- rep(x[[id]], purrr::map_int(nested, nrow))

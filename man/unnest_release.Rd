@@ -6,6 +6,7 @@
 \alias{dig_credits}
 \alias{dig_formats}
 \alias{dig_identifiers}
+\alias{dig_companies}
 \title{Unnest release data}
 \usage{
 dig_tracklist(x)
@@ -15,6 +16,8 @@ dig_credits(x)
 dig_formats(x)
 
 dig_identifiers(x)
+
+dig_companies(x)
 }
 \arguments{
 \item{x}{A tibble returned by \code{\link[=dig_release]{dig_release()}} or, for \code{dig_tracklist()},
@@ -26,8 +29,8 @@ A tibble, or \code{NULL} invisibly if the API cannot be reached.
 }
 \description{
 Turns the list columns of \code{\link[=dig_release]{dig_release()}} into tibbles with one row per
-track, credit, format or identifier. Each row keeps the ID of its
-release.
+track, credit, format, identifier or company. Each row keeps the ID of
+its release.
 }
 \details{
 \code{dig_tracklist()} also accepts the output of \code{\link[=dig_master]{dig_master()}}. Headings
@@ -38,6 +41,10 @@ follow it. \code{seconds} is the duration converted to seconds.
 single tracks. \code{credited_as} is the name printed on the release, if it
 differs from the artist name, and \code{tracks} gives the positions a credit
 applies to.
+
+\code{dig_companies()} lists the labels of the release followed by the other
+companies, such as pressing plants and studios. \code{role} says what each
+company did, and \code{label_id} can be passed to \code{\link[=dig_label]{dig_label()}}.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
@@ -46,5 +53,6 @@ dig_tracklist(release)
 dig_credits(release)
 dig_formats(release)
 dig_identifiers(release)
+dig_companies(release)
 \dontshow{\}) # examplesIf}
 }

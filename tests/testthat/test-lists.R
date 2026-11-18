@@ -26,7 +26,7 @@ test_that("dig_label_releases returns releases with NA for year 0", {
   local_fixtures()
   out <- dig_label_releases(4001)
   expect_equal(out$release_id, c(1001L, 1002L, 1003L))
-  expect_true(is.na(out$year[3]))
+  expect_true(is.na(out$year[2]))
 })
 
 test_that("dig_master_versions sends only the filters given", {
@@ -39,7 +39,7 @@ test_that("dig_master_versions sends only the filters given", {
   out <- dig_master_versions(1000, country = "Germany")
   expect_equal(query$country, "Germany")
   expect_null(query$format)
-  expect_equal(out$major_formats[1], "Cassette")
+  expect_equal(out$major_formats[1], "Vinyl")
 })
 
 test_that("list functions check their arguments", {

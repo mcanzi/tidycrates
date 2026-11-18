@@ -4,10 +4,12 @@
 \alias{dig_collection_value}
 \title{Get the value of a collection}
 \usage{
-dig_collection_value(username)
+dig_collection_value(username = NULL)
 }
 \arguments{
-\item{username}{A 'Discogs' username.}
+\item{username}{A 'Discogs' username, or \code{NULL} for the owner of the
+token set with \code{\link[=dig_auth]{dig_auth()}}. Finding the owner takes one request,
+once per session.}
 }
 \value{
 A tibble with one row and the columns \code{username}, \code{minimum},
@@ -18,7 +20,8 @@ cannot be reached. A value that cannot be read is \code{NA}.
 Gets the minimum, median and maximum value of a collection, as
 'Discogs' estimates it from marketplace sales. Only the owner of a
 collection can get its value, so this needs the owner's token, see
-\code{\link[=dig_auth]{dig_auth()}}.
+\code{\link[=dig_auth]{dig_auth()}}. Without a username, the value of the token owner's
+collection is read.
 }
 \details{
 'Discogs' returns the values as formatted text, such as \code{"$1,250.00"}.
@@ -39,6 +42,6 @@ using the API to get around the 'Discogs' marketplace.
 
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
-dig_collection_value("your-username")
+dig_collection_value()
 \dontshow{\}) # examplesIf}
 }

@@ -9,12 +9,12 @@
   "releases": [
     {
       "status": "Accepted",
-      "format": "CD, Comp, Mixed",
-      "catno": "FHR 010",
-      "title": "Fernhollow Nights",
+      "format": "7\", Single",
+      "catno": "FHR 007",
+      "title": "Lantern Weather",
       "id": 1001,
-      "year": 1998,
-      "artist": "Felix Arno"
+      "year": 1994,
+      "artist": "Juniper Static"
     },
     {
       "status": "Accepted",
@@ -22,16 +22,16 @@
       "catno": "FHR 011",
       "title": "Tidewater Sessions",
       "id": 1002,
-      "year": 1998,
+      "year": 0,
       "artist": "Various"
     },
     {
       "status": "Accepted",
-      "format": "CD, Mixed, RP",
+      "format": "CD, Mixed",
       "catno": "FHR 012",
       "title": "Low Tide Mix",
       "id": 1003,
-      "year": 0,
+      "year": 1998,
       "artist": "Ida Marsh"
     }
   ]

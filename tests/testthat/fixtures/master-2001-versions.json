@@ -10,14 +10,14 @@
     {
       "id": 1001,
       "label": "Fernhollow Records",
-      "country": "Bulgaria",
-      "title": "Small Hours Atlas",
+      "country": "UK",
+      "title": "Lantern Weather",
       "major_formats": [
-        "Cassette"
+        "Vinyl"
       ],
       "format": "Album",
-      "catno": "FHR 001 MC",
-      "released": "1997",
+      "catno": "FHR 007",
+      "released": "1994-07-00",
       "status": "Accepted",
       "stats": {
         "community": {
@@ -30,12 +30,12 @@
       "id": 1005,
       "label": "Fernhollow Records",
       "country": "UK & France",
-      "title": "Small Hours Atlas",
+      "title": "Lantern Weather",
       "major_formats": [
         "CD"
       ],
       "format": "Album",
-      "catno": "FHR 001 CD",
+      "catno": "FHR 007 CD",
       "released": "1997",
       "status": "Accepted",
       "stats": {
@@ -47,14 +47,14 @@
     },
     {
       "id": 1006,
-      "label": "Fernhollow Records",
+      "label": "Mossbank Tapes",
       "country": "Poland",
-      "title": "Small Hours Atlas",
+      "title": "Lantern Weather",
       "major_formats": [
         "Cassette"
       ],
       "format": "Album",
-      "catno": "FHR 001 PL",
+      "catno": "MBT 012",
       "released": "1997",
       "status": "Accepted",
       "stats": {

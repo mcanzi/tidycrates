@@ -5,7 +5,8 @@
 #'
 #' The tracklist, credits, formats, identifiers and companies are kept as
 #' list columns of tibbles. [dig_tracklist()], [dig_credits()],
-#' [dig_formats()] and [dig_identifiers()] turn them into one row per item.
+#' [dig_formats()], [dig_identifiers()] and [dig_companies()] turn them
+#' into one row per item.
 #'
 #' Images are left out, because the people who upload them can hold their
 #' own copyright. Prices are left out too, because they change quickly and
@@ -32,7 +33,7 @@
 #' @export
 dig_release <- function(id) {
   ids <- check_ids(id, "r")
-  out <- fetch_each(ids, "releases", parse_release)
+  out <- fetch_rows(ids, "releases", \(body, id) parse_release(body))
   if (is.null(out)) invisible(NULL) else out
 }
 
@@ -95,7 +96,7 @@ parse_release <- function(body) {
 #' @export
 dig_master <- function(id) {
   ids <- check_ids(id, "m")
-  out <- fetch_each(ids, "masters", parse_master)
+  out <- fetch_rows(ids, "masters", \(body, id) parse_master(body))
   if (is.null(out)) invisible(NULL) else out
 }
 
@@ -141,7 +142,7 @@ parse_master <- function(body) {
 #' @export
 dig_artist <- function(id) {
   ids <- check_ids(id, "a")
-  out <- fetch_each(ids, "artists", parse_artist)
+  out <- fetch_rows(ids, "artists", \(body, id) parse_artist(body))
   if (is.null(out)) invisible(NULL) else out
 }
 
@@ -195,7 +196,7 @@ people_tibble <- function(items) {
 #' @export
 dig_label <- function(id) {
   ids <- check_ids(id, "l")
-  out <- fetch_each(ids, "labels", parse_label)
+  out <- fetch_rows(ids, "labels", \(body, id) parse_label(body))
   if (is.null(out)) invisible(NULL) else out
 }
 

@@ -2,7 +2,8 @@
 #'
 #' Lists the releases in the collection of a 'Discogs' user. Anyone can
 #' read a public collection. A private collection can only be read with
-#' the token of its owner, see [dig_auth()].
+#' the token of its owner, see [dig_auth()]. Without a username, the
+#' collection of the token owner is listed.
 #'
 #' A release that is in the collection more than once has one row per
 #' copy, each with its own `instance_id`. Collections are never cached, so
@@ -11,10 +12,9 @@
 #' The media and sleeve conditions come from the collection fields named
 #' Media and Sleeve. If any copy has a value in a field, the fields are
 #' matched by name with one more request. Other fields, such as Notes, are
-#' left out. Without
-#' the token of the owner, only public fields can be read, and the
-#' conditions are `NA` for fields that are private. If the fields cannot be
-#' read, a message says so and the conditions are `NA`.
+#' left out. Without the token of the owner, only public fields can be
+#' read, and the conditions are `NA` for fields that are private. If the
+#' fields cannot be read, a message says so and the conditions are `NA`.
 #'
 #' @section Restricted Data:
 #' Collections, wantlists, usernames and marketplace data, such as prices
@@ -27,9 +27,12 @@
 #' using the API to get around the 'Discogs' marketplace.
 #'
 #' @inheritParams dig_artist_releases
-#' @param username A 'Discogs' username.
-#' @param folder The ID of a collection folder. The default, `0`, holds the
-#'   whole collection and is the only folder other users can read.
+#' @param username A 'Discogs' username, or `NULL` for the owner of the
+#'   token set with [dig_auth()]. Finding the owner takes one request,
+#'   once per session.
+#' @param folder The ID of a collection folder, see
+#'   [dig_collection_folders()]. The default, `0`, holds the whole
+#'   collection and is the only folder other users can read.
 #' @param sort The column to sort by: `"added"`, `"artist"`, `"title"`,
 #'   `"label"`, `"catno"`, `"format"`, `"rating"` or `"year"`.
 #'
@@ -49,19 +52,22 @@
 #' dplyr::count(collection, media_condition)
 #'
 #' @export
-dig_collection <- function(username, folder = 0,
+dig_collection <- function(username = NULL, folder = 0,
                            sort = c("added", "artist", "title", "label", "catno", "format", "rating", "year"),
                            order = c("asc", "desc"), all = FALSE, page = 1,
                            per_page = 50) {
-  username <- check_username(username)
   if (!rlang::is_scalar_integerish(folder, finite = TRUE) || folder < 0) {
     cli::cli_abort("{.arg folder} must be a whole number from 0.")
   }
   sort <- rlang::arg_match(sort)
   order <- rlang::arg_match(order)
   check_page(page, per_page, all)
+  username <- check_username(username)
+  if (is.null(username)) {
+    return(invisible(NULL))
+  }
   items <- dig_get_pages(
-    paste0("users/", username, "/collection/folders/", format(folder, scientific = FALSE), "/releases"),
+    user_path(username, "/collection/folders/", format(folder, scientific = FALSE), "/releases"),
     "releases",
     query = list(sort = sort, sort_order = order),
     all = all, page = page, per_page = per_page, cache = FALSE
@@ -69,7 +75,6 @@ dig_collection <- function(username, folder = 0,
   if (is.null(items)) {
     return(invisible(NULL))
   }
-  items <- as_items(items)
   fields <- condition_fields(username, items)
   if (is.null(fields)) {
     return(invisible(NULL))
@@ -93,7 +98,7 @@ condition_fields <- function(username, items, call = rlang::caller_env()) {
     return(list(media = integer(), sleeve = integer()))
   }
   body <- tryCatch(
-    dig_get(paste0("users/", username, "/collection/fields"), cache = FALSE, call = call),
+    dig_get(user_path(username, "/collection/fields"), cache = FALSE, call = call),
     tidycrates_http_error = \(e) {
       cli::cli_inform(c("The collection fields could not be read, so the conditions are {.val {NA}}.", i = "{e$message}"))
       list()
@@ -128,8 +133,12 @@ grade <- function(x, levels) {
 #'
 #' Lists the releases in the wantlist of a 'Discogs' user. Anyone can read
 #' a public wantlist. A private wantlist can only be read with the token of
-#' its owner, see [dig_auth()]. Wantlists are never cached, so changes
-#' show up at once.
+#' its owner, see [dig_auth()]. Without a username, the wantlist of the
+#' token owner is listed. Wantlists are never cached, so changes show up
+#' at once.
+#'
+#' The notes that a user writes for each release are left out, because
+#' they can be personal.
 #'
 #' @inheritSection dig_collection Restricted Data
 #' @inheritParams dig_collection
@@ -137,39 +146,114 @@ grade <- function(x, levels) {
 #' @return A tibble with one row per release, or `NULL` invisibly if the
 #'   API cannot be reached. The columns are `release_id`, `title`,
 #'   `artist`, `year`, `label`, `catno`, `format`, `genres` and `styles` as
-#'   list columns, `master_id`, `rating`, `date_added` and `notes`.
-#'   `rating` is `NA` if the user gave none.
+#'   list columns, `master_id`, `rating` and `date_added`. `rating` is `NA`
+#'   if the user gave none.
 #'
 #' @examplesIf interactive()
 #' dig_wantlist("username", all = TRUE)
 #'
 #' @export
-dig_wantlist <- function(username,
+dig_wantlist <- function(username = NULL,
                          sort = c("added", "artist", "title", "label", "catno", "format", "rating", "year"),
                          order = c("asc", "desc"), all = FALSE, page = 1,
                          per_page = 50) {
-  username <- check_username(username)
   sort <- rlang::arg_match(sort)
   order <- rlang::arg_match(order)
   check_page(page, per_page, all)
+  username <- check_username(username)
+  if (is.null(username)) {
+    return(invisible(NULL))
+  }
   items <- dig_get_pages(
-    paste0("users/", username, "/wants"), "wants",
+    user_path(username, "/wants"), "wants",
     query = list(sort = sort, sort_order = order),
     all = all, page = page, per_page = per_page, cache = FALSE
   )
   if (is.null(items)) {
     return(invisible(NULL))
   }
-  items <- as_items(items)
-  basic_tibble(items) |>
-    tibble::add_column(notes = chr(items, "notes"))
+  basic_tibble(items)
+}
+
+#' List the collection folders of a user
+#'
+#' Lists the folders of a 'Discogs' collection, with the number of
+#' releases in each. Folder `0` holds the whole collection and folder `1`
+#' holds the releases that are in no other folder. Other users can only
+#' see folder `0`, unless the collection is read with the token of its
+#' owner, see [dig_auth()]. Folders are never cached.
+#'
+#' @inheritSection dig_collection Restricted Data
+#' @inheritParams dig_collection
+#'
+#' @return A tibble with one row per folder and the columns `folder_id`,
+#'   `name` and `count`, or `NULL` invisibly if the API cannot be reached.
+#'   `folder_id` can be passed to [dig_collection()].
+#'
+#' @examplesIf interactive()
+#' dig_collection_folders("username")
+#'
+#' @export
+dig_collection_folders <- function(username = NULL) {
+  username <- check_username(username)
+  if (is.null(username)) {
+    return(invisible(NULL))
+  }
+  body <- dig_get(user_path(username, "/collection/folders"), cache = FALSE)
+  if (is.null(body)) {
+    return(invisible(NULL))
+  }
+  folders <- as_items(pluck_list(body, "folders"))
+  tibble::tibble(
+    folder_id = int(folders, "id"),
+    name = chr(folders, "name"),
+    count = int(folders, "count")
+  )
 }
 
 check_username <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
-  if (!rlang::is_string(x) || is.na(x) || !nzchar(stringr::str_trim(x))) {
-    cli::cli_abort("{.arg {arg}} must be a single username.", call = call)
+  if (is.null(x)) {
+    return(token_username(arg, call))
   }
-  utils::URLencode(stringr::str_trim(x), reserved = TRUE)
+  if (!rlang::is_string(x) || is.na(x) || !nzchar(stringr::str_trim(x))) {
+    cli::cli_abort("{.arg {arg}} must be a single username or `NULL`.", call = call)
+  }
+  x <- stringr::str_trim(x)
+  if (stringr::str_detect(x, "^\\.+$|[[:cntrl:]]")) {
+    cli::cli_abort("{.arg {arg}} is not a valid username.", call = call)
+  }
+  x
+}
+
+token_username <- function(arg, call) {
+  token <- auth_token(call)
+  if (is.null(token)) {
+    cli::cli_abort(
+      c(
+        "{.arg {arg}} is needed when no token is set.",
+        i = "Give a username, or set your token with {.fn dig_auth} to use your own."
+      ),
+      call = call
+    )
+  }
+  key <- rlang::hash(token)
+  if (identical(dig_env$identity$key, key)) {
+    return(dig_env$identity$username)
+  }
+  body <- dig_get("oauth/identity", cache = FALSE, call = call)
+  if (is.null(body)) {
+    return(NULL)
+  }
+  username <- chr(list(body), "username")
+  if (is.na(username)) {
+    cli::cli_abort("'Discogs' did not return the username of the token owner.", call = call)
+  }
+  dig_env$identity <- list(key = key, username = username)
+  username
+}
+
+user_path <- function(username, ...) {
+  paste0("users/", utils::URLencode(username, reserved = TRUE), ...)
 }
 
 basic_tibble <- function(items) {

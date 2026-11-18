@@ -11,7 +11,10 @@
 #' [dig_label()], depending on `type`.
 #'
 #' 'Discogs' returns up to 100 results per page. With `all = TRUE`, every
-#' page is fetched, which takes one request for each 100 results.
+#' page is fetched, which takes one request for each 100 results. A search
+#' with more than 100 pages, or 10,000 results, stops with an error before
+#' the other pages are fetched, so that a broad search does not send
+#' hundreds of requests. Single pages can still be fetched with `page`.
 #'
 #' @inheritParams dig_artist_releases
 #' @param query The search query, or `NULL` to search with filters only.
@@ -72,12 +75,11 @@ dig_search <- function(query = NULL, type = NULL, title = NULL, release_title = 
   items <- dig_get_pages(
     "database/search", "results",
     query = c(filters, purrr::compact(list(type = type)), sort = sort, sort_order = order),
-    all = all, page = page, per_page = per_page
+    all = all, page = page, per_page = per_page, max_pages = 100
   )
   if (is.null(items)) {
     return(invisible(NULL))
   }
-  items <- as_items(items)
   uri <- chr(items, "uri")
   tibble::tibble(
     id = int(items, "id"),

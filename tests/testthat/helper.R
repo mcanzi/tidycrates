@@ -68,6 +68,8 @@ local_fixtures <- function(env = parent.frame()) {
     "marketplace/price_suggestions/1001$" = "price-suggestions-1001",
     "marketplace/price_suggestions/1002$" = "price-suggestions-1002",
     "users/example/collection/value$" = "collection-value-example",
+    "users/example/collection/folders$" = "collection-folders-example",
+    "oauth/identity$" = "identity-example",
     "database/search$" = "search-juniper"
   )
   httr2::local_mocked_responses(

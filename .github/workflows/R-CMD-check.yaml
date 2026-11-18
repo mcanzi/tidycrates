@@ -8,7 +8,7 @@ name: R-CMD-check
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}${{ matrix.config.no-suggests && ', no Suggests' || '' }})
     strategy:
       fail-fast: false
       matrix:
@@ -18,9 +18,12 @@ jobs:
           - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,  r: 'release'}
           - {os: ubuntu-latest,  r: 'oldrel-1'}
+          - {os: ubuntu-latest,  r: '4.1'}
+          - {os: ubuntu-latest,  r: 'release', dependencies: '"hard"', no-suggests: true}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_FORCE_SUGGESTS_: ${{ matrix.config.no-suggests && 'false' || 'true' }}
     steps:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
@@ -29,13 +32,14 @@ jobs:
           use-public-rspm: true
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          dependencies: ${{ matrix.config.dependencies || '"all"' }}
+          extra-packages: ${{ matrix.config.no-suggests && 'any::rcmdcheck, any::testthat' || 'any::rcmdcheck' }}
           needs: check
       - uses: r-lib/actions/setup-tinytex@v2
-        if: runner.os == 'Linux' && matrix.config.r == 'release'
+        if: runner.os == 'Linux' && matrix.config.r == 'release' && !matrix.config.no-suggests
       - name: Install LaTeX fonts for the PDF manual
-        if: runner.os == 'Linux' && matrix.config.r == 'release'
+        if: runner.os == 'Linux' && matrix.config.r == 'release' && !matrix.config.no-suggests
         run: tlmgr install inconsolata
       - uses: r-lib/actions/check-r-package@v2
         with:
-          args: ${{ (runner.os == 'Linux' && matrix.config.r == 'release') && 'c("--as-cran")' || 'c("--no-manual", "--as-cran")' }}
+          args: ${{ (runner.os == 'Linux' && matrix.config.r == 'release' && !matrix.config.no-suggests) && 'c("--as-cran")' || 'c("--no-manual", "--as-cran")' }}

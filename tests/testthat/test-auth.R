@@ -47,3 +47,12 @@ test_that("the user agent is squished", {
   dig_user_agent(" My App/1.0\n")
   expect_match(dig_user_agent(), "^My App/1.0 tidycrates/")
 })
+
+test_that("tokens with spaces or line breaks inside are rejected", {
+  local_dig_state()
+  expect_error(dig_auth("abc def"), "spaces or line breaks")
+  expect_error(dig_auth("abc\r\nX-Other: 1"), "spaces or line breaks")
+  rm("token", envir = dig_env)
+  withr::local_envvar(DISCOGS_TOKEN = "abc\ndef")
+  expect_error(dig_release(1), "DISCOGS_TOKEN")
+})

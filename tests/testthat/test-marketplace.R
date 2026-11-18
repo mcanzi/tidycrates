@@ -98,6 +98,7 @@ test_that("price suggestions and collection values need a token", {
   local_dig_state()
   expect_error(dig_price_suggestions(1001), "personal access token")
   expect_error(dig_collection_value("example"), "personal access token")
+  expect_error(dig_collection_value(), "personal access token")
 })
 
 test_that("dig_collection_value turns formatted values into numbers", {
@@ -146,6 +147,7 @@ test_that("an owner check from Discogs stops with its message", {
 
 test_that("marketplace data are never cached", {
   skip_if_not_installed("memoise")
+  skip_if_not_installed("cachem")
   local_dig_state(token = "abc")
   withr::local_options(tidycrates.cache = TRUE)
   calls <- 0L
@@ -174,4 +176,12 @@ test_that("negative values keep their sign", {
   money <- parse_money(c("-$5.00", "$-5.00", "−€1.250,00", "-", "$1,250.00"))
   expect_equal(money$value, c(-5, -5, -1250, NA, 1250))
   expect_equal(money$currency, c("$", "$", "€", NA, "$"))
+})
+
+test_that("dig_collection_value reads the value of the token owner", {
+  local_dig_state(token = "abc")
+  local_fixtures()
+  out <- dig_collection_value()
+  expect_equal(out$username, "example")
+  expect_equal(out$maximum, 1250)
 })

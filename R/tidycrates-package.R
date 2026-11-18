@@ -4,14 +4,14 @@
 #' access token set by [dig_auth()], the limit is 60 requests a minute,
 #' the database can be searched, your own private collection and wantlist
 #' can be read, and price suggestions and the value of your collection are
-#' available. Requests
-#' are spaced out to stay within the limit and retried after HTTP 429
-#' responses.
+#' available. Requests are spaced out evenly to stay within the limit and
+#' retried after HTTP 429 responses.
 #'
-#' When the API cannot be reached, because there is no internet connection
-#' or the server returns an error, functions give a message and return
-#' `NULL` invisibly. Errors caused by the request, such as an unknown
-#' release, stop with the message returned by 'Discogs'.
+#' When the API cannot be reached, because there is no internet connection,
+#' the server returns an error or the rate limit is still exceeded after
+#' several tries, functions give a message and return `NULL` invisibly.
+#' Errors caused by the request, such as an unknown release, stop with the
+#' message returned by 'Discogs'.
 #'
 #' @section Options:
 #' If the option `tidycrates.cache` is set to `TRUE`, responses from the
@@ -19,7 +19,8 @@
 #' count towards the rate limit. Caching needs the memoise and cachem
 #' packages and is off by default. Cached responses are kept for 3600
 #' seconds unless `tidycrates.cache_age` gives another number of seconds.
-#' Changing `tidycrates.cache_age` starts a new, empty cache.
+#' Changing `tidycrates.cache_age` starts a new, empty cache, and
+#' [dig_cache_clear()] empties it.
 #' Collections, wantlists and marketplace data are never cached.
 #' The API Terms of Use do not allow showing data that are more than six
 #' hours old, so responses are never kept longer than 21600 seconds.

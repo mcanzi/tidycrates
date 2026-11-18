@@ -9,7 +9,8 @@ dig_auth(token = Sys.getenv("DISCOGS_TOKEN"))
 \arguments{
 \item{token}{A personal access token. By default the value of the
 \code{DISCOGS_TOKEN} environment variable. An empty string removes the
-token, so requests are made without one.}
+token, so requests are made without one. Spaces at either end are
+removed, and a token with spaces or line breaks inside is rejected.}
 }
 \value{
 \code{TRUE} if a token is set and \code{FALSE} otherwise, invisibly.
@@ -19,8 +20,8 @@ Sets the personal access token used for requests in this session. With a
 token, 'Discogs' allows 60 requests a minute instead of 25,
 \code{\link[=dig_collection]{dig_collection()}} and \code{\link[=dig_wantlist]{dig_wantlist()}} can read your own collection and
 wantlist when they are private, and \code{\link[=dig_search]{dig_search()}},
-\code{\link[=dig_price_suggestions]{dig_price_suggestions()}} and \code{\link[=dig_collection_value]{dig_collection_value()}} work. A token can be generated at
-\url{https://www.discogs.com/settings/developers}.
+\code{\link[=dig_price_suggestions]{dig_price_suggestions()}} and \code{\link[=dig_collection_value]{dig_collection_value()}} work. A token
+can be generated at \url{https://www.discogs.com/settings/developers}.
 }
 \details{
 If \code{dig_auth()} is never called, the \code{DISCOGS_TOKEN} environment

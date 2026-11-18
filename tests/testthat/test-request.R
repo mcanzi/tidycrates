@@ -19,6 +19,25 @@ test_that("the throttle follows the rate limit for the token", {
   expect_equal(dig_request("x", token = "abc")$policies$throttle_realm, "discogs-token")
 })
 
+test_that("requests are spaced out evenly, without a burst", {
+  local_dig_state()
+  dig_request("x", token = NULL)
+  dig_request("x", token = "abc")
+  status <- httr2::throttle_status()
+  expect_equal(status$capacity[status$realm == "discogs"], 1)
+  expect_equal(status$capacity[status$realm == "discogs-token"], 1)
+  expect_lte(60 / request_spacing(NULL), 25)
+  expect_lte(60 / request_spacing("abc"), 60)
+})
+
+test_that("a rate limit that is still exceeded gives a message and returns NULL", {
+  local_dig_state()
+  httr2::local_mocked_responses(function(req) discogs_response(list(message = "Too many requests."), status = 429L))
+  local_mocked_bindings(retry_backoff = \(attempt) 0)
+  expect_message(out <- dig_get("releases/1"), "rate limit")
+  expect_null(out)
+})
+
 test_that("dig_get returns the parsed body", {
   local_dig_state()
   httr2::local_mocked_responses(list(discogs_response(list(id = 1L, title = "Kaos"))))

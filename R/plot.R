@@ -23,6 +23,15 @@
 #' @return A ggplot object, which can be changed with `+`, or `NULL`
 #'   invisibly if `x` is `NULL`.
 #'
+#' @examplesIf rlang::is_installed("ggplot2")
+#' shelf <- tibble::tibble(
+#'   release_id = c(1, 1, 2, 3),
+#'   year = c(1994, 1994, 1998, NA),
+#'   genres = list(c("Electronic", "Pop"), c("Electronic", "Pop"), "Electronic", "Jazz")
+#' )
+#' dig_plot(shelf, "genre")
+#' dig_plot(shelf, "year")
+#'
 #' @examplesIf interactive() && rlang::is_installed("ggplot2")
 #' collection <- dig_collection("username", all = TRUE)
 #' dig_plot(collection, "decade")
@@ -36,27 +45,27 @@ dig_plot <- function(x,
                      n = 10, unique = FALSE) {
   by <- rlang::arg_match(by)
   rlang::check_installed("ggplot2", reason = "to plot releases.")
-  data <- tally_collection(x, by, n, unique)
-  if (is.null(data)) {
+  if (is.null(x)) {
     return(invisible(NULL))
   }
-  total <- if (unique) nrow(dplyr::distinct(x, dplyr::across(dplyr::all_of(release_key(x))))) else nrow(x)
+  check_tally(x, n, unique)
+  tally <- tally_long(x, by, unique)
+  data <- count_values(tally, by, n)
   unit <- dplyr::case_when(
     "type" %in% names(x) && any(x$type %in% c("artist", "label")) ~ "results",
     unique || !"instance_id" %in% names(x) ~ "releases",
     .default = "copies"
   )
-  about <- list(by = by, total = total, unit = unit)
+  about <- list(by = by, total = tally$rows, unit = unit)
   if (nrow(data) == 0) {
     return(plot_empty(about))
   }
-  plot <- switch(by,
+  switch(by,
     decade = plot_decades(data, about),
     year = plot_years(data, about),
     added = plot_growth(data, about),
-    plot_ranking(data, n, nrow(tally_collection(x, by, Inf, unique)), about)
+    plot_ranking(data, n, dplyr::n_distinct(tally$long$value), about)
   )
-  plot
 }
 
 credit <- "Data provided by Discogs."

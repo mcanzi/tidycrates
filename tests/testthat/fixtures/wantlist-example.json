@@ -60,9 +60,9 @@
       "date_added": "2024-02-14T09:30:00-08:00",
       "basic_information": {
         "id": 1002,
-        "master_id": 2002,
+        "master_id": 0,
         "title": "Tidewater Sessions",
-        "year": 1998,
+        "year": 0,
         "formats": [
           {
             "name": "Vinyl",
@@ -94,9 +94,7 @@
         "genres": [
           "Electronic"
         ],
-        "styles": [
-          "Techno"
-        ]
+        "styles": []
       }
     }
   ]

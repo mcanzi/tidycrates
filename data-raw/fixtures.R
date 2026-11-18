@@ -75,11 +75,6 @@ write_fixture(
   "release-1001"
 )
 
-atlas <- c(
-  "Small Hours", "Quiet Engine", "Tin Roof Choir", "Harbour Lights", "Moth Radio", "Glasshouse",
-  "Northbound Static", "Paper Moon Signal", "Low Tide Waltz", "Ember Lane", "Atlas (Reprise)"
-)
-
 write_fixture(
   list(
     id = 2001,
@@ -88,9 +83,12 @@ write_fixture(
     genres = list("Electronic", "Pop"),
     styles = list("Downtempo"),
     year = 1994,
-    tracklist = purrr::map(seq_along(atlas), \(i) list(position = as.character(i), type_ = "track", title = atlas[[i]], duration = paste0(3 + i %% 4, ":", sprintf("%02d", (i * 7) %% 60)))),
+    tracklist = list(
+      list(position = "1", type_ = "track", title = "Lantern Weather", duration = "3:32"),
+      list(position = "2", type_ = "track", title = "Lantern Weather (Dub)", duration = "3:30")
+    ),
     artists = list(juniper),
-    title = "Small Hours Atlas",
+    title = "Lantern Weather",
     data_quality = "Correct",
     uri = "https://example.com/master/2001"
   ),
@@ -143,7 +141,7 @@ write_fixture(
     pagination = pages(3, 44, 132),
     releases = list(
       list(id = 1004, status = "Accepted", type = "release", format = "10\"", label = "Fernhollow Records", title = "Moth Radio", role = "Main", artist = "Juniper Static & Felix Arno", year = 1997, stats = list(community = list(in_wantlist = 160, in_collection = 43))),
-      list(id = 2001, type = "master", main_release = 1001, title = "Small Hours Atlas", role = "Main", artist = "Juniper Static", year = 1997, stats = list(community = list(in_wantlist = 90, in_collection = 70))),
+      list(id = 2001, type = "master", main_release = 1001, title = "Lantern Weather", role = "Main", artist = "Juniper Static", year = 1994, stats = list(community = list(in_wantlist = 90, in_collection = 70))),
       list(id = 2002, type = "master", main_release = 1007, title = "Paper Moon Signal", role = "Main", artist = "Juniper Static", year = 1997, stats = list(community = list(in_wantlist = 30, in_collection = 25)))
     )
   ),
@@ -154,18 +152,18 @@ write_fixture(
   list(
     pagination = pages(3, 199, 597),
     releases = list(
-      list(status = "Accepted", format = "CD, Comp, Mixed", catno = "FHR 010", title = "Fernhollow Nights", id = 1001, year = 1998, artist = "Felix Arno"),
-      list(status = "Accepted", format = "2x12\", Comp", catno = "FHR 011", title = "Tidewater Sessions", id = 1002, year = 1998, artist = "Various"),
-      list(status = "Accepted", format = "CD, Mixed, RP", catno = "FHR 012", title = "Low Tide Mix", id = 1003, year = 0, artist = "Ida Marsh")
+      list(status = "Accepted", format = "7\", Single", catno = "FHR 007", title = "Lantern Weather", id = 1001, year = 1994, artist = "Juniper Static"),
+      list(status = "Accepted", format = "2x12\", Comp", catno = "FHR 011", title = "Tidewater Sessions", id = 1002, year = 0, artist = "Various"),
+      list(status = "Accepted", format = "CD, Mixed", catno = "FHR 012", title = "Low Tide Mix", id = 1003, year = 1998, artist = "Ida Marsh")
     )
   ),
   "label-4001-releases"
 )
 
-version <- function(id, country, format, catno) {
+version <- function(id, label, country, format, catno, released) {
   list(
-    id = id, label = "Fernhollow Records", country = country, title = "Small Hours Atlas",
-    major_formats = list(format), format = "Album", catno = catno, released = "1997", status = "Accepted",
+    id = id, label = label, country = country, title = "Lantern Weather",
+    major_formats = list(format), format = "Album", catno = catno, released = released, status = "Accepted",
     stats = list(community = list(in_wantlist = 10, in_collection = 5))
   )
 }
@@ -174,9 +172,9 @@ write_fixture(
   list(
     pagination = pages(3, 3, 8),
     versions = list(
-      version(1001, "Bulgaria", "Cassette", "FHR 001 MC"),
-      version(1005, "UK & France", "CD", "FHR 001 CD"),
-      version(1006, "Poland", "Cassette", "FHR 001 PL")
+      version(1001, "Fernhollow Records", "UK", "Vinyl", "FHR 007", "1994-07-00"),
+      version(1005, "Fernhollow Records", "UK & France", "CD", "FHR 007 CD", "1997"),
+      version(1006, "Mossbank Tapes", "Poland", "Cassette", "MBT 012", "1997")
     )
   ),
   "master-2001-versions"
@@ -207,7 +205,7 @@ write_fixture(
       list(id = 1001, instance_id = 102, folder_id = 1, rating = 0, date_added = "2024-05-20T08:00:00-07:00", basic_information = lantern, notes = list(note(1, "Very Good (VG)"), note(2, "Generic"), note(4, "Shelf B"))),
       list(
         id = 1002, instance_id = 103, folder_id = 2, rating = 5, date_added = "2025-01-11T19:45:00-08:00",
-        basic_information = basic(1002, 0, "Tidewater Sessions", 0, "CD", c("Compilation", "Mixed"), c("Fernhollow Records", "Fernhollow Records"), "Felix Arno", "Electronic", character())
+        basic_information = basic(1002, 0, "Tidewater Sessions", 0, "Vinyl", c("12\"", "Compilation"), c("Fernhollow Records", "Fernhollow Records"), "Various", "Electronic", character())
       )
     )
   ),
@@ -241,7 +239,7 @@ write_fixture(
       ),
       list(
         id = 1002, rating = 3, notes = "", date_added = "2024-02-14T09:30:00-08:00",
-        basic_information = basic(1002, 2002, "Tidewater Sessions", 1998, "Vinyl", c("12\"", "Compilation"), "Fernhollow Records", "Various", "Electronic", "Techno")
+        basic_information = basic(1002, 0, "Tidewater Sessions", 0, "Vinyl", c("12\"", "Compilation"), "Fernhollow Records", "Various", "Electronic", character())
       )
     )
   ),
@@ -304,7 +302,7 @@ write_fixture(
         genre = list("Electronic", "Pop"), master_id = 2001
       ),
       result(
-        2001, "master", "Juniper Static - Small Hours Atlas", "/Juniper-Static-Small-Hours-Atlas/master/2001",
+        2001, "master", "Juniper Static - Lantern Weather", "/Juniper-Static-Lantern-Weather/master/2001",
         style = list("Downtempo"), format = list("Vinyl", "CD", "Cassette"), community = list(want = 90, have = 70),
         label = list("Fernhollow Records", "Mossbank Tapes"), year = "1994",
         genre = list("Electronic", "Pop")
@@ -313,4 +311,18 @@ write_fixture(
     )
   ),
   "search-juniper"
+)
+
+folder <- function(id, name, count) {
+  list(id = id, name = name, count = count, resource_url = paste0("https://example.com/users/example/collection/folders/", id))
+}
+
+write_fixture(
+  list(folders = list(folder(0, "All", 3), folder(1, "Uncategorized", 2), folder(2, "Compilations", 1))),
+  "collection-folders-example"
+)
+
+write_fixture(
+  list(id = 9001, username = "example", resource_url = "https://example.com/users/example", consumer_name = "tidycrates"),
+  "identity-example"
 )

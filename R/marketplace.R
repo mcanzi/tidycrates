@@ -28,9 +28,9 @@
 dig_price_stats <- function(id, currency = NULL) {
   ids <- check_ids(id, "r")
   currency <- check_currency(currency)
-  out <- fetch_uncached(
+  out <- fetch_rows(
     ids, "marketplace/stats", parse_price_stats,
-    query = purrr::compact(list(curr_abbr = currency))
+    query = purrr::compact(list(curr_abbr = currency)), cache = FALSE
   )
   if (is.null(out)) invisible(NULL) else out
 }
@@ -59,7 +59,7 @@ dig_price_stats <- function(id, currency = NULL) {
 dig_price_suggestions <- function(id) {
   ids <- check_ids(id, "r")
   check_token()
-  out <- fetch_uncached(ids, "marketplace/price_suggestions", parse_price_suggestions)
+  out <- fetch_rows(ids, "marketplace/price_suggestions", parse_price_suggestions, cache = FALSE)
   if (is.null(out)) invisible(NULL) else out
 }
 
@@ -68,7 +68,8 @@ dig_price_suggestions <- function(id) {
 #' Gets the minimum, median and maximum value of a collection, as
 #' 'Discogs' estimates it from marketplace sales. Only the owner of a
 #' collection can get its value, so this needs the owner's token, see
-#' [dig_auth()].
+#' [dig_auth()]. Without a username, the value of the token owner's
+#' collection is read.
 #'
 #' 'Discogs' returns the values as formatted text, such as `"$1,250.00"`.
 #' They are turned into numbers, and the currency symbol is kept in
@@ -82,14 +83,16 @@ dig_price_suggestions <- function(id) {
 #'   cannot be reached. A value that cannot be read is `NA`.
 #'
 #' @examplesIf interactive()
-#' dig_collection_value("your-username")
+#' dig_collection_value()
 #'
 #' @export
-dig_collection_value <- function(username) {
-  path <- paste0("users/", check_username(username), "/collection/value")
-  name <- stringr::str_trim(username)
+dig_collection_value <- function(username = NULL) {
   check_token()
-  body <- dig_get(path, cache = FALSE)
+  name <- check_username(username)
+  if (is.null(name)) {
+    return(invisible(NULL))
+  }
+  body <- dig_get(user_path(name, "/collection/value"), cache = FALSE)
   if (is.null(body)) {
     return(invisible(NULL))
   }
@@ -132,27 +135,7 @@ check_token <- function(call = rlang::caller_env()) {
   invisible()
 }
 
-fetch_uncached <- function(ids, path, parse, query = list(), call = rlang::caller_env()) {
-  unique_ids <- unique(ids)
-  bodies <- map_requests(
-    unique_ids,
-    \(id) dig_get(paste0(path, "/", id), query, cache = FALSE, call = call),
-    .progress = if (length(unique_ids) > 1) "Fetching" else FALSE
-  )
-  if (any(purrr::map_lgl(bodies, is.null))) {
-    return(NULL)
-  }
-  rows <- purrr::map2(bodies, as.integer(unique_ids), parse)
-  dplyr::bind_rows(c(list(parse(list(), integer())), rows[match(ids, unique_ids)]))
-}
-
 parse_price_stats <- function(body, id) {
-  if (length(id) == 0) {
-    return(tibble::tibble(
-      release_id = integer(), lowest_price = numeric(), currency = character(),
-      for_sale = integer(), blocked = logical()
-    ))
-  }
   body <- list(if (is.list(body)) body else list())
   blocked <- lgl(body, "blocked_from_sale")
   for_sale <- int(body, "num_for_sale")

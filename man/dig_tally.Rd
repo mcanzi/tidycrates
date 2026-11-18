@@ -77,6 +77,15 @@ Tallies of a collection or wantlist are still Restricted Data, see
 \code{\link[=dig_collection]{dig_collection()}}.
 }
 \examples{
+shelf <- tibble::tibble(
+  release_id = c(1, 1, 2, 3),
+  year = c(1994, 1994, 1998, NA),
+  genres = list(c("Electronic", "Pop"), c("Electronic", "Pop"), "Electronic", "Jazz")
+)
+dig_tally(shelf, "genre")
+dig_tally(shelf, "decade")
+dig_tally(shelf, "genre", unique = TRUE)
+
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 collection <- dig_collection("username", all = TRUE)
 dig_tally(collection, "genre")

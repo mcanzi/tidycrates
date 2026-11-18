@@ -57,6 +57,16 @@
 #'   `"All other"` if one of the values is `"Other"`. `NULL` is returned
 #'   invisibly if `x` is `NULL`.
 #'
+#' @examples
+#' shelf <- tibble::tibble(
+#'   release_id = c(1, 1, 2, 3),
+#'   year = c(1994, 1994, 1998, NA),
+#'   genres = list(c("Electronic", "Pop"), c("Electronic", "Pop"), "Electronic", "Jazz")
+#' )
+#' dig_tally(shelf, "genre")
+#' dig_tally(shelf, "decade")
+#' dig_tally(shelf, "genre", unique = TRUE)
+#'
 #' @examplesIf interactive()
 #' collection <- dig_collection("username", all = TRUE)
 #' dig_tally(collection, "genre")
@@ -69,13 +79,14 @@ dig_tally <- function(x,
                              "decade", "year", "added"),
                       n = 10, unique = FALSE) {
   by <- rlang::arg_match(by)
-  tally_collection(x, by, n, unique)
-}
-
-tally_collection <- function(x, by, n, unique, call = rlang::caller_env()) {
   if (is.null(x)) {
     return(invisible(NULL))
   }
+  check_tally(x, n, unique)
+  count_values(tally_long(x, by, unique), by, n)
+}
+
+check_tally <- function(x, n, unique, call = rlang::caller_env()) {
   check_flag(unique, call = call)
   if (!identical(n, Inf) && !(rlang::is_scalar_integerish(n, finite = TRUE) && n >= 1)) {
     cli::cli_abort("{.arg n} must be a positive whole number or `Inf`.", call = call)
@@ -83,6 +94,10 @@ tally_collection <- function(x, by, n, unique, call = rlang::caller_env()) {
   if (!is.data.frame(x)) {
     cli::cli_abort("{.arg x} must be a tibble returned by a tidycrates function.", call = call)
   }
+  invisible()
+}
+
+tally_long <- function(x, by, unique, call = rlang::caller_env()) {
   if (unique) {
     x <- dplyr::distinct(x, dplyr::across(dplyr::all_of(release_key(x, call))), .keep_all = TRUE)
   }
@@ -99,6 +114,11 @@ tally_collection <- function(x, by, n, unique, call = rlang::caller_env()) {
   if (is.character(long$value)) {
     long <- dplyr::filter(long, .data$value != "")
   }
+  list(long = long, rows = nrow(x))
+}
+
+count_values <- function(tally, by, n) {
+  long <- tally$long
   counts <- dplyr::summarise(long, n = dplyr::n_distinct(.data$copy), .by = "value")
   if (by %in% c("decade", "year", "added")) {
     counts <- dplyr::arrange(counts, .data$value)
@@ -114,7 +134,7 @@ tally_collection <- function(x, by, n, unique, call = rlang::caller_env()) {
       counts <- dplyr::bind_rows(counts[seq_len(n), ], tibble::tibble(value = other, n = rest))
     }
   }
-  counts$share <- counts$n / max(nrow(x), 1L)
+  counts$share <- counts$n / max(tally$rows, 1L)
   if (by == "added") {
     counts$total <- cumsum(counts$n)
   }

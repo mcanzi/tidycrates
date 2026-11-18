@@ -88,20 +88,18 @@ check_filter <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env
   invisible(x)
 }
 
-fetch_each <- function(ids, path, parse, call = rlang::caller_env()) {
+fetch_rows <- function(ids, path, parse, query = list(), cache = TRUE, call = rlang::caller_env()) {
   unique_ids <- unique(ids)
   bodies <- map_requests(
     unique_ids,
-    \(id) dig_get(paste0(path, "/", id), call = call),
+    \(id) dig_get(paste0(path, "/", id), query, cache, call),
     .progress = if (length(unique_ids) > 1) "Fetching" else FALSE
   )
   if (any(purrr::map_lgl(bodies, is.null))) {
     return(NULL)
   }
-  rows <- bodies |>
-    purrr::map(parse) |>
-    dplyr::bind_rows()
-  rows[match(ids, unique_ids), ]
+  rows <- purrr::map2(bodies, as.integer(unique_ids), parse)
+  dplyr::bind_rows(rows[match(ids, unique_ids)])
 }
 
 map_requests <- function(.x, .f, .progress = FALSE) {

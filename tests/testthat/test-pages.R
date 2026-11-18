@@ -46,3 +46,15 @@ test_that("pages without items or pagination are handled", {
   httr2::local_mocked_responses(list(discogs_response(list(releases = "broken"))))
   expect_equal(dig_get_pages("artists/1/releases", "releases", all = TRUE), list())
 })
+
+test_that("max_pages stops before fetching the other pages", {
+  local_dig_state()
+  calls <- 0L
+  httr2::local_mocked_responses(function(req) {
+    calls <<- calls + 1L
+    page_response(req, pages = 101L)
+  })
+  expect_error(dig_get_pages("database/search", "releases", all = TRUE, max_pages = 100), "101 pages")
+  expect_equal(calls, 1L)
+  expect_length(dig_get_pages("database/search", "releases", page = 2, max_pages = 100), 2)
+})

@@ -1,21 +1,42 @@
-# tidycrates (development version)
+# tidycrates 0.2.0
 
 * `dig_search()` searches the 'Discogs' database by a query, by filters or
   by both, and returns one row per release, master release, artist or
   label. It needs a token. `dig_tally()` and `dig_plot()` can count the
-  results by genre, style, format, label, country, year or decade.
+  results by genre, style, format, label, country, year or decade, and
+  `dig_plot()` counts "results" instead of "releases" when they include
+  artists or labels.
 * `dig_collection()` returns the media and sleeve condition of each copy
   as factors from best to worst, with the same grades as
   `dig_price_suggestions()`. The collection fields are read with one more
   request, and only when a copy has a value in one of them. If that
   request fails, the conditions are `NA` and the collection is kept.
-* `dig_plot()` counts "results" instead of "releases" when search results
-  include artists or labels.
 * An HTTP error for one of several IDs now stops with the message from
   'Discogs', without a purrr error about the index around it.
 * A response body of `null` gives a row of `NA` instead of returning
   `NULL` without a message.
 * `dig_collection_value()` keeps the sign of negative values.
+* `dig_collection_folders()` lists the folders of a collection with their
+  IDs, which `dig_collection()` takes as `folder`.
+* `dig_companies()` unnests the labels and other companies of releases.
+* `dig_cache_clear()` empties the cache.
+* `dig_collection()`, `dig_wantlist()`, `dig_collection_folders()` and
+  `dig_collection_value()` use the owner of the token when no username is
+  given.
+* Requests are spaced out evenly. Before, the first 25 requests were sent
+  at once, so a batch of more than 25 could exceed the rate limit of
+  'Discogs'.
+* A rate limit that is still exceeded after several tries gives a message
+  and returns `NULL`, as when the API cannot be reached.
+* `dig_search(all = TRUE)` stops before fetching more than 100 pages.
+* `dig_wantlist()` leaves out the notes of the user, as `dig_collection()`
+  does.
+* Tokens with spaces or line breaks inside, and usernames made only of
+  dots, are rejected.
+* jsonlite is now imported. It was needed to read every response but was
+  only suggested. httr2 1.2.2 and, for plots, ggplot2 3.5.2 are now
+  required.
+* The made-up data of the tests and README agree with each other.
 
 # tidycrates 0.1.0
 

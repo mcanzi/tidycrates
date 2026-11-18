@@ -26,7 +26,8 @@ edition of a recording, such as the 1987 UK 7" single of a song.
 \details{
 The tracklist, credits, formats, identifiers and companies are kept as
 list columns of tibbles. \code{\link[=dig_tracklist]{dig_tracklist()}}, \code{\link[=dig_credits]{dig_credits()}},
-\code{\link[=dig_formats]{dig_formats()}} and \code{\link[=dig_identifiers]{dig_identifiers()}} turn them into one row per item.
+\code{\link[=dig_formats]{dig_formats()}}, \code{\link[=dig_identifiers]{dig_identifiers()}} and \code{\link[=dig_companies]{dig_companies()}} turn them
+into one row per item.
 
 Images are left out, because the people who upload them can hold their
 own copyright. Prices are left out too, because they change quickly and

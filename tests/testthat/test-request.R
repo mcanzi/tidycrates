@@ -33,6 +33,49 @@ test_that("waits under a second give no message", {
   expect_equal(clock$pauses, 0.2, tolerance = 1e-8)
 })
 
+test_that("a response with no requests left makes the next one wait a minute", {
+  clock <- local_dig_state(token = "abc")
+  responses <- list(
+    discogs_response(list(id = 1L), used = 60L, limit = 60L),
+    discogs_response(list(id = 2L), used = 1L, limit = 60L),
+    discogs_response(list(id = 3L), used = 2L, limit = 60L)
+  )
+  httr2::local_mocked_responses(responses)
+  dig_get("releases/1")
+  expect_equal(clock$time, 0)
+  expect_message(dig_get("releases/2"), "Waiting 60 seconds for the 'Discogs' rate limit.", fixed = TRUE)
+  expect_equal(clock$time, 60)
+  expect_no_message(dig_get("releases/3"))
+  expect_equal(clock$time, 60)
+})
+
+test_that("an HTTP 429 with no requests left waits for the window to reset", {
+  clock <- local_dig_state()
+  responses <- list(
+    discogs_response(list(message = "Too many requests."), status = 429L, used = 25L, limit = 25L),
+    discogs_response(list(id = 1L))
+  )
+  httr2::local_mocked_responses(responses)
+  msgs <- testthat::capture_messages(out <- dig_get("releases/1"))
+  expect_equal(out, list(id = 1L))
+  expect_length(msgs, 2)
+  expect_match(msgs[1], "Retrying in 10 seconds after HTTP 429.", fixed = TRUE)
+  expect_match(msgs[2], "Waiting 50 seconds for the 'Discogs' rate limit.", fixed = TRUE)
+  expect_equal(clock$time, 60)
+})
+
+test_that("requests left in one window do not affect the other", {
+  clock <- local_dig_state()
+  httr2::local_mocked_responses(list(
+    discogs_response(list(id = 1L), used = 25L, limit = 25L),
+    discogs_response(list(id = 2L))
+  ))
+  dig_get("releases/1")
+  dig_env$token <- "abc"
+  expect_no_message(dig_get("releases/2"))
+  expect_equal(clock$time, 0)
+})
+
 test_that("the window holds 59 requests with a token and 24 without", {
   expect_equal(window_size(NULL), 24)
   expect_equal(window_size("abc"), 59)

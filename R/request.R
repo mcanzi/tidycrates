@@ -23,7 +23,9 @@ perform <- function(req, token, max_tries = 4) {
   for (attempt in seq_len(max_tries)) {
     wait_for_slot(token)
     resp <- tryCatch(httr2::req_perform(req), httr2_http = identity, finally = record_request(token))
-    if (!inherits(resp, "httr2_http")) {
+    failed <- inherits(resp, "httr2_http")
+    note_remaining(if (failed) resp$resp else resp, token)
+    if (!failed) {
       return(resp)
     }
     status <- httr2::resp_status(resp$resp)
@@ -41,10 +43,14 @@ perform <- function(req, token, max_tries = 4) {
 wait_for_slot <- function(token) {
   sent <- recent_requests(token)
   size <- window_size(token)
-  if (length(sent) < size) {
+  seconds <- max(
+    if (length(sent) >= size) sent[length(sent) - size + 1] + rate_window - now(),
+    dig_env[[full_key(token)]] + rate_window - now(),
+    0
+  )
+  if (seconds == 0) {
     return(invisible())
   }
-  seconds <- sent[length(sent) - size + 1] + rate_window - now()
   if (seconds >= 1) {
     cli::cli_inform("Waiting {ceiling(seconds)} second{?s} for the 'Discogs' rate limit.")
   }
@@ -60,8 +66,19 @@ recent_requests <- function(token) {
   sent[sent > now() - rate_window]
 }
 
+note_remaining <- function(resp, token) {
+  remaining <- as_int(httr2::resp_header(resp, "x-discogs-ratelimit-remaining"))
+  if (!is.na(remaining) && remaining <= 0) {
+    dig_env[[full_key(token)]] <- now()
+  }
+}
+
 sent_key <- function(token) {
   if (is.null(token)) "sent" else "sent_token"
+}
+
+full_key <- function(token) {
+  paste0(sent_key(token), "_full")
 }
 
 now <- function() {

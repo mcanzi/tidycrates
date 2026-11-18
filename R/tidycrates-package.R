@@ -6,8 +6,9 @@
 #' can be read, and price suggestions and the value of your collection are
 #' available. Up to 59 requests with a token, or 24 without, are sent at
 #' once, and later requests wait until the last 60 seconds have room for
-#' them. Requests are retried after HTTP 429 and 503 responses, and a
-#' message says how long each wait takes.
+#' them. If 'Discogs' reports that no requests are left, the next request
+#' waits 60 seconds. Requests are retried after HTTP 429 and 503
+#' responses, and a message says how long each wait takes.
 #'
 #' When the API cannot be reached, because there is no internet connection,
 #' the server returns an error or the rate limit is still exceeded after

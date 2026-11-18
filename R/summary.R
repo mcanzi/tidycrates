@@ -15,6 +15,7 @@
 #' | [dig_artist_releases()] | format, label, artist, role, decade, year |
 #' | [dig_label_releases()] | format, artist, decade, year |
 #' | [dig_master_versions()] | format, label, country, decade, year |
+#' | [dig_search()] | genre, style, format, label, country, decade, year |
 #'
 #' A row with several genres, styles, formats or labels counts once for
 #' each of them, so the shares can add up to more than 1. Rows without a
@@ -23,10 +24,11 @@
 #' The lists of [dig_artist_releases()] and [dig_label_releases()] give
 #' formats as descriptions such as `2x12", Comp`. Only the first part is
 #' counted, without the number of items, so vinyl is counted by size, for
-#' example `12"`. Master releases in [dig_artist_releases()] stand
-#' for all their versions and have no format or label. For
-#' [dig_release()], `added` is the month the release was added to
-#' 'Discogs'.
+#' example `12"`. [dig_search()] gives the format of a release followed by
+#' its descriptions, and only the format is counted. Master releases in
+#' [dig_artist_releases()] stand for all their versions and have no format
+#' or label. For [dig_release()], `added` is the month the release was
+#' added to 'Discogs'.
 #'
 #' Collections and wantlists have no country, because 'Discogs' does not
 #' return it for them. To tally a collection by country, get its releases
@@ -158,12 +160,10 @@ tally_values <- function(x, by, call) {
   switch(by,
     format = if (column == "major_formats") {
       stringr::str_split(values, ", ")
-    } else if (has("genres")) {
-      stringr::str_split(values, "; ")
     } else {
       values |>
-        stringr::str_extract("^[^,]+") |>
-        stringr::str_remove("^[0-9]+x")
+        stringr::str_split("; ") |>
+        purrr::map(\(v) v |> stringr::str_extract("^[^,]+") |> stringr::str_remove("^[0-9]+x"))
     },
     label = stringr::str_split(values, "; "),
     decade = values %/% 10L * 10L,

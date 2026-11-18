@@ -97,3 +97,27 @@ test_that("the offline message leaves out the internal cause", {
   msg <- expect_message(dig_get("releases/1"), "internet connection")
   expect_no_match(conditionMessage(msg), "resolve host")
 })
+
+test_that("a body of null is read as an empty record", {
+  local_dig_state()
+  httr2::local_mocked_responses(list(
+    httr2::response(200L, headers = list(`Content-Type` = "application/json"), body = charToRaw("null"))
+  ))
+  out <- dig_release(1)
+  expect_equal(nrow(out), 1)
+  expect_true(is.na(out$release_id))
+})
+
+test_that("errors for one of several IDs are not wrapped in an index", {
+  local_dig_state()
+  httr2::local_mocked_responses(function(req) {
+    if (stringr::str_ends(req$url, "/2")) {
+      return(discogs_response(list(message = "Release not found."), status = 404L))
+    }
+    discogs_response(fixture("release-1001"))
+  })
+  err <- expect_error(dig_release(c(1, 2)), class = "tidycrates_http_error")
+  expect_false(inherits(err, "purrr_error_indexed"))
+  expect_match(conditionMessage(err), "/releases/2")
+  expect_equal(deparse(err$call), "dig_release(c(1, 2))")
+})

@@ -8,14 +8,15 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Sends requests to the 'Discogs' API \url{https://www.discogs.com/developers} and returns the results as tidy tibbles. Releases, master releases, artists and labels can be read from the 'Discogs' database, along with the releases of an artist or label and the versions of a master release. The collection and wantlist of a user can be listed, tallied and plotted, and marketplace statistics, price suggestions and collection values can be read. Tracklists, credits, formats and identifiers of releases can be unnested into one row per item. Requests can be made with a personal access token or without one. They are spaced out to stay within the rate limit of the API and retried when the limit is exceeded. Responses can be cached for the session, and paginated results can be fetched in full.
+Sends requests to the 'Discogs' API \url{https://www.discogs.com/developers} and returns the results as tidy tibbles. The 'Discogs' database can be searched, and releases, master releases, artists and labels can be read from it, along with the releases of an artist or label and the versions of a master release. The collection and wantlist of a user can be listed, tallied and plotted, and marketplace statistics, price suggestions and collection values can be read. Tracklists, credits, formats and identifiers of releases can be unnested into one row per item. Requests can be made with a personal access token or without one. They are spaced out to stay within the rate limit of the API and retried when the limit is exceeded. Responses can be cached for the session, and paginated results can be fetched in full.
 }
 \details{
 Requests are sent to the 'Discogs' API at \url{https://api.discogs.com}.
 Without a token, 'Discogs' allows 25 requests a minute. With a personal
 access token set by \code{\link[=dig_auth]{dig_auth()}}, the limit is 60 requests a minute,
-your own private collection and wantlist can be read, and price
-suggestions and the value of your collection are available. Requests
+the database can be searched, your own private collection and wantlist
+can be read, and price suggestions and the value of your collection are
+available. Requests
 are spaced out to stay within the limit and retried after HTTP 429
 responses.
 

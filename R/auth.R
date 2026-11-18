@@ -3,8 +3,8 @@
 #' Sets the personal access token used for requests in this session. With a
 #' token, 'Discogs' allows 60 requests a minute instead of 25,
 #' [dig_collection()] and [dig_wantlist()] can read your own collection and
-#' wantlist when they are private, and [dig_price_suggestions()] and
-#' [dig_collection_value()] work. A token can be generated at
+#' wantlist when they are private, and [dig_search()],
+#' [dig_price_suggestions()] and [dig_collection_value()] work. A token can be generated at
 #' <https://www.discogs.com/settings/developers>.
 #'
 #' If `dig_auth()` is never called, the `DISCOGS_TOKEN` environment

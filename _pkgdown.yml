@@ -37,6 +37,7 @@ reference:
   - dig_rate_limit
 - title: Database
   contents:
+  - dig_search
   - dig_release
   - dig_master
   - dig_artist

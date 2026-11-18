@@ -90,7 +90,7 @@ check_filter <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env
 
 fetch_each <- function(ids, path, parse, call = rlang::caller_env()) {
   unique_ids <- unique(ids)
-  bodies <- purrr::map(
+  bodies <- map_requests(
     unique_ids,
     \(id) dig_get(paste0(path, "/", id), call = call),
     .progress = if (length(unique_ids) > 1) "Fetching" else FALSE
@@ -104,6 +104,13 @@ fetch_each <- function(ids, path, parse, call = rlang::caller_env()) {
   rows[match(ids, unique_ids), ]
 }
 
+map_requests <- function(.x, .f, .progress = FALSE) {
+  tryCatch(
+    purrr::map(.x, .f, .progress = .progress),
+    purrr_error_indexed = \(e) rlang::cnd_signal(e$parent)
+  )
+}
+
 as_items <- function(x) {
   if (!is.list(x)) {
     return(list())
@@ -111,7 +118,7 @@ as_items <- function(x) {
   if (any(nzchar(names(x) %||% ""))) {
     x <- list(x)
   }
-  purrr::keep(x, is.list)
+  unname(purrr::keep(x, is.list))
 }
 
 clean <- function(x) {

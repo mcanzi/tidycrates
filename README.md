@@ -18,7 +18,7 @@ pak::pak("mcanzi/tidycrates")
 
 ## Token
 
-The database can be read without a token. A <span class="hl">personal access token</span> raises the limit to 60 requests a minute. Generate one in the [developer settings](https://www.discogs.com/settings/developers) of your Discogs account and add it to `.Renviron`, so it stays out of your scripts:
+The database can be read without a token, but searching it needs one. A <span class="hl">personal access token</span> also raises the limit to 60 requests a minute. Generate one in the [developer settings](https://www.discogs.com/settings/developers) of your Discogs account and add it to `.Renviron`, so it stays out of your scripts:
 
 ```r
 usethis::edit_r_environ()
@@ -34,9 +34,24 @@ After restarting R, tidycrates uses the token for every request. `dig_auth()` se
 
 The output below comes from <span class="hl">made-up data</span>: the band Juniper Static, the label Fernhollow Records and their releases do not exist. The package tests use the same data. The real API returns other records for these IDs.
 
+`dig_search()` finds the IDs to start from. It searches releases, master releases, artists and labels by a query, by filters such as artist, label, format and year, or by both:
+
 ```r
 library(tidycrates)
 
+dig_search("Juniper Static") |>
+  dplyr::select(id, type, title, year)
+#> # A tibble: 3 × 4
+#>      id type    title                               year
+#>   <int> <chr>   <chr>                              <int>
+#> 1  1001 release Juniper Static - Lantern Weather    1994
+#> 2  2001 master  Juniper Static - Small Hours Atlas  1994
+#> 3  3001 artist  Juniper Static                        NA
+```
+
+`dig_release()` reads a release:
+
+```r
 release <- dig_release(1001)
 release |> dplyr::select(title, artist, year, country, label, format)
 #> # A tibble: 1 × 6

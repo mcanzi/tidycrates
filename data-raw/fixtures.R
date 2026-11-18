@@ -266,3 +266,30 @@ write_fixture(
   list(maximum = "€1.250,00", median = "€480,25", minimum = "€75,50"),
   "collection-value-example"
 )
+
+result <- function(id, type, title, uri, ...) {
+  list(id = id, type = type, title = title, uri = uri, resource_url = "", thumb = "", cover_image = "", ...)
+}
+
+write_fixture(
+  list(
+    pagination = pages(3, 1, 3),
+    results = list(
+      result(
+        1001, "release", "Juniper Static - Lantern Weather", "/Juniper-Static-Lantern-Weather/release/1001",
+        style = list("Downtempo"), format = list("Vinyl", "7\"", "45 RPM", "Single"), country = "UK",
+        barcode = list("5000000000017", "LC 00007"), community = list(want = 45, have = 120),
+        label = list("Fernhollow Records"), catno = "FHR 007", year = "1994",
+        genre = list("Electronic", "Pop"), master_id = 2001
+      ),
+      result(
+        2001, "master", "Juniper Static - Small Hours Atlas", "/Juniper-Static-Small-Hours-Atlas/master/2001",
+        style = list("Downtempo"), format = list("Vinyl", "CD", "Cassette"), community = list(want = 90, have = 70),
+        label = list("Fernhollow Records", "Mossbank Tapes"), year = "1994",
+        genre = list("Electronic", "Pop")
+      ),
+      result(3001, "artist", "Juniper Static", "/artist/3001-Juniper-Static")
+    )
+  ),
+  "search-juniper"
+)

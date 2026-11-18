@@ -40,7 +40,7 @@ fetch <- function(path, query = list(), token = auth_token()) {
     )
   store_rate_limit(resp, token)
   tryCatch(
-    httr2::resp_body_json(resp),
+    httr2::resp_body_json(resp) %||% list(),
     error = \(e) unavailable("The Discogs API returned a response that could not be read.", e)
   )
 }
@@ -115,7 +115,7 @@ dig_get_pages <- function(path, field, query = list(), all = FALSE, page = 1,
   if (minutes > 1) {
     cli::cli_inform("Fetching {pages} pages takes about {minutes} minutes.")
   }
-  rest <- purrr::map(seq(page + 1L, pages), get_page, .progress = "Fetching pages")
+  rest <- map_requests(seq(page + 1L, pages), get_page, .progress = "Fetching pages")
   if (any(purrr::map_lgl(rest, is.null))) {
     return(NULL)
   }

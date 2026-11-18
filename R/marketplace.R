@@ -134,7 +134,7 @@ check_token <- function(call = rlang::caller_env()) {
 
 fetch_uncached <- function(ids, path, parse, query = list(), call = rlang::caller_env()) {
   unique_ids <- unique(ids)
-  bodies <- purrr::map(
+  bodies <- map_requests(
     unique_ids,
     \(id) dig_get(paste0(path, "/", id), query, cache = FALSE, call = call),
     .progress = if (length(unique_ids) > 1) "Fetching" else FALSE
@@ -179,6 +179,8 @@ parse_price_suggestions <- function(body, id) {
 }
 
 parse_money <- function(x) {
+  negative <- stringr::str_detect(x, "^\\s*[-\u2212]|[-\u2212]\\s*[0-9]") %in% TRUE
+  x <- dplyr::if_else(negative, stringr::str_remove(x, "[-\u2212]"), x)
   number <- stringr::str_extract(x, "[0-9](?:[0-9.,'\\u2019\\s\u00a0]*[0-9])?")
   currency <- dplyr::if_else(
     is.na(number), NA_character_,
@@ -191,7 +193,8 @@ parse_money <- function(x) {
   whole <- dplyr::if_else(decimal, stringr::str_remove(digits, "[.,][0-9]+$"), digits)
   value <- paste0(stringr::str_remove_all(whole, "[.,]"), dplyr::if_else(decimal, paste0(".", tail), ""))
   list(
-    value = suppressWarnings(as.numeric(dplyr::if_else(is.na(number), NA_character_, value))),
+    value = suppressWarnings(as.numeric(dplyr::if_else(is.na(number), NA_character_, value))) *
+      dplyr::if_else(negative, -1, 1),
     currency = dplyr::if_else(currency %in% "", NA_character_, currency)
   )
 }

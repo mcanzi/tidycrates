@@ -1,3 +1,15 @@
+# tidycrates (development version)
+
+* `dig_search()` searches the 'Discogs' database by a query, by filters or
+  by both, and returns one row per release, master release, artist or
+  label. It needs a token. `dig_tally()` and `dig_plot()` can count the
+  results by genre, style, format, label, country, year or decade.
+* An HTTP error for one of several IDs now stops with the message from
+  'Discogs', without a purrr error about the index around it.
+* A response body of `null` gives a row of `NA` instead of returning
+  `NULL` without a message.
+* `dig_collection_value()` keeps the sign of negative values.
+
 # tidycrates 0.1.0
 
 First release.

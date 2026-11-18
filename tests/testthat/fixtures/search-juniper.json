@@ -1,0 +1,87 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 1,
+    "per_page": 3,
+    "items": 3,
+    "urls": {}
+  },
+  "results": [
+    {
+      "id": 1001,
+      "type": "release",
+      "title": "Juniper Static - Lantern Weather",
+      "uri": "/Juniper-Static-Lantern-Weather/release/1001",
+      "resource_url": "",
+      "thumb": "",
+      "cover_image": "",
+      "style": [
+        "Downtempo"
+      ],
+      "format": [
+        "Vinyl",
+        "7\"",
+        "45 RPM",
+        "Single"
+      ],
+      "country": "UK",
+      "barcode": [
+        "5000000000017",
+        "LC 00007"
+      ],
+      "community": {
+        "want": 45,
+        "have": 120
+      },
+      "label": [
+        "Fernhollow Records"
+      ],
+      "catno": "FHR 007",
+      "year": "1994",
+      "genre": [
+        "Electronic",
+        "Pop"
+      ],
+      "master_id": 2001
+    },
+    {
+      "id": 2001,
+      "type": "master",
+      "title": "Juniper Static - Small Hours Atlas",
+      "uri": "/Juniper-Static-Small-Hours-Atlas/master/2001",
+      "resource_url": "",
+      "thumb": "",
+      "cover_image": "",
+      "style": [
+        "Downtempo"
+      ],
+      "format": [
+        "Vinyl",
+        "CD",
+        "Cassette"
+      ],
+      "community": {
+        "want": 90,
+        "have": 70
+      },
+      "label": [
+        "Fernhollow Records",
+        "Mossbank Tapes"
+      ],
+      "year": "1994",
+      "genre": [
+        "Electronic",
+        "Pop"
+      ]
+    },
+    {
+      "id": 3001,
+      "type": "artist",
+      "title": "Juniper Static",
+      "uri": "/artist/3001-Juniper-Static",
+      "resource_url": "",
+      "thumb": "",
+      "cover_image": ""
+    }
+  ]
+}

@@ -169,3 +169,9 @@ test_that("marketplace functions return NULL when the API cannot be reached", {
   expect_message(out <- dig_collection_value("example"))
   expect_null(out)
 })
+
+test_that("negative values keep their sign", {
+  money <- parse_money(c("-$5.00", "$-5.00", "−€1.250,00", "-", "$1,250.00"))
+  expect_equal(money$value, c(-5, -5, -1250, NA, 1250))
+  expect_equal(money$currency, c("$", "$", "€", NA, "$"))
+})

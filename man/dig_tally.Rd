@@ -51,6 +51,7 @@ Which values of \code{by} work depends on where \code{x} comes from:\tabular{ll}
    \code{\link[=dig_artist_releases]{dig_artist_releases()}} \tab format, label, artist, role, decade, year \cr
    \code{\link[=dig_label_releases]{dig_label_releases()}} \tab format, artist, decade, year \cr
    \code{\link[=dig_master_versions]{dig_master_versions()}} \tab format, label, country, decade, year \cr
+   \code{\link[=dig_search]{dig_search()}} \tab genre, style, format, label, country, decade, year \cr
 }
 
 
@@ -61,10 +62,11 @@ value, such as releases with an unknown year, are left out.
 The lists of \code{\link[=dig_artist_releases]{dig_artist_releases()}} and \code{\link[=dig_label_releases]{dig_label_releases()}} give
 formats as descriptions such as \verb{2x12", Comp}. Only the first part is
 counted, without the number of items, so vinyl is counted by size, for
-example \verb{12"}. Master releases in \code{\link[=dig_artist_releases]{dig_artist_releases()}} stand
-for all their versions and have no format or label. For
-\code{\link[=dig_release]{dig_release()}}, \code{added} is the month the release was added to
-'Discogs'.
+example \verb{12"}. \code{\link[=dig_search]{dig_search()}} gives the format of a release followed by
+its descriptions, and only the format is counted. Master releases in
+\code{\link[=dig_artist_releases]{dig_artist_releases()}} stand for all their versions and have no format
+or label. For \code{\link[=dig_release]{dig_release()}}, \code{added} is the month the release was
+added to 'Discogs'.
 
 Collections and wantlists have no country, because 'Discogs' does not
 return it for them. To tally a collection by country, get its releases

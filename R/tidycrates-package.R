@@ -2,8 +2,9 @@
 #' Requests are sent to the 'Discogs' API at <https://api.discogs.com>.
 #' Without a token, 'Discogs' allows 25 requests a minute. With a personal
 #' access token set by [dig_auth()], the limit is 60 requests a minute,
-#' your own private collection and wantlist can be read, and price
-#' suggestions and the value of your collection are available. Requests
+#' the database can be searched, your own private collection and wantlist
+#' can be read, and price suggestions and the value of your collection are
+#' available. Requests
 #' are spaced out to stay within the limit and retried after HTTP 429
 #' responses.
 #'

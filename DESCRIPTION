@@ -1,15 +1,15 @@
 Package: tidycrates
 Type: Package
 Title: Tidy Data from the 'Discogs' API
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R:
     person("Massimiliano", "Canzi", , "massimiliano.canzi@uni-konstanz.de", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-6124-0321"))
 Description: Sends requests to the 'Discogs' API
     <https://www.discogs.com/developers> and returns the results as tidy
-    tibbles. Releases, master releases, artists and labels can be read from
-    the 'Discogs' database, along with the releases of an artist or label
-    and the versions of a master release. The collection and wantlist of a
+    tibbles. The 'Discogs' database can be searched, and releases, master
+    releases, artists and labels can be read from it, along with the
+    releases of an artist or label and the versions of a master release. The collection and wantlist of a
     user can be listed, tallied and plotted, and marketplace statistics,
     price suggestions and collection values can be read. Tracklists,
     credits, formats and identifiers of releases can be unnested into one

@@ -1,10 +1,12 @@
-# tidycrates 0.0.0.9000
+# tidycrates 0.1.0
+
+First release.
 
 * Core request layer with token authentication, a custom user agent,
   throttling to the 'Discogs' rate limit, retries after HTTP 429,
   pagination and optional caching.
 * `dig_release()`, `dig_master()`, `dig_artist()` and `dig_label()` read
-  the 'Discogs' database. Images and marketplace data are left out.
+  the 'Discogs' database. Images and prices are left out.
 * `dig_tracklist()`, `dig_credits()`, `dig_formats()` and
   `dig_identifiers()` unnest release data into one row per item.
 * `dig_artist_releases()`, `dig_label_releases()` and
@@ -24,7 +26,8 @@
   Use require.
 * Plots carry the caption "Data provided by Discogs.", which the API
   Terms of Use require. The help pages and README explain which fields are
-  CC0 and that collections, wantlists and usernames are Restricted Data.
+  CC0 and that collections, wantlists, usernames and marketplace data are
+  Restricted Data.
 * The tests and README examples use made-up data instead of data from
   'Discogs'. `data-raw/fixtures.R` creates it.
 * IDs can also be given as codes copied from 'Discogs', such as

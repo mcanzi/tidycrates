@@ -1,7 +1,7 @@
 Package: tidycrates
 Type: Package
 Title: Tidy Data from the 'Discogs' API
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R:
     person("Massimiliano", "Canzi", , "massimiliano.canzi@uni-konstanz.de", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-6124-0321"))

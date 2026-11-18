@@ -40,6 +40,15 @@
 - [`dig_plot()`](https://mcanzi.de/tidycrates/reference/dig_plot.md) :
   Plot releases
 
+## Marketplace
+
+- [`dig_price_stats()`](https://mcanzi.de/tidycrates/reference/dig_price_stats.md)
+  : Get marketplace statistics
+- [`dig_price_suggestions()`](https://mcanzi.de/tidycrates/reference/dig_price_suggestions.md)
+  : Get price suggestions
+- [`dig_collection_value()`](https://mcanzi.de/tidycrates/reference/dig_collection_value.md)
+  : Get the value of a collection
+
 ## Unnesting release data
 
 - [`dig_tracklist()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)

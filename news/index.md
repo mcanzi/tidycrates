@@ -1,6 +1,8 @@
 # Changelog
 
-## tidycrates 0.0.0.9000
+## tidycrates 0.1.0
+
+First release.
 
 - Core request layer with token authentication, a custom user agent,
   throttling to the ‘Discogs’ rate limit, retries after HTTP 429,
@@ -10,7 +12,7 @@
   [`dig_artist()`](https://mcanzi.de/tidycrates/reference/dig_artist.md)
   and
   [`dig_label()`](https://mcanzi.de/tidycrates/reference/dig_label.md)
-  read the ‘Discogs’ database. Images and marketplace data are left out.
+  read the ‘Discogs’ database. Images and prices are left out.
 - [`dig_tracklist()`](https://mcanzi.de/tidycrates/reference/unnest_release.md),
   [`dig_credits()`](https://mcanzi.de/tidycrates/reference/unnest_release.md),
   [`dig_formats()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
@@ -27,6 +29,12 @@
   [`dig_wantlist()`](https://mcanzi.de/tidycrates/reference/dig_wantlist.md)
   list the collection and wantlist of a user. Private ones can be read
   with the token of their owner, and neither is cached.
+- [`dig_price_stats()`](https://mcanzi.de/tidycrates/reference/dig_price_stats.md),
+  [`dig_price_suggestions()`](https://mcanzi.de/tidycrates/reference/dig_price_suggestions.md)
+  and
+  [`dig_collection_value()`](https://mcanzi.de/tidycrates/reference/dig_collection_value.md)
+  read marketplace data. They are never cached, and the last two need a
+  token.
 - [`dig_tally()`](https://mcanzi.de/tidycrates/reference/dig_tally.md)
   counts a collection, a wantlist or the output of the database and list
   functions by genre, style, format, label, artist, role, country, year,
@@ -38,8 +46,8 @@
   Use require.
 - Plots carry the caption “Data provided by Discogs.”, which the API
   Terms of Use require. The help pages and README explain which fields
-  are CC0 and that collections, wantlists and usernames are Restricted
-  Data.
+  are CC0 and that collections, wantlists, usernames and marketplace
+  data are Restricted Data.
 - The tests and README examples use made-up data instead of data from
   ‘Discogs’. `data-raw/fixtures.R` creates it.
 - IDs can also be given as codes copied from ‘Discogs’, such as

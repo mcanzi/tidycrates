@@ -37,9 +37,12 @@ and
 [`dig_identifiers()`](https://mcanzi.de/tidycrates/reference/unnest_release.md)
 turn them into one row per item.
 
-Images, prices and the number of copies for sale are Restricted Data
-under the 'Discogs' API Terms of Use and are left out. The `uri` column
-links to the release on the 'Discogs' website.
+Images are left out, because the people who upload them can hold their
+own copyright. Prices are left out too, because they change quickly and
+this function can be cached.
+[`dig_price_stats()`](https://mcanzi.de/tidycrates/reference/dig_price_stats.md)
+gets them. The `uri` column links to the release on the 'Discogs'
+website.
 
 ## See also
 

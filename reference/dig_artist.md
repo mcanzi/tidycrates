@@ -28,8 +28,8 @@ of tibbles.
 ## Details
 
 Profiles keep the 'Discogs' markup for links, such as `[a=Carl Craig]`.
-Images are Restricted Data under the 'Discogs' API Terms of Use and are
-left out.
+Images are left out, because the people who upload them can hold their
+own copyright.
 [`dig_artist_releases()`](https://mcanzi.de/tidycrates/reference/dig_artist_releases.md)
 lists the releases of an artist.
 

@@ -11,12 +11,12 @@ Source:
 [`DESCRIPTION`](https://github.com/mcanzi/tidycrates/blob/main/DESCRIPTION)
 
 Canzi M (2026). *tidycrates: Tidy Data from the 'Discogs' API*. R
-package version 0.0.0.9000, <https://github.com/mcanzi/tidycrates>.
+package version 0.1.0, <https://github.com/mcanzi/tidycrates>.
 
     @Manual{,
       title = {tidycrates: Tidy Data from the 'Discogs' API},
       author = {Massimiliano Canzi},
       year = {2026},
-      note = {R package version 0.0.0.9000},
+      note = {R package version 0.1.0},
       url = {https://github.com/mcanzi/tidycrates},
     }

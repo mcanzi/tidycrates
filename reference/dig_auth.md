@@ -1,12 +1,16 @@
 # Set the 'Discogs' token
 
 Sets the personal access token used for requests in this session. With a
-token, 'Discogs' allows 60 requests a minute instead of 25, and
+token, 'Discogs' allows 60 requests a minute instead of 25,
 [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md)
 and
 [`dig_wantlist()`](https://mcanzi.de/tidycrates/reference/dig_wantlist.md)
-can read your own collection and wantlist when they are private. A token
-can be generated at <https://www.discogs.com/settings/developers>.
+can read your own collection and wantlist when they are private, and
+[`dig_price_suggestions()`](https://mcanzi.de/tidycrates/reference/dig_price_suggestions.md)
+and
+[`dig_collection_value()`](https://mcanzi.de/tidycrates/reference/dig_collection_value.md)
+work. A token can be generated at
+<https://www.discogs.com/settings/developers>.
 
 ## Usage
 

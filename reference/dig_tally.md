@@ -80,6 +80,11 @@ stand for all their versions and have no format or label. For
 [`dig_release()`](https://mcanzi.de/tidycrates/reference/dig_release.md),
 `added` is the month the release was added to 'Discogs'.
 
+Collections and wantlists have no country, because 'Discogs' does not
+return it for them. To tally a collection by country, get its releases
+first with `dig_release(collection$release_id)`. This sends one request
+for each release.
+
 Tallies of a collection or wantlist are still Restricted Data, see
 [`dig_collection()`](https://mcanzi.de/tidycrates/reference/dig_collection.md).
 

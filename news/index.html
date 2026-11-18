@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidycrates</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,10 +33,11 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.0.9000" id="tidycrates-0009000">tidycrates 0.0.0.9000<a class="anchor" aria-label="anchor" href="#tidycrates-0009000"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="tidycrates-010">tidycrates 0.1.0<a class="anchor" aria-label="anchor" href="#tidycrates-010"></a></h2>
+<p>First release.</p>
 <ul><li>Core request layer with token authentication, a custom user agent, throttling to the ‘Discogs’ rate limit, retries after HTTP 429, pagination and optional caching.</li>
 <li>
-<code><a href="../reference/dig_release.html">dig_release()</a></code>, <code><a href="../reference/dig_master.html">dig_master()</a></code>, <code><a href="../reference/dig_artist.html">dig_artist()</a></code> and <code><a href="../reference/dig_label.html">dig_label()</a></code> read the ‘Discogs’ database. Images and marketplace data are left out.</li>
+<code><a href="../reference/dig_release.html">dig_release()</a></code>, <code><a href="../reference/dig_master.html">dig_master()</a></code>, <code><a href="../reference/dig_artist.html">dig_artist()</a></code> and <code><a href="../reference/dig_label.html">dig_label()</a></code> read the ‘Discogs’ database. Images and prices are left out.</li>
 <li>
 <code><a href="../reference/unnest_release.html">dig_tracklist()</a></code>, <code><a href="../reference/unnest_release.html">dig_credits()</a></code>, <code><a href="../reference/unnest_release.html">dig_formats()</a></code> and <code><a href="../reference/unnest_release.html">dig_identifiers()</a></code> unnest release data into one row per item.</li>
 <li>
@@ -44,9 +45,11 @@
 <li>
 <code><a href="../reference/dig_collection.html">dig_collection()</a></code> and <code><a href="../reference/dig_wantlist.html">dig_wantlist()</a></code> list the collection and wantlist of a user. Private ones can be read with the token of their owner, and neither is cached.</li>
 <li>
+<code><a href="../reference/dig_price_stats.html">dig_price_stats()</a></code>, <code><a href="../reference/dig_price_suggestions.html">dig_price_suggestions()</a></code> and <code><a href="../reference/dig_collection_value.html">dig_collection_value()</a></code> read marketplace data. They are never cached, and the last two need a token.</li>
+<li>
 <code><a href="../reference/dig_tally.html">dig_tally()</a></code> counts a collection, a wantlist or the output of the database and list functions by genre, style, format, label, artist, role, country, year, decade or month added. <code><a href="../reference/dig_plot.html">dig_plot()</a></code> plots the counts with ggplot2 as labelled lollipops, columns or a growth line, with titles, subtitles and alt text.</li>
 <li>Cached responses are kept for at most six hours, as the API Terms of Use require.</li>
-<li>Plots carry the caption “Data provided by Discogs.”, which the API Terms of Use require. The help pages and README explain which fields are CC0 and that collections, wantlists and usernames are Restricted Data.</li>
+<li>Plots carry the caption “Data provided by Discogs.”, which the API Terms of Use require. The help pages and README explain which fields are CC0 and that collections, wantlists, usernames and marketplace data are Restricted Data.</li>
 <li>The tests and README examples use made-up data instead of data from ‘Discogs’. <code>data-raw/fixtures.R</code> creates it.</li>
 <li>IDs can also be given as codes copied from ‘Discogs’, such as <code>"[a514141]"</code> or <code>"a514141"</code>. A code of the wrong type, such as a master release code given to <code><a href="../reference/dig_release.html">dig_release()</a></code>, gives an error that names the right function.</li>
 <li>Unknown release dates, which ‘Discogs’ gives as <code>"0"</code>, are <code>NA</code>.</li>

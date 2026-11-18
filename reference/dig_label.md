@@ -26,8 +26,8 @@ a list column of tibbles.
 
 ## Details
 
-Profiles keep the 'Discogs' markup for links. Images are Restricted Data
-under the 'Discogs' API Terms of Use and are left out.
+Profiles keep the 'Discogs' markup for links. Images are left out,
+because the people who upload them can hold their own copyright.
 [`dig_label_releases()`](https://mcanzi.de/tidycrates/reference/dig_label_releases.md)
 lists the releases of a label.
 

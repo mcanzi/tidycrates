@@ -13,7 +13,7 @@ columns of x are used, so no requests are sent."><meta property="og:image" conte
 
     <a class="navbar-brand me-2" href="../index.html">tidycrates</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,6 +105,10 @@ example <code>12"</code>. Master releases in <code><a href="dig_artist_releases.
 for all their versions and have no format or label. For
 <code><a href="dig_release.html">dig_release()</a></code>, <code>added</code> is the month the release was added to
 'Discogs'.</p>
+<p>Collections and wantlists have no country, because 'Discogs' does not
+return it for them. To tally a collection by country, get its releases
+first with <code>dig_release(collection$release_id)</code>. This sends one request
+for each release.</p>
 <p>Tallies of a collection or wantlist are still Restricted Data, see
 <code><a href="dig_collection.html">dig_collection()</a></code>.</p>
     </div>

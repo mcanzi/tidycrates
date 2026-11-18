@@ -28,8 +28,8 @@ unnests.
 
 ## Details
 
-Images and prices are Restricted Data under the 'Discogs' API Terms of
-Use and are left out.
+Images are left out, because the people who upload them can hold their
+own copyright.
 [`dig_master_versions()`](https://mcanzi.de/tidycrates/reference/dig_master_versions.md)
 lists the versions.
 

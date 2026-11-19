@@ -35,10 +35,10 @@ perform <- function(req, token, max_tries = 4) {
       rlang::cnd_signal(resp)
     }
     seconds <- retry_wait(resp$resp, attempt)
-    if (seconds >= 1) {
+    if (is.null(dig_env$progress) && seconds >= 1) {
       cli::cli_inform("Retrying in {ceiling(seconds)} second{?s} after HTTP {status}.")
     }
-    pause(seconds)
+    hold(seconds, \(n) paste0("HTTP ", status, ", retry in ", n, "s"))
   }
 }
 
@@ -47,10 +47,100 @@ wait_for_slot <- function(token) {
   if (seconds == 0) {
     return(invisible())
   }
-  if (seconds >= 1) {
+  if (is.null(dig_env$progress) && seconds >= 1) {
     cli::cli_inform("Waiting {ceiling(seconds)} second{?s} for the 'Discogs' rate limit.")
   }
-  pause(seconds)
+  hold(seconds, \(n) paste0("rate limit wait ", n, "s"))
+}
+
+hold <- function(seconds, note) {
+  bar <- dig_env$progress
+  if (is.null(bar) || seconds <= 0) {
+    return(pause(seconds))
+  }
+  n <- ceiling(seconds)
+  steps <- c(seconds - n + 1, rep(1, n - 1))
+  for (i in seq_len(n)) {
+    left <- sum(steps[i:n])
+    show_progress(bar, progress_status(bar, left, if (left >= 1) note(n - i + 1)))
+    pause(steps[i])
+    bar$waited <- bar$waited + steps[i]
+  }
+}
+
+start_progress <- function(name, total, envir = parent.frame()) {
+  bar <- rlang::env(
+    total = total,
+    done = 0,
+    waited = 0,
+    start = now(),
+    token = tryCatch(auth_token(), error = \(e) NULL)
+  )
+  bar$id <- cli::cli_progress_bar(
+    name,
+    total = total,
+    format = "{cli::pb_name}{cli::pb_bar} {cli::pb_current}/{cli::pb_total} | {cli::pb_extra$status}",
+    extra = list(status = ""),
+    .envir = envir
+  )
+  bar
+}
+
+tick_progress <- function() {
+  bar <- dig_env$progress
+  bar$done <- bar$done + 1
+  show_progress(bar, progress_status(bar))
+}
+
+show_progress <- function(bar, status) {
+  cli::cli_progress_update(id = bar$id, set = bar$done, extra = list(status = status))
+}
+
+progress_status <- function(bar, wait = 0, note = NULL) {
+  latency <- if (bar$done > 0) max(0, now() - bar$start - bar$waited) / bar$done else 0
+  at <- now() + wait
+  seconds <- wait + predict_finish(logged_requests(bar$token), at, request_cap(bar$token), bar$total - bar$done, latency)
+  paste(c(paste0("ETA: ", format_seconds(seconds)), note), collapse = ", ")
+}
+
+predict_finish <- function(times, at, cap, n, latency) {
+  if (n <= 0) {
+    return(0)
+  }
+  counts <- minute_counts(times, at)
+  start <- counts$start
+  previous <- counts$previous
+  current <- counts$current
+  ready <- at
+  repeat {
+    before <- seq(current, length.out = max(0, cap + 1 - current))
+    gate <- if (previous > 0) start + minute * pmax(0, 1 - (cap - before) / previous) else rep(start, length(before))
+    gate <- pmax(gate, ready)
+    k <- seq_along(gate)
+    sends <- k * latency + cummax(gate - k * latency)
+    sends <- sends[sends < start + minute]
+    if (length(sends) >= n) {
+      return(sends[n] + latency - at)
+    }
+    n <- n - length(sends)
+    if (length(sends) > 0) {
+      ready <- sends[length(sends)] + latency
+    }
+    previous <- current + length(sends)
+    current <- 0
+    start <- start + minute
+  }
+}
+
+format_seconds <- function(seconds) {
+  seconds <- ceiling(seconds)
+  if (seconds < minute) {
+    return(paste0(seconds, "s"))
+  }
+  hours <- seconds %/% 3600
+  mins <- seconds %% 3600 %/% minute
+  secs <- seconds %% minute
+  if (hours > 0) paste0(hours, "h ", mins, "m") else paste0(mins, "m ", secs, "s")
 }
 
 minute_counts <- function(times, at) {

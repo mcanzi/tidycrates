@@ -103,8 +103,19 @@ fetch_rows <- function(ids, path, parse, query = list(), cache = TRUE, call = rl
 }
 
 map_requests <- function(.x, .f, .progress = FALSE) {
+  if (!isFALSE(.progress)) {
+    old <- dig_env$progress
+    dig_env$progress <- start_progress(.progress, length(.x))
+    on.exit(dig_env$progress <- old, add = TRUE)
+    f <- .f
+    .f <- \(x) {
+      out <- f(x)
+      tick_progress()
+      out
+    }
+  }
   tryCatch(
-    purrr::map(.x, .f, .progress = .progress),
+    purrr::map(.x, .f),
     purrr_error_indexed = \(e) rlang::cnd_signal(e$parent)
   )
 }

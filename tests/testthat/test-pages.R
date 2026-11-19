@@ -36,7 +36,7 @@ test_that("long fetches give the expected time", {
   httr2::local_mocked_responses(\(req) page_response(req, pages = 80L))
   msgs <- testthat::capture_messages(out <- dig_get_pages("artists/1/releases", "releases", all = TRUE))
   expect_match(msgs[1], "80 pages takes at least 3 minutes")
-  expect_match(msgs[-1], "Waiting [0-9]+ seconds")
+  expect_length(msgs, 1)
   expect_length(out, 160)
   expect_equal(round(clock$time, 1), 203.5)
 })

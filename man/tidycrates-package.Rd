@@ -16,11 +16,11 @@ Without a token, 'Discogs' allows 25 requests a minute. With a personal
 access token set by \code{\link[=dig_auth]{dig_auth()}}, the limit is 60 requests a minute,
 the database can be searched, your own private collection and wantlist
 can be read, and price suggestions and the value of your collection are
-available. Up to 59 requests with a token, or 24 without, are sent at
-once, and later requests wait until the last 60 seconds have room for
-them. If 'Discogs' reports that no requests are left, the next request
-waits 60 seconds. Requests are retried after HTTP 429 and 503
-responses, and a message says how long each wait takes.
+available. tidycrates counts requests as 'Discogs' does, so small
+batches are sent at once and later requests wait only until 'Discogs'
+has room for them. \code{\link[=dig_rate_limit]{dig_rate_limit()}} explains the count and why the
+throttle of httr2 is not used. Requests are retried after HTTP 429 and
+503 responses, and a message says how long each wait takes.
 
 When the API cannot be reached, because there is no internet connection,
 the server returns an error or the rate limit is still exceeded after

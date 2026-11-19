@@ -42,8 +42,8 @@ role of the artist on each.
 \details{
 'Discogs' returns up to 100 items per page and sometimes fewer than
 \code{per_page}. With \code{all = TRUE}, every page is fetched, which takes one
-request for each 100 items. If this takes more than a minute, a message
-gives the expected time.
+request for each 100 items. If this takes a minute or more, a message
+gives the least time it takes.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}

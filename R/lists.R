@@ -5,8 +5,8 @@
 #'
 #' 'Discogs' returns up to 100 items per page and sometimes fewer than
 #' `per_page`. With `all = TRUE`, every page is fetched, which takes one
-#' request for each 100 items. If this takes more than a minute, a message
-#' gives the expected time.
+#' request for each 100 items. If this takes a minute or more, a message
+#' gives the least time it takes.
 #'
 #' @param id An artist ID, as a number or as a code copied from 'Discogs'
 #'   such as `"a1"` or `"[a1]"`.

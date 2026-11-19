@@ -22,16 +22,19 @@ local_dig_state <- function(token = "", env = parent.frame()) {
   invisible(clock)
 }
 
-discogs_response <- function(body, status = 200L, used = 1L, limit = 25L) {
-  httr2::response_json(
-    status_code = status,
-    headers = list(
-      `X-Discogs-Ratelimit` = limit,
-      `X-Discogs-Ratelimit-Used` = used,
-      `X-Discogs-Ratelimit-Remaining` = limit - used
-    ),
-    body = body
+rate_headers <- function(used, limit) {
+  if (is.null(used)) {
+    return(list())
+  }
+  list(
+    `X-Discogs-Ratelimit` = limit,
+    `X-Discogs-Ratelimit-Used` = used,
+    `X-Discogs-Ratelimit-Remaining` = limit - used
   )
+}
+
+discogs_response <- function(body, status = 200L, used = NULL, limit = 60L) {
+  httr2::response_json(status_code = status, headers = rate_headers(used, limit), body = body)
 }
 
 page_response <- function(req, pages = 3L) {
@@ -42,18 +45,18 @@ page_response <- function(req, pages = 3L) {
   ))
 }
 
-raw_response <- function(name, used = 1L, limit = 25L) {
+raw_response <- function(name, used = NULL, limit = 60L) {
   path <- test_path("fixtures", paste0(name, ".json"))
   httr2::response(
     status_code = 200L,
-    headers = list(
-      `Content-Type` = "application/json",
-      `X-Discogs-Ratelimit` = limit,
-      `X-Discogs-Ratelimit-Used` = used,
-      `X-Discogs-Ratelimit-Remaining` = limit - used
-    ),
+    headers = c(list(`Content-Type` = "application/json"), rate_headers(used, limit)),
     body = readBin(path, "raw", file.size(path))
   )
+}
+
+discogs_count <- function(times, at) {
+  start <- 60 * floor(at / 60)
+  sum(times >= start - 60 & times < start) * (1 - (at - start) / 60) + sum(times >= start & times < at)
 }
 
 fixture <- function(name) {

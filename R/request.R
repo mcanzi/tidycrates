@@ -1,9 +1,10 @@
 base_url <- "https://api.discogs.com"
 
-rate_window <- 60
+minute <- 60
 
-window_size <- function(token = auth_token()) {
-  if (is.null(token)) 24 else 59
+request_cap <- function(token = auth_token()) {
+  limit <- dig_env[[limit_key(token)]] %||% (if (is.null(token)) 25 else 60)
+  limit - 2
 }
 
 dig_request <- function(path, query = list(), token = auth_token()) {
@@ -22,9 +23,10 @@ dig_request <- function(path, query = list(), token = auth_token()) {
 perform <- function(req, token, max_tries = 4) {
   for (attempt in seq_len(max_tries)) {
     wait_for_slot(token)
+    before <- request_tally(logged_requests(token), now())
     resp <- tryCatch(httr2::req_perform(req), httr2_http = identity, finally = record_request(token))
     failed <- inherits(resp, "httr2_http")
-    note_remaining(if (failed) resp$resp else resp, token)
+    sync_tally(if (failed) resp$resp else resp, token, before)
     if (!failed) {
       return(resp)
     }
@@ -41,13 +43,7 @@ perform <- function(req, token, max_tries = 4) {
 }
 
 wait_for_slot <- function(token) {
-  sent <- recent_requests(token)
-  size <- window_size(token)
-  seconds <- max(
-    if (length(sent) >= size) sent[length(sent) - size + 1] + rate_window - now(),
-    dig_env[[full_key(token)]] + rate_window - now(),
-    0
-  )
+  seconds <- tally_wait(logged_requests(token), now(), request_cap(token))
   if (seconds == 0) {
     return(invisible())
   }
@@ -57,28 +53,59 @@ wait_for_slot <- function(token) {
   pause(seconds)
 }
 
-record_request <- function(token) {
-  dig_env[[sent_key(token)]] <- c(recent_requests(token), now())
+minute_counts <- function(times, at) {
+  start <- minute * floor(at / minute)
+  list(
+    start = start,
+    previous = sum(times >= start - minute & times < start),
+    current = sum(times >= start & times <= at)
+  )
 }
 
-recent_requests <- function(token) {
-  sent <- dig_env[[sent_key(token)]]
-  sent[sent > now() - rate_window]
+request_tally <- function(times, at) {
+  counts <- minute_counts(times, at)
+  counts$previous * (1 - (at - counts$start) / minute) + counts$current
 }
 
-note_remaining <- function(resp, token) {
-  remaining <- as_int(httr2::resp_header(resp, "x-discogs-ratelimit-remaining"))
-  if (!is.na(remaining) && remaining <= 0) {
-    dig_env[[full_key(token)]] <- now()
+tally_wait <- function(times, at, cap) {
+  if (request_tally(times, at) <= cap) {
+    return(0)
+  }
+  counts <- minute_counts(times, at)
+  next_minute <- counts$start + minute
+  if (counts$current >= cap) {
+    return(next_minute - at + tally_wait(times, next_minute, cap))
+  }
+  next_minute - minute * (cap - counts$current) / counts$previous - at
+}
+
+record_request <- function(token, n = 1) {
+  dig_env[[log_key(token)]] <- c(logged_requests(token), rep(now(), n))
+}
+
+logged_requests <- function(token) {
+  times <- dig_env[[log_key(token)]]
+  times[times >= minute * floor(now() / minute) - minute]
+}
+
+sync_tally <- function(resp, token, before) {
+  limit <- as_int(httr2::resp_header(resp, "x-discogs-ratelimit"))
+  if (!is.na(limit) && limit > 2) {
+    dig_env[[limit_key(token)]] <- limit
+  }
+  used <- as_int(httr2::resp_header(resp, "x-discogs-ratelimit-used"))
+  missing <- if (is.na(used)) 0 else used - ceiling(before)
+  if (missing > 0) {
+    record_request(token, missing)
   }
 }
 
-sent_key <- function(token) {
-  if (is.null(token)) "sent" else "sent_token"
+log_key <- function(token) {
+  if (is.null(token)) "requests" else "requests_token"
 }
 
-full_key <- function(token) {
-  paste0(sent_key(token), "_full")
+limit_key <- function(token) {
+  paste0(log_key(token), "_limit")
 }
 
 now <- function() {
@@ -224,7 +251,7 @@ dig_get_pages <- function(path, field, query = list(), all = FALSE, page = 1,
       call = call
     )
   }
-  minutes <- (pages - page) %/% window_size()
+  minutes <- (pages - page) %/% (request_cap() + 1)
   if (minutes >= 1) {
     cli::cli_inform("Fetching {pages} pages takes at least {minutes} minute{?s}.")
   }

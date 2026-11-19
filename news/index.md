@@ -45,14 +45,16 @@
   and
   [`dig_collection_value()`](https://mcanzi.de/tidycrates/reference/dig_collection_value.md)
   use the owner of the token when no username is given.
-- tidycrates counts its own requests over the last 60 seconds. Up to 59
-  requests with a token, or 24 without, are sent at once, and later ones
-  wait until the window has room. If ‘Discogs’ reports that no requests
-  are left, for example because other applications use the same token,
-  the next request waits 60 seconds. A message says how long each wait
-  or retry takes. Before, a full minute of requests was sent at once and
-  more followed within the same minute, so a long batch could exceed the
-  rate limit of ‘Discogs’.
+- tidycrates counts its requests as ‘Discogs’ does, from the current
+  clock minute and a shrinking share of the previous one, and no longer
+  uses the throttle of httr2. Requests are sent at once while the count
+  has room, up to 59 a minute with a token and 24 without, and later
+  ones wait only until it has room again. A higher count reported by
+  ‘Discogs’, for example because other applications use the same token,
+  is added to it. A message says how long each wait or retry takes.
+  Before, a full minute of requests was sent at once and more followed
+  within the same minute, so a long batch could exceed the rate limit of
+  ‘Discogs’.
 - A rate limit that is still exceeded after several tries gives a
   message and returns `NULL`, as when the API cannot be reached.
 - `dig_search(all = TRUE)` stops before fetching more than 100 pages.

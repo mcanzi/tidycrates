@@ -7,10 +7,11 @@ back with one row each, and their tracklists, credits, formats,
 identifiers and companies can be unnested into one row per item.
 
 Requests stay within the rate limit of the API, which is 25 requests a
-minute without a token and 60 with one. Small batches are sent at once,
-and longer ones wait for room in each minute. A request that still hits
-the limit is retried. Long lists can be fetched in full with
-`all = TRUE`, and responses can be cached for the session.
+minute without a token and 60 with one. tidycrates counts them the way
+Discogs does, so small batches are sent at once and longer ones wait
+only as long as needed. A request that still hits the limit is retried.
+Long lists can be fetched in full with `all = TRUE`, and responses can
+be cached for the session.
 
 ## Installation
 

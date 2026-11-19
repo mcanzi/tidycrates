@@ -55,8 +55,8 @@ of users with the item in their collection or wantlist.
 
 'Discogs' returns up to 100 items per page and sometimes fewer than
 `per_page`. With `all = TRUE`, every page is fetched, which takes one
-request for each 100 items. If this takes more than a minute, a message
-gives the expected time.
+request for each 100 items. If this takes a minute or more, a message
+gives the least time it takes.
 
 ## Examples
 

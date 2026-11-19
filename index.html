@@ -62,7 +62,7 @@
 <!-- badges: start -->
 
 <p>tidycrates reads the <a href="https://www.discogs.com/" class="external-link">Discogs</a> database through the <a href="https://www.discogs.com/developers" class="external-link">Discogs API</a> and returns <span class="hl">tidy tibbles</span>. Releases, master releases, artists and labels come back with one row each, and their tracklists, credits, formats, identifiers and companies can be unnested into one row per item.</p>
-<p>Requests stay within the <span class="hl">rate limit</span> of the API, which is 25 requests a minute without a token and 60 with one. Small batches are sent at once, and longer ones wait for room in each minute. A request that still hits the limit is retried. Long lists can be fetched in full with <code>all = TRUE</code>, and responses can be cached for the session.</p>
+<p>Requests stay within the <span class="hl">rate limit</span> of the API, which is 25 requests a minute without a token and 60 with one. tidycrates counts them the way Discogs does, so small batches are sent at once and longer ones wait only as long as needed. A request that still hits the limit is retried. Long lists can be fetched in full with <code>all = TRUE</code>, and responses can be cached for the session.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>

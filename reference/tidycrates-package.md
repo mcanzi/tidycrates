@@ -27,8 +27,8 @@ as 'Discogs' does, so small batches are sent at once and later requests
 wait only until 'Discogs' has room for them.
 [`dig_rate_limit()`](https://mcanzi.de/tidycrates/reference/dig_rate_limit.md)
 explains the count and why the throttle of httr2 is not used. Requests
-are retried after HTTP 429 and 503 responses, and a message says how
-long each wait takes.
+are retried after HTTP 429 and 503 responses. A message, or the progress
+bar when several items are fetched, says how long each wait takes.
 
 When the API cannot be reached, because there is no internet connection,
 the server returns an error or the rate limit is still exceeded after

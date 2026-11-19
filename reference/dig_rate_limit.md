@@ -35,9 +35,11 @@ wait until the count has room again, and no longer. If the response
 headers give another limit, the count may reach two below it. If
 'Discogs' reports a higher count, for example because other applications
 use the same token, the difference is added. Requests are retried after
-HTTP 429 and 503 responses, and a message says how long each wait of a
-second or more takes. The limit only needs checking when other
-applications share the same token or IP address.
+HTTP 429 and 503 responses. A message says how long each wait of a
+second or more takes; when several items are fetched, the progress bar
+counts the wait down instead and its ETA includes the waits still to
+come. The limit only needs checking when other applications share the
+same token or IP address.
 
 The count uses the clock of your computer. A clock that is off by a
 second changes it by about one request, which the margin of two covers.
